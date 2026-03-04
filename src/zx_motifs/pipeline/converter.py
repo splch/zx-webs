@@ -91,6 +91,17 @@ def _make_snapshot(
     )
 
 
+_SIMPLIFIERS = [
+    (SimplificationLevel.RAW, None, False),
+    (SimplificationLevel.SPIDER_FUSED, zx.simplify.spider_simp, False),
+    (SimplificationLevel.INTERIOR_CLIFFORD, zx.simplify.interior_clifford_simp, False),
+    (SimplificationLevel.CLIFFORD_SIMP, zx.simplify.clifford_simp, False),
+    (SimplificationLevel.FULL_REDUCE, zx.simplify.full_reduce, False),
+    # teleport_reduce returns a new graph unlike the others
+    (SimplificationLevel.TELEPORT_REDUCE, zx.simplify.teleport_reduce, True),
+]
+
+
 def convert_at_all_levels(
     qc: QuantumCircuit, algorithm_name: str
 ) -> list[ZXSnapshot]:
@@ -102,51 +113,12 @@ def convert_at_all_levels(
     g_raw = zx_circ.to_graph()
     snapshots = []
 
-    # Level 0: Raw conversion
-    snapshots.append(
-        _make_snapshot(copy.deepcopy(g_raw), SimplificationLevel.RAW,
-                       algorithm_name, qc.num_qubits)
-    )
-
-    # Level 1: Spider fusion only
-    g_fused = copy.deepcopy(g_raw)
-    zx.simplify.spider_simp(g_fused)
-    snapshots.append(
-        _make_snapshot(copy.deepcopy(g_fused), SimplificationLevel.SPIDER_FUSED,
-                       algorithm_name, qc.num_qubits)
-    )
-
-    # Level 2: Interior Clifford simplification
-    g_int_cliff = copy.deepcopy(g_raw)
-    zx.simplify.interior_clifford_simp(g_int_cliff)
-    snapshots.append(
-        _make_snapshot(copy.deepcopy(g_int_cliff), SimplificationLevel.INTERIOR_CLIFFORD,
-                       algorithm_name, qc.num_qubits)
-    )
-
-    # Level 3: Clifford simplification (includes pivoting)
-    g_cliff = copy.deepcopy(g_raw)
-    zx.simplify.clifford_simp(g_cliff)
-    snapshots.append(
-        _make_snapshot(copy.deepcopy(g_cliff), SimplificationLevel.CLIFFORD_SIMP,
-                       algorithm_name, qc.num_qubits)
-    )
-
-    # Level 4: Full reduce (destroys circuit structure)
-    g_full = copy.deepcopy(g_raw)
-    zx.simplify.full_reduce(g_full)
-    snapshots.append(
-        _make_snapshot(copy.deepcopy(g_full), SimplificationLevel.FULL_REDUCE,
-                       algorithm_name, qc.num_qubits)
-    )
-
-    # Level 5: Teleport reduce (preserves circuit structure)
-    # NOTE: teleport_reduce both mutates and returns the graph
-    g_tele = copy.deepcopy(g_raw)
-    g_tele = zx.simplify.teleport_reduce(g_tele)
-    snapshots.append(
-        _make_snapshot(copy.deepcopy(g_tele), SimplificationLevel.TELEPORT_REDUCE,
-                       algorithm_name, qc.num_qubits)
-    )
+    for level, simplifier, returns_graph in _SIMPLIFIERS:
+        g = copy.deepcopy(g_raw)
+        if simplifier is not None:
+            result = simplifier(g)
+            if returns_graph:
+                g = result
+        snapshots.append(_make_snapshot(g, level, algorithm_name, qc.num_qubits))
 
     return snapshots

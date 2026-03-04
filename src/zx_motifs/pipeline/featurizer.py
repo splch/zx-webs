@@ -8,7 +8,7 @@ from fractions import Fraction
 
 import networkx as nx
 from pyzx.graph import Graph
-from pyzx.utils import VertexType, EdgeType
+from pyzx.utils import EdgeType, VertexType
 
 
 # ── Phase Classification ────────────────────────────────────────────

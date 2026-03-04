@@ -13,7 +13,6 @@ Key design decisions:
 This gives you commutation-aware pattern detection "for free" because
 ZX diagrams have already absorbed commutation relations into their topology.
 """
-from collections import Counter
 from dataclasses import dataclass, field
 
 import networkx as nx
@@ -27,8 +26,8 @@ class MotifMatch:
     motif_id: str
     host_algorithm: str
     host_level: str
-    mapping: dict  # {pattern_node: host_node}
-    matched_node_types: list
+    mapping: dict[int, int]  # {pattern_node: host_node}
+    matched_node_types: list[str]
 
 
 @dataclass

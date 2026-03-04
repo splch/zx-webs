@@ -21,7 +21,6 @@ from dataclasses import dataclass, field
 
 import pyzx as zx
 from pyzx.graph import Graph
-from pyzx.utils import EdgeType
 from qiskit import QuantumCircuit
 
 from .converter import qiskit_to_zx
@@ -36,7 +35,7 @@ class BoundarySpec:
     """Specification of one side of a box's boundary."""
 
     n_wires: int
-    wire_types: list  # [VertexType.Z, ...] for each wire
+    wire_types: list[int]  # [VertexType.Z, ...] for each wire
     phases: list  # Phase of each boundary spider (usually 0)
 
 
@@ -56,7 +55,7 @@ class ZXBox:
     left_spec: BoundarySpec
     right_spec: BoundarySpec
     description: str = ""
-    tags: list = field(default_factory=list)
+    tags: list[str] = field(default_factory=list)
     semantic_role: str = ""
 
     @property
@@ -123,7 +122,7 @@ def compose_sequential(box_a: ZXBox, box_b: ZXBox) -> ZXBox:
     # Requires each boundary vertex to have exactly one neighbor.
     try:
         return _compose_via_pyzx(box_a, box_b)
-    except Exception:
+    except (TypeError, ValueError, AssertionError, KeyError):
         return _compose_manual(box_a, box_b)
 
 
@@ -159,9 +158,10 @@ def _compose_via_pyzx(box_a: ZXBox, box_b: ZXBox) -> ZXBox:
     )
 
 
-def _copy_vertices_into(target: Graph, source: Graph) -> dict[int, int]:
+def _merge_graph_into(target: Graph, source: Graph) -> dict[int, int]:
     """
-    Copy all vertices from source into target, returning the ID mapping.
+    Copy all vertices and edges from source into target.
+    Returns the ID mapping {old_id: new_id}.
     PyZX 0.9.x auto-assigns vertex IDs; we capture the returned IDs.
     """
     id_map: dict[int, int] = {}
@@ -173,6 +173,11 @@ def _copy_vertices_into(target: Graph, source: Graph) -> dict[int, int]:
             row=source.row(v),
         )
         id_map[v] = new_id
+
+    for e in source.edges():
+        src, tgt = source.edge_st(e)
+        target.add_edge((id_map[src], id_map[tgt]), source.edge_type(e))
+
     return id_map
 
 
@@ -182,14 +187,7 @@ def _compose_manual(box_a: ZXBox, box_b: ZXBox) -> ZXBox:
     then fuse boundary vertices.
     """
     g = copy.deepcopy(box_a.graph)
-    g_b = copy.deepcopy(box_b.graph)
-
-    id_map = _copy_vertices_into(g, g_b)
-
-    # Add box_b's edges
-    for e in g_b.edges():
-        src, tgt = g_b.edge_st(e)
-        g.add_edge((id_map[src], id_map[tgt]), g_b.edge_type(e))
+    id_map = _merge_graph_into(g, box_b.graph)
 
     # Fuse: connect box_a's outputs to box_b's inputs
     a_outputs = list(box_a.right_boundary)
@@ -225,13 +223,7 @@ def compose_parallel(box_a: ZXBox, box_b: ZXBox) -> ZXBox:
     Compose two boxes in parallel (tensor product): box_a ⊗ box_b.
     """
     g = copy.deepcopy(box_a.graph)
-    g_b = copy.deepcopy(box_b.graph)
-
-    id_map = _copy_vertices_into(g, g_b)
-
-    for e in g_b.edges():
-        src, tgt = g_b.edge_st(e)
-        g.add_edge((id_map[src], id_map[tgt]), g_b.edge_type(e))
+    id_map = _merge_graph_into(g, box_b.graph)
 
     new_left = list(box_a.left_boundary) + [id_map[v] for v in box_b.left_boundary]
     new_right = list(box_a.right_boundary) + [id_map[v] for v in box_b.right_boundary]
@@ -258,6 +250,14 @@ def compose_parallel(box_a: ZXBox, box_b: ZXBox) -> ZXBox:
     )
 
 
+_BOX_SIMPLIFIERS = {
+    "spider_fusion": zx.simplify.spider_simp,
+    "interior_clifford": zx.simplify.interior_clifford_simp,
+    "clifford": zx.simplify.clifford_simp,
+    "full": zx.simplify.full_reduce,
+}
+
+
 def simplify_box(box: ZXBox, level: str = "interior_clifford") -> ZXBox:
     """
     Simplify the interior of a box.
@@ -266,19 +266,13 @@ def simplify_box(box: ZXBox, level: str = "interior_clifford") -> ZXBox:
     preserve boundary vertices. Higher levels will be validated and
     raise BoundaryDestroyedError if boundaries are lost.
     """
+    simplifier = _BOX_SIMPLIFIERS.get(level)
+    if simplifier is None:
+        raise ValueError(f"Unknown simplification level: {level}")
+
     g = copy.deepcopy(box.graph)
     boundary_ids = set(box.left_boundary) | set(box.right_boundary)
-
-    if level == "spider_fusion":
-        zx.simplify.spider_simp(g)
-    elif level == "interior_clifford":
-        zx.simplify.interior_clifford_simp(g)
-    elif level == "clifford":
-        zx.simplify.clifford_simp(g)
-    elif level == "full":
-        zx.simplify.full_reduce(g)
-    else:
-        raise ValueError(f"Unknown simplification level: {level}")
+    simplifier(g)
 
     # Validate boundaries survived
     surviving = set(g.vertices())

@@ -25,10 +25,10 @@ class CatalogEntry:
     node_type_signature: str  # e.g. "Z3_X1"
     edge_type_signature: str  # e.g. "H2_S1"
     total_occurrences: int
-    algorithms_found_in: list
-    occurrence_by_family: dict  # {"oracle": 5, "variational": 3}
-    tags: list = field(default_factory=list)
-    related_motifs: list = field(default_factory=list)
+    algorithms_found_in: list[str]
+    occurrence_by_family: dict[str, int]  # {"oracle": 5, "variational": 3}
+    tags: list[str] = field(default_factory=list)
+    related_motifs: list[str] = field(default_factory=list)
 
 
 class MotifCatalog:

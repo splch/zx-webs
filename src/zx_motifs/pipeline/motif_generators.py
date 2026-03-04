@@ -6,11 +6,11 @@ Three strategies for generating candidate motifs to search for:
 3. Hybrid: Extract neighborhoods around "interesting" vertices and cluster.
 """
 import hashlib
-from collections import Counter
 
 import networkx as nx
 from networkx.algorithms import isomorphism
 
+from .featurizer import extract_local_neighborhood
 from .matcher import MotifPattern, node_match_fn, edge_match_fn
 
 
@@ -312,20 +312,9 @@ def extract_interesting_neighborhoods(
     seen_hashes: set[str] = set()
 
     for center in interesting:
-        nodes: set[int] = set()
-        frontier = {center}
-        for _ in range(radius):
-            next_frontier = set()
-            for node in frontier:
-                for nbr in host.neighbors(node):
-                    if nbr not in nodes and nbr not in frontier:
-                        next_frontier.add(nbr)
-            nodes.update(frontier)
-            frontier = next_frontier
-        nodes.update(frontier)
-
+        neighborhood = extract_local_neighborhood(host, center, radius)
         # Remove boundary nodes
-        interior = {n for n in nodes if not host.nodes[n].get("is_boundary")}
+        interior = {n for n in neighborhood.nodes() if not host.nodes[n].get("is_boundary")}
         if len(interior) >= 3:
             subg = host.subgraph(interior).copy()
             if nx.is_connected(subg):
