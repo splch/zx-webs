@@ -8,7 +8,7 @@ from collections import Counter
 from dataclasses import asdict, dataclass, field
 
 import networkx as nx
-from networkx.readwrite import json_graph
+from networkx.readwrite import json_graph as _json_graph
 
 from .matcher import MotifPattern
 
@@ -74,7 +74,7 @@ class MotifCatalog:
 
         entry = CatalogEntry(
             motif_id=motif.motif_id,
-            graph_json=json_graph.node_link_data(g),
+            graph_json=_json_graph.node_link_data(g, edges="links"),
             source=motif.source,
             family=dominant_family,
             description=motif.description,

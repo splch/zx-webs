@@ -2,8 +2,6 @@
 from fractions import Fraction
 
 import networkx as nx
-import pyzx as zx
-from pyzx.utils import VertexType
 
 from zx_motifs.pipeline.featurizer import (
     classify_phase,

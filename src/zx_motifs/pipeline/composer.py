@@ -21,7 +21,7 @@ from dataclasses import dataclass, field
 
 import pyzx as zx
 from pyzx.graph import Graph
-from pyzx.utils import EdgeType, VertexType
+from pyzx.utils import EdgeType
 from qiskit import QuantumCircuit
 
 from .converter import qiskit_to_zx
@@ -138,8 +138,6 @@ def _compose_via_pyzx(box_a: ZXBox, box_b: ZXBox) -> ZXBox:
     # Graph.compose() mutates g_a in place and remaps g_b's vertices.
     # We need to track what g_b's boundary vertices become after remapping.
     # The compose method adds g_b's vertices with new IDs.
-    old_b_outputs = list(g_b.outputs())
-
     g_a.compose(g_b)
 
     # After compose, g_a's outputs are now what g_b's outputs were (remapped).
@@ -161,6 +159,23 @@ def _compose_via_pyzx(box_a: ZXBox, box_b: ZXBox) -> ZXBox:
     )
 
 
+def _copy_vertices_into(target: Graph, source: Graph) -> dict[int, int]:
+    """
+    Copy all vertices from source into target, returning the ID mapping.
+    PyZX 0.9.x auto-assigns vertex IDs; we capture the returned IDs.
+    """
+    id_map: dict[int, int] = {}
+    for v in source.vertices():
+        new_id = target.add_vertex(
+            ty=source.type(v),
+            phase=source.phase(v),
+            qubit=source.qubit(v),
+            row=source.row(v),
+        )
+        id_map[v] = new_id
+    return id_map
+
+
 def _compose_manual(box_a: ZXBox, box_b: ZXBox) -> ZXBox:
     """
     Manual composition: remap box_b's vertices into box_a's graph,
@@ -169,21 +184,7 @@ def _compose_manual(box_a: ZXBox, box_b: ZXBox) -> ZXBox:
     g = copy.deepcopy(box_a.graph)
     g_b = copy.deepcopy(box_b.graph)
 
-    # Find the next safe vertex ID
-    max_id = max(g.vertices()) + 1 if list(g.vertices()) else 0
-
-    # Remap box_b's vertex IDs
-    id_map: dict[int, int] = {}
-    for v in g_b.vertices():
-        new_id = v + max_id
-        id_map[v] = new_id
-        g.add_vertex(
-            ty=g_b.type(v),
-            phase=g_b.phase(v),
-            qubit=g_b.qubit(v),
-            row=g_b.row(v),
-            index=new_id,
-        )
+    id_map = _copy_vertices_into(g, g_b)
 
     # Add box_b's edges
     for e in g_b.edges():
@@ -226,19 +227,7 @@ def compose_parallel(box_a: ZXBox, box_b: ZXBox) -> ZXBox:
     g = copy.deepcopy(box_a.graph)
     g_b = copy.deepcopy(box_b.graph)
 
-    max_id = max(g.vertices()) + 1 if list(g.vertices()) else 0
-    id_map: dict[int, int] = {}
-
-    for v in g_b.vertices():
-        new_id = v + max_id
-        id_map[v] = new_id
-        g.add_vertex(
-            ty=g_b.type(v),
-            phase=g_b.phase(v),
-            qubit=g_b.qubit(v),
-            row=g_b.row(v),
-            index=new_id,
-        )
+    id_map = _copy_vertices_into(g, g_b)
 
     for e in g_b.edges():
         src, tgt = g_b.edge_st(e)
