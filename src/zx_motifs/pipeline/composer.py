@@ -19,6 +19,7 @@ The boundary contract specifies:
 import copy
 from dataclasses import dataclass, field
 
+import networkx as nx
 import pyzx as zx
 from pyzx.graph import Graph
 from qiskit import QuantumCircuit
@@ -291,4 +292,82 @@ def simplify_box(box: ZXBox, level: str = "interior_clifford") -> ZXBox:
         left_spec=box.left_spec,
         right_spec=box.right_spec,
         semantic_role=box.semantic_role,
+    )
+
+
+def make_box_from_motif(
+    motif: "MotifPattern",
+    host_graph: nx.Graph,
+    mapping: dict[int, int],
+    pyzx_graph: Graph,
+) -> "ZXBox | None":
+    """
+    Create a ZXBox from a motif match in a host graph.
+
+    Args:
+        motif: The matched MotifPattern.
+        host_graph: The NetworkX host graph (for attribute lookup).
+        mapping: {pattern_node: host_node} from the match.
+        pyzx_graph: The PyZX graph to extract the subgraph from.
+
+    Returns:
+        A ZXBox with boundary vertices determined by external connections,
+        or None if the subgraph cannot form a valid box.
+    """
+    matched_pyzx_ids = set(mapping.values())
+
+    # Verify all matched nodes exist in PyZX graph
+    pyzx_verts = set(pyzx_graph.vertices())
+    if not matched_pyzx_ids.issubset(pyzx_verts):
+        return None
+
+    # Determine boundary: matched nodes with neighbors outside the match
+    boundary_verts = []
+    for v in matched_pyzx_ids:
+        for nbr in list(pyzx_graph.neighbors(v)):
+            if nbr not in matched_pyzx_ids:
+                boundary_verts.append(v)
+                break
+
+    if not boundary_verts:
+        return None
+
+    # Split left/right by qubit coordinate (lower qubit → left)
+    boundary_verts.sort(key=lambda v: (pyzx_graph.qubit(v), pyzx_graph.row(v)))
+
+    mid = len(boundary_verts) // 2
+    if mid == 0:
+        mid = 1
+    left_boundary = boundary_verts[:mid]
+    right_boundary = boundary_verts[mid:]
+
+    # If only one boundary vertex, put it on both sides
+    if not right_boundary:
+        right_boundary = list(left_boundary)
+
+    left_spec = BoundarySpec(
+        n_wires=len(left_boundary),
+        wire_types=[pyzx_graph.type(v) for v in left_boundary],
+        phases=[pyzx_graph.phase(v) for v in left_boundary],
+    )
+    right_spec = BoundarySpec(
+        n_wires=len(right_boundary),
+        wire_types=[pyzx_graph.type(v) for v in right_boundary],
+        phases=[pyzx_graph.phase(v) for v in right_boundary],
+    )
+
+    # Extract subgraph from PyZX
+    subgraph = copy.deepcopy(pyzx_graph)
+    remove_verts = [v for v in subgraph.vertices() if v not in matched_pyzx_ids]
+    subgraph.remove_vertices(remove_verts)
+
+    return ZXBox(
+        name=f"box_{motif.motif_id}",
+        graph=subgraph,
+        left_boundary=left_boundary,
+        right_boundary=right_boundary,
+        left_spec=left_spec,
+        right_spec=right_spec,
+        description=motif.description,
+        semantic_role=motif.motif_id,
     )

@@ -7,9 +7,11 @@ import os
 from collections import Counter
 from dataclasses import asdict, dataclass, field
 
+import numpy as np
 import networkx as nx
 from networkx.readwrite import json_graph as _json_graph
 
+from .featurizer import compute_motif_feature_vector, motif_similarity
 from .matcher import MotifPattern
 
 
@@ -29,6 +31,8 @@ class CatalogEntry:
     occurrence_by_family: dict[str, int]  # {"oracle": 5, "variational": 3}
     tags: list[str] = field(default_factory=list)
     related_motifs: list[str] = field(default_factory=list)
+    feature_vector: list[float] = field(default_factory=list)
+    cross_level_info: dict = field(default_factory=dict)
 
 
 class MotifCatalog:
@@ -72,6 +76,8 @@ class MotifCatalog:
             family_counts.most_common(1)[0][0] if family_counts else "universal"
         )
 
+        fvec = compute_motif_feature_vector(g).tolist()
+
         entry = CatalogEntry(
             motif_id=motif.motif_id,
             graph_json=_json_graph.node_link_data(g, edges="links"),
@@ -85,30 +91,56 @@ class MotifCatalog:
             total_occurrences=len(motif.occurrences),
             algorithms_found_in=algos_list,
             occurrence_by_family=dict(family_counts),
+            feature_vector=fvec,
         )
 
         self.entries[motif.motif_id] = entry
 
     def find_related(
-        self, motif_id: str, similarity_threshold: float = 0.5
+        self,
+        motif_id: str,
+        similarity_threshold: float = 0.5,
+        structural_weight: float = 0.6,
+        cooccurrence_weight: float = 0.4,
     ) -> list[tuple[str, float]]:
-        """Find motifs with similar algorithm co-occurrence (Jaccard)."""
+        """
+        Find related motifs using combined structural + co-occurrence similarity.
+
+        Score = structural_weight * cosine_sim(features) +
+                cooccurrence_weight * jaccard(algorithms)
+        """
         if motif_id not in self.entries:
             return []
 
         target = self.entries[motif_id]
+        target_vec = np.array(target.feature_vector) if target.feature_vector else None
+        target_algos = set(target.algorithms_found_in)
         related = []
 
         for mid, entry in self.entries.items():
             if mid == motif_id:
                 continue
-            target_algos = set(target.algorithms_found_in)
+
+            # Structural similarity
+            structural_sim = 0.0
+            if target_vec is not None and entry.feature_vector:
+                entry_vec = np.array(entry.feature_vector)
+                structural_sim = motif_similarity(target_vec, entry_vec)
+
+            # Co-occurrence similarity (Jaccard)
             entry_algos = set(entry.algorithms_found_in)
-            if not target_algos or not entry_algos:
-                continue
-            jaccard = len(target_algos & entry_algos) / len(target_algos | entry_algos)
-            if jaccard >= similarity_threshold:
-                related.append((mid, jaccard))
+            cooc_sim = 0.0
+            if target_algos and entry_algos:
+                cooc_sim = len(target_algos & entry_algos) / len(
+                    target_algos | entry_algos
+                )
+
+            score = (
+                structural_weight * structural_sim
+                + cooccurrence_weight * cooc_sim
+            )
+            if score >= similarity_threshold:
+                related.append((mid, score))
 
         return sorted(related, key=lambda x: -x[1])
 

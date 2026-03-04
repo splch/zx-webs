@@ -7,6 +7,7 @@ which misses the entire point of ZX.
 from fractions import Fraction
 
 import networkx as nx
+import numpy as np
 from pyzx.graph import Graph
 from pyzx.utils import EdgeType, VertexType
 
@@ -162,3 +163,55 @@ def compute_graph_features(nxg: nx.Graph) -> dict:
         "density": nx.density(nxg),
         "n_connected_components": nx.number_connected_components(nxg),
     }
+
+
+# ── Motif Feature Vectors ─────────────────────────────────────────
+
+
+def compute_motif_feature_vector(nxg: nx.Graph) -> np.ndarray:
+    """
+    Compute a fixed-length 12-element feature vector for a motif graph.
+
+    Elements: [n_nodes, n_edges, n_Z, n_X, n_H_BOX, n_zero, n_clifford,
+               n_t_like, n_arbitrary, n_hadamard_edges, n_simple_edges, density]
+    """
+    n_nodes = nxg.number_of_nodes()
+    n_edges = nxg.number_of_edges()
+
+    type_counts = {"Z": 0, "X": 0, "H_BOX": 0}
+    phase_counts = {"zero": 0, "clifford": 0, "t_like": 0, "arbitrary": 0}
+
+    for _, data in nxg.nodes(data=True):
+        vt = data.get("vertex_type", "")
+        pc = data.get("phase_class", "")
+        if vt in type_counts:
+            type_counts[vt] += 1
+        if pc in phase_counts:
+            phase_counts[pc] += 1
+
+    n_hadamard = sum(
+        1 for _, _, d in nxg.edges(data=True) if d.get("edge_type") == "HADAMARD"
+    )
+    n_simple = n_edges - n_hadamard
+
+    density = nx.density(nxg) if n_nodes > 0 else 0.0
+
+    return np.array([
+        n_nodes, n_edges,
+        type_counts["Z"], type_counts["X"], type_counts["H_BOX"],
+        phase_counts["zero"], phase_counts["clifford"],
+        phase_counts["t_like"], phase_counts["arbitrary"],
+        n_hadamard, n_simple, density,
+    ], dtype=float)
+
+
+def motif_similarity(vec_a: np.ndarray, vec_b: np.ndarray) -> float:
+    """
+    Cosine similarity between two motif feature vectors, in [0, 1].
+    Returns 0.0 if either vector is all-zero.
+    """
+    norm_a = np.linalg.norm(vec_a)
+    norm_b = np.linalg.norm(vec_b)
+    if norm_a == 0 or norm_b == 0:
+        return 0.0
+    return float(np.dot(vec_a, vec_b) / (norm_a * norm_b))

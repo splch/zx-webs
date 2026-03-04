@@ -6,12 +6,58 @@ Three strategies for generating candidate motifs to search for:
 3. Hybrid: Extract neighborhoods around "interesting" vertices and cluster.
 """
 import hashlib
+from typing import Callable
 
 import networkx as nx
 from networkx.algorithms import isomorphism
 
 from .featurizer import extract_local_neighborhood
-from .matcher import MotifPattern, node_match_fn, edge_match_fn
+from .matcher import (
+    PHASE_ANY,
+    PHASE_ANY_NONCLIFFORD,
+    PHASE_ANY_NONZERO,
+    MotifPattern,
+    node_match_fn,
+    edge_match_fn,
+)
+
+
+# ════════════════════════════════════════════════════════════════════
+# Hashing: WL hash for better deduplication quality
+# ════════════════════════════════════════════════════════════════════
+
+
+def _ensure_wl_label(subg: nx.Graph) -> nx.Graph:
+    """Set ``wl_label`` on each node from vertex_type + phase_class."""
+    for n, d in subg.nodes(data=True):
+        d["wl_label"] = f"{d.get('vertex_type', '?')}_{d.get('phase_class', '?')}"
+    return subg
+
+
+def wl_hash(subg: nx.Graph, iterations: int = 3) -> str:
+    """Weisfeiler-Leman graph hash using node and edge labels."""
+    _ensure_wl_label(subg)
+    return nx.weisfeiler_lehman_graph_hash(
+        subg,
+        node_attr="wl_label",
+        edge_attr="edge_type",
+        iterations=iterations,
+        digest_size=16,
+    )
+
+
+_HASH_FN: Callable[[nx.Graph], str] = wl_hash
+
+
+def get_hash_fn() -> Callable[[nx.Graph], str]:
+    """Return the current hash function used for motif deduplication."""
+    return _HASH_FN
+
+
+def set_hash_fn(fn: Callable[[nx.Graph], str]) -> None:
+    """Override the hash function used for motif deduplication."""
+    global _HASH_FN
+    _HASH_FN = fn
 
 
 # ════════════════════════════════════════════════════════════════════
@@ -175,6 +221,121 @@ HANDCRAFTED_MOTIFS = [
 
 
 # ════════════════════════════════════════════════════════════════════
+# Phase-parametric motifs (wildcard phase classes)
+# ════════════════════════════════════════════════════════════════════
+
+
+def make_syndrome_extraction_param_motif() -> MotifPattern:
+    """Syndrome extraction with any-phase center Z-spider."""
+    g = nx.Graph()
+    g.add_node(0, vertex_type="Z", phase_class=PHASE_ANY, is_boundary=False)
+    g.add_node(1, vertex_type="X", phase_class="zero", is_boundary=False)
+    g.add_node(2, vertex_type="X", phase_class="zero", is_boundary=False)
+    g.add_edge(0, 1, edge_type="SIMPLE")
+    g.add_edge(0, 2, edge_type="SIMPLE")
+    return MotifPattern(
+        motif_id="syndrome_extraction_param",
+        graph=g,
+        source="hand_crafted",
+        description="Syndrome extraction fan-out with any-phase center",
+    )
+
+
+def make_zz_interaction_param_motif() -> MotifPattern:
+    """ZZ interaction with any-nonzero center phase."""
+    g = nx.Graph()
+    g.add_node(0, vertex_type="Z", phase_class="zero", is_boundary=False)
+    g.add_node(1, vertex_type="Z", phase_class=PHASE_ANY_NONZERO, is_boundary=False)
+    g.add_node(2, vertex_type="Z", phase_class="zero", is_boundary=False)
+    g.add_edge(0, 1, edge_type="SIMPLE")
+    g.add_edge(1, 2, edge_type="SIMPLE")
+    return MotifPattern(
+        motif_id="zz_interaction_param",
+        graph=g,
+        source="hand_crafted",
+        description="ZZ interaction with any-nonzero center phase",
+    )
+
+
+def make_toffoli_core_param_motif() -> MotifPattern:
+    """Toffoli core with any-nonclifford outer phases."""
+    g = nx.Graph()
+    g.add_node(0, vertex_type="Z", phase_class=PHASE_ANY_NONCLIFFORD, is_boundary=False)
+    g.add_node(1, vertex_type="Z", phase_class="zero", is_boundary=False)
+    g.add_node(2, vertex_type="Z", phase_class=PHASE_ANY_NONCLIFFORD, is_boundary=False)
+    g.add_edge(0, 1, edge_type="SIMPLE")
+    g.add_edge(1, 2, edge_type="SIMPLE")
+    return MotifPattern(
+        motif_id="toffoli_core_param",
+        graph=g,
+        source="hand_crafted",
+        description="Toffoli core with any-nonclifford outer phases",
+    )
+
+
+def make_x_hub_3z_param_motif() -> MotifPattern:
+    """X-spider hub connected to 3 Z-spiders with any phase."""
+    g = nx.Graph()
+    g.add_node(0, vertex_type="X", phase_class="zero", is_boundary=False)
+    g.add_node(1, vertex_type="Z", phase_class=PHASE_ANY, is_boundary=False)
+    g.add_node(2, vertex_type="Z", phase_class=PHASE_ANY, is_boundary=False)
+    g.add_node(3, vertex_type="Z", phase_class=PHASE_ANY, is_boundary=False)
+    g.add_edge(0, 1, edge_type="SIMPLE")
+    g.add_edge(0, 2, edge_type="SIMPLE")
+    g.add_edge(0, 3, edge_type="SIMPLE")
+    return MotifPattern(
+        motif_id="x_hub_3z_param",
+        graph=g,
+        source="hand_crafted",
+        description="X-spider hub connected to 3 Z-spiders (any phase)",
+    )
+
+
+def make_hadamard_pauli_pair_motif() -> MotifPattern:
+    """Z(zero) connected to X(pauli) via HADAMARD edge."""
+    g = nx.Graph()
+    g.add_node(0, vertex_type="Z", phase_class="zero", is_boundary=False)
+    g.add_node(1, vertex_type="X", phase_class="pauli", is_boundary=False)
+    g.add_edge(0, 1, edge_type="HADAMARD")
+    return MotifPattern(
+        motif_id="hadamard_pauli_pair",
+        graph=g,
+        source="hand_crafted",
+        description="Z(zero)-X(pauli) pair via Hadamard edge",
+    )
+
+
+def make_pauli_x_hub_3z_motif() -> MotifPattern:
+    """X(pauli) hub connected to 3 Z(zero) spiders."""
+    g = nx.Graph()
+    g.add_node(0, vertex_type="X", phase_class="pauli", is_boundary=False)
+    g.add_node(1, vertex_type="Z", phase_class="zero", is_boundary=False)
+    g.add_node(2, vertex_type="Z", phase_class="zero", is_boundary=False)
+    g.add_node(3, vertex_type="Z", phase_class="zero", is_boundary=False)
+    g.add_edge(0, 1, edge_type="SIMPLE")
+    g.add_edge(0, 2, edge_type="SIMPLE")
+    g.add_edge(0, 3, edge_type="SIMPLE")
+    return MotifPattern(
+        motif_id="pauli_x_hub_3z",
+        graph=g,
+        source="hand_crafted",
+        description="X(pauli) hub connected to 3 Z(zero) spiders",
+    )
+
+
+PARAMETRIC_MOTIFS = [
+    make_syndrome_extraction_param_motif(),
+    make_zz_interaction_param_motif(),
+    make_toffoli_core_param_motif(),
+    make_x_hub_3z_param_motif(),
+    make_hadamard_pauli_pair_motif(),
+    make_pauli_x_hub_3z_motif(),
+]
+
+EXTENDED_MOTIFS = HANDCRAFTED_MOTIFS + PARAMETRIC_MOTIFS
+
+
+# ════════════════════════════════════════════════════════════════════
 # Strategy 2: Bottom-up enumeration of small connected subgraphs
 # ════════════════════════════════════════════════════════════════════
 
@@ -246,7 +407,7 @@ def enumerate_connected_subgraphs(
         size = len(node_set)
         if size >= min_size:
             subg = host.subgraph(node_set).copy()
-            h = canonical_hash(subg)
+            h = _HASH_FN(subg)
             if h not in seen_hashes:
                 seen_hashes[h] = subg
                 subgraphs.append(subg)
@@ -305,7 +466,7 @@ def find_recurring_subgraphs(
         )
 
         for sg in subgraphs:
-            h = canonical_hash(sg)
+            h = _HASH_FN(sg)
 
             if h in hash_registry:
                 existing, algo_set = hash_registry[h]
@@ -343,6 +504,60 @@ def find_recurring_subgraphs(
         )
 
     return motifs
+
+
+def find_recurring_subgraphs_multilevel(
+    corpus: dict,
+    levels: list[str] | None = None,
+    min_size: int = 3,
+    max_size: int = 6,
+    min_algorithms: int = 2,
+) -> list[MotifPattern]:
+    """
+    Bottom-up motif discovery across multiple simplification levels.
+
+    Runs find_recurring_subgraphs at each level, then deduplicates across
+    levels using isomorphism. Motifs found at multiple levels get a
+    discovery_levels list tracking where they appeared.
+    """
+    if levels is None:
+        levels = sorted({lvl for (_, lvl) in corpus.keys()})
+
+    # Collect motifs per level
+    all_motifs: list[tuple[MotifPattern, str]] = []  # (motif, level)
+    for level in levels:
+        level_motifs = find_recurring_subgraphs(
+            corpus,
+            target_level=level,
+            min_size=min_size,
+            max_size=max_size,
+            min_algorithms=min_algorithms,
+        )
+        for m in level_motifs:
+            all_motifs.append((m, level))
+
+    # Cross-level deduplication
+    # Each entry: (representative MotifPattern, set of levels)
+    deduped: list[tuple[MotifPattern, set[str]]] = []
+
+    for motif, level in all_motifs:
+        merged = False
+        for existing_motif, level_set in deduped:
+            if _is_isomorphic(existing_motif.graph, motif.graph):
+                level_set.add(level)
+                # Merge algorithm info into description
+                merged = True
+                break
+        if not merged:
+            deduped.append((motif, {level}))
+
+    # Build final list with discovery_levels
+    result = []
+    for motif, level_set in deduped:
+        motif.discovery_levels = sorted(level_set)
+        result.append(motif)
+
+    return result
 
 
 # ════════════════════════════════════════════════════════════════════
@@ -392,9 +607,82 @@ def extract_interesting_neighborhoods(
         if len(interior) >= 3:
             subg = host.subgraph(interior).copy()
             if nx.is_connected(subg):
-                h = canonical_hash(subg)
+                h = _HASH_FN(subg)
                 if h not in seen_hashes:
                     seen_hashes.add(h)
                     neighborhoods.append(subg)
 
     return neighborhoods
+
+
+def find_neighborhood_motifs(
+    corpus: dict,
+    target_level: str = "spider_fused",
+    radius: int = 2,
+    criteria: list[str] | None = None,
+    min_algorithms: int = 2,
+) -> list[MotifPattern]:
+    """
+    Strategy 3: Extract neighborhoods around interesting vertices across
+    the corpus and return those that recur in multiple algorithms.
+
+    Args:
+        corpus: {(algo_name, level): nx.Graph}
+        target_level: Which simplification level to search.
+        radius: BFS radius for neighborhood extraction.
+        criteria: Interest criteria to apply. Defaults to all three.
+        min_algorithms: Minimum algorithms a neighborhood must appear in.
+
+    Returns:
+        List of MotifPattern with source="neighborhood".
+    """
+    if criteria is None:
+        criteria = ["non_clifford", "high_degree", "color_boundary"]
+
+    # hash → (representative graph, set of algorithm names)
+    hash_registry: dict[str, tuple[nx.Graph, set[str]]] = {}
+
+    for (algo_name, level), host_graph in corpus.items():
+        if level != target_level:
+            continue
+
+        for criterion in criteria:
+            neighborhoods = extract_interesting_neighborhoods(
+                host_graph, radius=radius, interest_criteria=criterion
+            )
+            for subg in neighborhoods:
+                h = _HASH_FN(subg)
+                if h in hash_registry:
+                    existing, algo_set = hash_registry[h]
+                    if _is_isomorphic(existing, subg):
+                        algo_set.add(algo_name)
+                    else:
+                        alt_h = h + f"_{algo_name}"
+                        if alt_h not in hash_registry:
+                            hash_registry[alt_h] = (subg, {algo_name})
+                        else:
+                            hash_registry[alt_h][1].add(algo_name)
+                else:
+                    hash_registry[h] = (subg, {algo_name})
+
+    motifs = []
+    for h, (sg, algo_set) in sorted(
+        hash_registry.items(), key=lambda x: -len(x[1][1])
+    ):
+        if len(algo_set) < min_algorithms:
+            continue
+
+        motifs.append(
+            MotifPattern(
+                motif_id=f"nbr_{h}",
+                graph=sg,
+                source="neighborhood",
+                description=(
+                    f"Neighborhood-extracted {sg.number_of_nodes()}-node motif, "
+                    f"found in {len(algo_set)} algorithms: "
+                    f"{', '.join(sorted(algo_set))}"
+                ),
+            )
+        )
+
+    return motifs
