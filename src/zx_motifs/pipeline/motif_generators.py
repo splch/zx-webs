@@ -91,12 +91,86 @@ def make_zz_interaction_motif() -> MotifPattern:
     )
 
 
+def make_syndrome_extraction_motif() -> MotifPattern:
+    """Syndrome extraction fan-out: a Z-spider connected via simple edges
+    to two X-spiders (data-to-ancilla CX pattern in error correction)."""
+    g = nx.Graph()
+    g.add_node(0, vertex_type="Z", phase_class="zero", is_boundary=False)
+    g.add_node(1, vertex_type="X", phase_class="zero", is_boundary=False)
+    g.add_node(2, vertex_type="X", phase_class="zero", is_boundary=False)
+    g.add_edge(0, 1, edge_type="SIMPLE")
+    g.add_edge(0, 2, edge_type="SIMPLE")
+    return MotifPattern(
+        motif_id="syndrome_extraction",
+        graph=g,
+        source="hand_crafted",
+        description="Syndrome extraction fan-out from error correction codes",
+    )
+
+
+def make_toffoli_core_motif() -> MotifPattern:
+    """Core of decomposed Toffoli gate: chain of T-like Z-spiders
+    connected by simple edges (from Clifford+T decomposition)."""
+    g = nx.Graph()
+    g.add_node(0, vertex_type="Z", phase_class="t_like", is_boundary=False)
+    g.add_node(1, vertex_type="Z", phase_class="zero", is_boundary=False)
+    g.add_node(2, vertex_type="Z", phase_class="t_like", is_boundary=False)
+    g.add_edge(0, 1, edge_type="SIMPLE")
+    g.add_edge(1, 2, edge_type="SIMPLE")
+    return MotifPattern(
+        motif_id="toffoli_core",
+        graph=g,
+        source="hand_crafted",
+        description="T-gate chain from decomposed Toffoli gate",
+    )
+
+
+def make_cluster_chain_motif() -> MotifPattern:
+    """Cluster state chain: three Z-spiders connected via Hadamard edges.
+    Characteristic of 1D cluster/graph states (MBQC building block)."""
+    g = nx.Graph()
+    g.add_node(0, vertex_type="Z", phase_class="zero", is_boundary=False)
+    g.add_node(1, vertex_type="Z", phase_class="zero", is_boundary=False)
+    g.add_node(2, vertex_type="Z", phase_class="zero", is_boundary=False)
+    g.add_edge(0, 1, edge_type="HADAMARD")
+    g.add_edge(1, 2, edge_type="HADAMARD")
+    return MotifPattern(
+        motif_id="cluster_chain",
+        graph=g,
+        source="hand_crafted",
+        description="Hadamard-edge chain from cluster/graph states",
+    )
+
+
+def make_trotter_layer_motif() -> MotifPattern:
+    """Trotter layer: ZZ interaction (Z-Z-Z chain via simple edges) adjacent
+    to a single-qubit rotation spider. Core of Trotterized simulation."""
+    g = nx.Graph()
+    g.add_node(0, vertex_type="Z", phase_class="zero", is_boundary=False)
+    g.add_node(1, vertex_type="Z", phase_class="arbitrary", is_boundary=False)
+    g.add_node(2, vertex_type="Z", phase_class="zero", is_boundary=False)
+    g.add_node(3, vertex_type="Z", phase_class="arbitrary", is_boundary=False)
+    g.add_edge(0, 1, edge_type="SIMPLE")
+    g.add_edge(1, 2, edge_type="SIMPLE")
+    g.add_edge(2, 3, edge_type="SIMPLE")
+    return MotifPattern(
+        motif_id="trotter_layer",
+        graph=g,
+        source="hand_crafted",
+        description="Alternating ZZ-interaction + rotation from Trotter simulation",
+    )
+
+
 HANDCRAFTED_MOTIFS = [
     make_phase_gadget_motif(2),
     make_phase_gadget_motif(3),
     make_cx_spider_motif(),
     make_hadamard_sandwich_motif(),
     make_zz_interaction_motif(),
+    make_syndrome_extraction_motif(),
+    make_toffoli_core_motif(),
+    make_cluster_chain_motif(),
+    make_trotter_layer_motif(),
 ]
 
 

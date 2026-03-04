@@ -54,3 +54,24 @@ def bell_zx_graph(bell_circuit):
 
     circ = qiskit_to_zx(bell_circuit)
     return circ.to_graph()
+
+
+@pytest.fixture
+def bit_flip_circuit() -> QuantumCircuit:
+    """3-qubit bit-flip code (5 qubits with ancillas)."""
+    from zx_motifs.algorithms.registry import make_bit_flip_code
+    return make_bit_flip_code()
+
+
+@pytest.fixture
+def trotter_ising_circuit() -> QuantumCircuit:
+    """4-qubit Trotter Ising circuit."""
+    from zx_motifs.algorithms.registry import make_trotter_ising
+    return make_trotter_ising(n_qubits=4)
+
+
+@pytest.fixture
+def cluster_state_circuit() -> QuantumCircuit:
+    """4-qubit cluster state."""
+    from zx_motifs.algorithms.registry import make_cluster_state
+    return make_cluster_state(n_qubits=4)

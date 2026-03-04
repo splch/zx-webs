@@ -12,7 +12,7 @@ from qiskit import QuantumCircuit
 @dataclass
 class AlgorithmEntry:
     name: str
-    family: str  # "oracle", "variational", "transform", "entanglement", "protocol"
+    family: str
     generator: Callable  # (n_qubits, **kwargs) -> QuantumCircuit
     qubit_range: tuple  # (min_qubits, max_qubits)
     tags: list = field(default_factory=list)
@@ -204,6 +204,485 @@ def make_teleportation(n_qubits=3, **kwargs) -> QuantumCircuit:
     return qc
 
 
+def make_superdense_coding(n_qubits=2, **kwargs) -> QuantumCircuit:
+    """Superdense coding: send 2 classical bits via 1 qubit."""
+    qc = QuantumCircuit(2)
+    # Create Bell pair
+    qc.h(0)
+    qc.cx(0, 1)
+    # Encode: apply X and Z to send bits "11"
+    qc.x(0)
+    qc.z(0)
+    # Decode: Bell measurement
+    qc.cx(0, 1)
+    qc.h(0)
+    return qc
+
+
+# ── Error Correction Generators ────────────────────────────────────
+
+
+def _decompose_toffoli(qc: QuantumCircuit, c0: int, c1: int, t: int) -> None:
+    """Decompose Toffoli (CCX) into Clifford+T gates for QASM2 compatibility."""
+    qc.h(t)
+    qc.cx(c1, t)
+    qc.tdg(t)
+    qc.cx(c0, t)
+    qc.t(t)
+    qc.cx(c1, t)
+    qc.tdg(t)
+    qc.cx(c0, t)
+    qc.t(c1)
+    qc.t(t)
+    qc.h(t)
+    qc.cx(c0, c1)
+    qc.t(c0)
+    qc.tdg(c1)
+    qc.cx(c0, c1)
+
+
+def make_bit_flip_code(n_qubits=5, **kwargs) -> QuantumCircuit:
+    """3-qubit bit-flip code: encode + syndrome extraction + correction.
+
+    Qubits: 0-2 = data (logical encoded), 3-4 = syndrome ancillas.
+    """
+    qc = QuantumCircuit(5)
+    # Encode: |ψ> → |ψψψ>
+    qc.cx(0, 1)
+    qc.cx(0, 2)
+    # Syndrome extraction
+    qc.cx(0, 3)
+    qc.cx(1, 3)
+    qc.cx(1, 4)
+    qc.cx(2, 4)
+    # Correction using Toffoli (decomposed)
+    _decompose_toffoli(qc, 3, 4, 2)
+    return qc
+
+
+def make_phase_flip_code(n_qubits=5, **kwargs) -> QuantumCircuit:
+    """3-qubit phase-flip code: Hadamard-wrapped repetition code.
+
+    Same structure as bit-flip but with Hadamard layers to detect phase errors.
+    """
+    qc = QuantumCircuit(5)
+    # Encode in Hadamard basis
+    qc.cx(0, 1)
+    qc.cx(0, 2)
+    qc.h(0)
+    qc.h(1)
+    qc.h(2)
+    # Syndrome extraction
+    qc.cx(0, 3)
+    qc.cx(1, 3)
+    qc.cx(1, 4)
+    qc.cx(2, 4)
+    # Correction
+    _decompose_toffoli(qc, 3, 4, 2)
+    # Decode back
+    qc.h(0)
+    qc.h(1)
+    qc.h(2)
+    return qc
+
+
+def make_steane_code(n_qubits=7, **kwargs) -> QuantumCircuit:
+    """[[7,1,3]] Steane code encoder.
+
+    Encodes logical |0> into 7 physical qubits using the CSS construction
+    from the classical [7,4,3] Hamming code.
+    """
+    qc = QuantumCircuit(7)
+    # Prepare logical |0> encoded state
+    qc.h(0)
+    qc.h(1)
+    qc.h(2)
+    # Steane code parity checks (CX connectivity from Hamming code)
+    qc.cx(0, 3)
+    qc.cx(0, 4)
+    qc.cx(0, 5)
+    qc.cx(1, 3)
+    qc.cx(1, 4)
+    qc.cx(1, 6)
+    qc.cx(2, 3)
+    qc.cx(2, 5)
+    qc.cx(2, 6)
+    return qc
+
+
+# ── Simulation Generators ──────────────────────────────────────────
+
+
+def make_trotter_ising(n_qubits=4, n_steps=1, dt=0.5, j_coupling=1.0,
+                       h_field=0.5, **kwargs) -> QuantumCircuit:
+    """Trotterized transverse-field Ising model: H = -J ΣZZ - h ΣX.
+
+    Each Trotter step applies ZZ interactions then X rotations.
+    """
+    n_qubits = max(2, n_qubits)
+    qc = QuantumCircuit(n_qubits)
+    for _ in range(n_steps):
+        # ZZ interaction terms: CX-RZ-CX
+        for i in range(n_qubits - 1):
+            qc.cx(i, i + 1)
+            qc.rz(2 * j_coupling * dt, i + 1)
+            qc.cx(i, i + 1)
+        # Transverse field terms
+        for i in range(n_qubits):
+            qc.rx(2 * h_field * dt, i)
+    return qc
+
+
+def make_trotter_heisenberg(n_qubits=4, n_steps=1, dt=0.5, **kwargs) -> QuantumCircuit:
+    """Trotterized Heisenberg XXX model: H = Σ(XX + YY + ZZ).
+
+    Decomposes each interaction into CX-Rz-CX blocks with basis changes
+    for XX and YY terms.
+    """
+    n_qubits = max(2, n_qubits)
+    qc = QuantumCircuit(n_qubits)
+    for _ in range(n_steps):
+        for i in range(n_qubits - 1):
+            # ZZ term
+            qc.cx(i, i + 1)
+            qc.rz(2 * dt, i + 1)
+            qc.cx(i, i + 1)
+            # XX term: H-CX-RZ-CX-H
+            qc.h(i)
+            qc.h(i + 1)
+            qc.cx(i, i + 1)
+            qc.rz(2 * dt, i + 1)
+            qc.cx(i, i + 1)
+            qc.h(i)
+            qc.h(i + 1)
+            # YY term: S†-H-CX-RZ-CX-H-S
+            qc.sdg(i)
+            qc.sdg(i + 1)
+            qc.h(i)
+            qc.h(i + 1)
+            qc.cx(i, i + 1)
+            qc.rz(2 * dt, i + 1)
+            qc.cx(i, i + 1)
+            qc.h(i)
+            qc.h(i + 1)
+            qc.s(i)
+            qc.s(i + 1)
+    return qc
+
+
+# ── Arithmetic Generators ──────────────────────────────────────────
+
+
+def make_ripple_carry_adder(n_qubits=5, **kwargs) -> QuantumCircuit:
+    """Cuccaro-style ripple-carry adder for 2-bit addition.
+
+    Uses 5 qubits: a0, b0, a1, b1, carry_out.
+    Toffoli gates decomposed into Clifford+T.
+    """
+    qc = QuantumCircuit(5)
+    a0, b0, a1, b1, cout = 0, 1, 2, 3, 4
+    # Majority gate on bit 0
+    qc.cx(a0, b0)
+    _decompose_toffoli(qc, a0, b0, a1)
+    # Majority gate on bit 1
+    qc.cx(a1, b1)
+    _decompose_toffoli(qc, a1, b1, cout)
+    # UMA (unmajority-and-add) on bit 1
+    _decompose_toffoli(qc, a1, b1, cout)
+    qc.cx(a1, b1)
+    qc.cx(a1, b1)
+    # UMA on bit 0
+    _decompose_toffoli(qc, a0, b0, a1)
+    qc.cx(a0, b0)
+    return qc
+
+
+# ── Oracle Family Additions ────────────────────────────────────────
+
+
+def make_simon(n_qubits=4, secret=None, **kwargs) -> QuantumCircuit:
+    """Simon's algorithm for hidden XOR mask.
+
+    Uses n data qubits + n ancilla qubits. n_qubits is the data qubit count.
+    """
+    n = max(2, n_qubits // 2) if n_qubits > 2 else 2
+    total = 2 * n
+    qc = QuantumCircuit(total)
+
+    if secret is None:
+        # Default: secret = "10...0" (MSB set)
+        secret = 1 << (n - 1)
+
+    # Hadamard on data register
+    qc.h(range(n))
+    # Oracle: copy data to ancilla, then XOR with secret
+    for i in range(n):
+        qc.cx(i, n + i)
+    for i in range(n):
+        if secret & (1 << i):
+            qc.cx(0, n + i)
+    # Final Hadamard on data register
+    qc.h(range(n))
+    return qc
+
+
+# ── Entanglement Family Additions ──────────────────────────────────
+
+
+def make_w_state(n_qubits=3, **kwargs) -> QuantumCircuit:
+    """W state preparation using RY rotations and CNOTs.
+
+    Creates |W_n> = (|100..0> + |010..0> + ... + |000..1>) / sqrt(n).
+    """
+    n = max(3, n_qubits)
+    qc = QuantumCircuit(n)
+    # First qubit: rotation to get amplitude 1/sqrt(n)
+    theta = 2 * np.arccos(np.sqrt(1 / n))
+    qc.ry(theta, 0)
+    for i in range(1, n):
+        # Controlled rotation to distribute amplitude
+        remaining = n - i
+        theta_i = 2 * np.arccos(np.sqrt(1 / remaining))
+        qc.cx(i - 1, i)
+        qc.ry(theta_i, i)
+        qc.cx(i - 1, i)
+    return qc
+
+
+def make_cluster_state(n_qubits=4, **kwargs) -> QuantumCircuit:
+    """1D cluster (graph) state: |+>^n with CZ on nearest neighbors.
+
+    Foundation of measurement-based quantum computing (MBQC).
+    All-Hadamard-edge topology in ZX representation.
+    """
+    n = max(2, n_qubits)
+    qc = QuantumCircuit(n)
+    qc.h(range(n))
+    for i in range(n - 1):
+        qc.cz(i, i + 1)
+    return qc
+
+
+# ── Phase 2: Error Correction (additional) ─────────────────────────
+
+
+def make_shor_code(n_qubits=9, **kwargs) -> QuantumCircuit:
+    """Shor's [[9,1,3]] code: concatenation of phase-flip inside bit-flip.
+
+    9 physical qubits encode 1 logical qubit.
+    """
+    qc = QuantumCircuit(9)
+    # Phase-flip encoding: spread across 3 blocks
+    qc.cx(0, 3)
+    qc.cx(0, 6)
+    qc.h(0)
+    qc.h(3)
+    qc.h(6)
+    # Bit-flip encoding within each block
+    qc.cx(0, 1)
+    qc.cx(0, 2)
+    qc.cx(3, 4)
+    qc.cx(3, 5)
+    qc.cx(6, 7)
+    qc.cx(6, 8)
+    return qc
+
+
+# ── Phase 2: Simulation (additional) ───────────────────────────────
+
+
+def make_quantum_walk(n_qubits=3, n_steps=2, **kwargs) -> QuantumCircuit:
+    """Discrete-time quantum walk on a cycle.
+
+    Uses 1 coin qubit + (n-1) position qubits. Coin operation is Hadamard,
+    shift is conditional increment/decrement via CX chains.
+    """
+    n = max(3, n_qubits)
+    qc = QuantumCircuit(n)
+    coin = 0
+    pos_qubits = list(range(1, n))
+
+    for _ in range(n_steps):
+        # Coin operation
+        qc.h(coin)
+        # Conditional shift right (coin=|0>): CX chain
+        for i in range(len(pos_qubits) - 1):
+            qc.cx(coin, pos_qubits[i])
+        # Conditional shift left (coin=|1>): X-CX-X
+        qc.x(coin)
+        for i in range(len(pos_qubits) - 1, 0, -1):
+            qc.cx(coin, pos_qubits[i])
+        qc.x(coin)
+    return qc
+
+
+# ── Phase 2: Arithmetic (additional) ───────────────────────────────
+
+
+def make_qft_adder(n_qubits=4, **kwargs) -> QuantumCircuit:
+    """Draper's QFT-based addition: QFT → controlled-phase → QFT†.
+
+    Uses n_qubits split into two n/2-qubit registers.
+    """
+    n = max(4, n_qubits)
+    half = n // 2
+    qc = QuantumCircuit(n)
+
+    a_reg = list(range(half))
+    b_reg = list(range(half, n))
+
+    # QFT on b register
+    for i in range(half):
+        qc.h(b_reg[i])
+        for j in range(i + 1, half):
+            angle = np.pi / (2 ** (j - i))
+            qc.cp(angle, b_reg[j], b_reg[i])
+
+    # Controlled-phase addition
+    for i in range(half):
+        for j in range(half):
+            if i + j < half:
+                angle = np.pi / (2 ** (j))
+                qc.cp(angle, a_reg[i], b_reg[i + j])
+
+    # Inverse QFT on b register
+    for i in range(half - 1, -1, -1):
+        for j in range(half - 1, i, -1):
+            angle = -np.pi / (2 ** (j - i))
+            qc.cp(angle, b_reg[j], b_reg[i])
+        qc.h(b_reg[i])
+
+    return qc
+
+
+# ── Phase 2: Oracle Family (additional) ────────────────────────────
+
+
+def make_quantum_counting(n_qubits=5, **kwargs) -> QuantumCircuit:
+    """Quantum counting: QPE applied to Grover's diffusion operator.
+
+    Uses n_counting qubits for phase estimation + n_search qubits for Grover.
+    Simplified to use 2 counting + (n-2) search qubits.
+    """
+    n = max(5, n_qubits)
+    n_counting = 2
+    n_search = n - n_counting
+
+    qc = QuantumCircuit(n)
+
+    # Initialize search register in uniform superposition
+    for i in range(n_counting, n):
+        qc.h(i)
+
+    # QPE counting register
+    for i in range(n_counting):
+        qc.h(i)
+
+    # Controlled Grover iterations (simplified: controlled diffusion)
+    for c in range(n_counting):
+        reps = 2 ** c
+        for _ in range(reps):
+            # Controlled-Z oracle (mark |0...0>)
+            for s in range(n_counting, n):
+                qc.x(s)
+            # Controlled multi-Z via CX chain
+            qc.cx(c, n_counting)
+            for s in range(n_counting, n - 1):
+                qc.cx(s, s + 1)
+            qc.cx(c, n - 1)
+            for s in range(n - 2, n_counting - 1, -1):
+                qc.cx(s, s + 1)
+            for s in range(n_counting, n):
+                qc.x(s)
+            # Diffusion
+            for s in range(n_counting, n):
+                qc.h(s)
+                qc.x(s)
+            qc.cx(c, n_counting)
+            for s in range(n_counting, n - 1):
+                qc.cx(s, s + 1)
+            qc.cx(c, n - 1)
+            for s in range(n - 2, n_counting - 1, -1):
+                qc.cx(s, s + 1)
+            for s in range(n_counting, n):
+                qc.x(s)
+                qc.h(s)
+
+    # Inverse QFT on counting register
+    qc.h(0)
+    qc.cp(-np.pi / 2, 0, 1)
+    qc.h(1)
+
+    return qc
+
+
+# ── Phase 2: Protocol Family (additional) ──────────────────────────
+
+
+def make_entanglement_swapping(n_qubits=4, **kwargs) -> QuantumCircuit:
+    """Entanglement swapping: extend entanglement via Bell measurement.
+
+    4 qubits: (0,1) form Bell pair, (2,3) form Bell pair.
+    Bell measurement on (1,2) entangles (0,3).
+    """
+    qc = QuantumCircuit(4)
+    # Create two Bell pairs: (0,1) and (2,3)
+    qc.h(0)
+    qc.cx(0, 1)
+    qc.h(2)
+    qc.cx(2, 3)
+    # Bell measurement on (1,2)
+    qc.cx(1, 2)
+    qc.h(1)
+    return qc
+
+
+# ── Phase 2: Machine Learning Family ──────────────────────────────
+
+
+def make_quantum_kernel(n_qubits=4, **kwargs) -> QuantumCircuit:
+    """ZZFeatureMap-style quantum kernel circuit.
+
+    Encodes classical data with H + RZ (single-qubit) + CX-RZ-CX (ZZ interaction).
+    Two repetitions of the feature map.
+    """
+    n = max(2, n_qubits)
+    qc = QuantumCircuit(n)
+    rng = np.random.default_rng(123)
+
+    for _rep in range(2):
+        # Single-qubit encoding
+        for i in range(n):
+            qc.h(i)
+            qc.rz(rng.uniform(0, 2 * np.pi), i)
+        # ZZ entangling feature map
+        for i in range(n - 1):
+            qc.cx(i, i + 1)
+            qc.rz(rng.uniform(0, 2 * np.pi), i + 1)
+            qc.cx(i, i + 1)
+    return qc
+
+
+def make_data_reuploading(n_qubits=2, layers=3, **kwargs) -> QuantumCircuit:
+    """Data re-uploading classifier: layered RY/RZ + CX.
+
+    Each layer re-encodes data via RY/RZ rotations, interleaved with CX.
+    """
+    n = max(2, n_qubits)
+    qc = QuantumCircuit(n)
+    rng = np.random.default_rng(456)
+
+    for _layer in range(layers):
+        # Data encoding + trainable rotations
+        for i in range(n):
+            qc.ry(rng.uniform(0, 2 * np.pi), i)
+            qc.rz(rng.uniform(0, 2 * np.pi), i)
+        # Entangling layer
+        for i in range(n - 1):
+            qc.cx(i, i + 1)
+    return qc
+
+
 # ── Registry ────────────────────────────────────────────────────────
 
 REGISTRY = [
@@ -250,6 +729,86 @@ REGISTRY = [
     AlgorithmEntry(
         "hw_efficient_ansatz", "variational", make_hardware_efficient_ansatz, (3, 8),
         tags=["hardware_efficient", "brick_layer"],
+    ),
+    # ── Error Correction ───────────────────────────────────────────
+    AlgorithmEntry(
+        "bit_flip_code", "error_correction", make_bit_flip_code, (5, 5),
+        tags=["repetition_code", "syndrome_extraction", "toffoli"],
+    ),
+    AlgorithmEntry(
+        "phase_flip_code", "error_correction", make_phase_flip_code, (5, 5),
+        tags=["repetition_code", "hadamard_basis", "toffoli"],
+    ),
+    AlgorithmEntry(
+        "steane_code", "error_correction", make_steane_code, (7, 7),
+        tags=["css_code", "hamming", "stabilizer"],
+    ),
+    # ── Simulation ─────────────────────────────────────────────────
+    AlgorithmEntry(
+        "trotter_ising", "simulation", make_trotter_ising, (2, 8),
+        tags=["hamiltonian_simulation", "zz_interaction", "trotter"],
+    ),
+    AlgorithmEntry(
+        "trotter_heisenberg", "simulation", make_trotter_heisenberg, (2, 8),
+        tags=["hamiltonian_simulation", "trotter", "mixed_interaction"],
+    ),
+    # ── Arithmetic ─────────────────────────────────────────────────
+    AlgorithmEntry(
+        "ripple_carry_adder", "arithmetic", make_ripple_carry_adder, (5, 5),
+        tags=["toffoli", "addition", "classical_reversible"],
+    ),
+    # ── Additional Oracle ──────────────────────────────────────────
+    AlgorithmEntry(
+        "simon", "oracle", make_simon, (4, 8),
+        tags=["hidden_structure", "oracle", "xor_mask"],
+    ),
+    # ── Additional Entanglement ────────────────────────────────────
+    AlgorithmEntry(
+        "w_state", "entanglement", make_w_state, (3, 8),
+        tags=["entanglement", "multipartite", "arbitrary_rotation"],
+    ),
+    AlgorithmEntry(
+        "cluster_state", "entanglement", make_cluster_state, (2, 8),
+        tags=["graph_state", "mbqc", "cz_only"],
+    ),
+    # ── Additional Protocol ────────────────────────────────────────
+    AlgorithmEntry(
+        "superdense_coding", "protocol", make_superdense_coding, (2, 2),
+        tags=["communication", "bell_pair", "dense_coding"],
+    ),
+    # ── Phase 2: Error Correction ──────────────────────────────────
+    AlgorithmEntry(
+        "shor_code", "error_correction", make_shor_code, (9, 9),
+        tags=["concatenated_code", "nine_qubit"],
+    ),
+    # ── Phase 2: Simulation ────────────────────────────────────────
+    AlgorithmEntry(
+        "quantum_walk", "simulation", make_quantum_walk, (3, 6),
+        tags=["discrete_walk", "coin_operator"],
+    ),
+    # ── Phase 2: Arithmetic ────────────────────────────────────────
+    AlgorithmEntry(
+        "qft_adder", "arithmetic", make_qft_adder, (4, 8),
+        tags=["addition", "controlled_phase", "qft_based"],
+    ),
+    # ── Phase 2: Oracle ────────────────────────────────────────────
+    AlgorithmEntry(
+        "quantum_counting", "oracle", make_quantum_counting, (5, 8),
+        tags=["grover_qpe", "counting", "hybrid"],
+    ),
+    # ── Phase 2: Protocol ──────────────────────────────────────────
+    AlgorithmEntry(
+        "entanglement_swapping", "protocol", make_entanglement_swapping, (4, 4),
+        tags=["bell_measurement", "relay", "teleportation_variant"],
+    ),
+    # ── Phase 2: Machine Learning ──────────────────────────────────
+    AlgorithmEntry(
+        "quantum_kernel", "machine_learning", make_quantum_kernel, (2, 8),
+        tags=["feature_map", "zz_interaction", "kernel_method"],
+    ),
+    AlgorithmEntry(
+        "data_reuploading", "machine_learning", make_data_reuploading, (2, 6),
+        tags=["classifier", "reuploading", "variational"],
     ),
 ]
 
