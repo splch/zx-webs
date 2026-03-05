@@ -1,0 +1,4115 @@
+{
+  "n_circuits": 64,
+  "n_standards": 15,
+  "n_candidates": 49,
+  "standards": [
+    "std_phase_estimation",
+    "std_qaoa_maxcut",
+    "std_w_state",
+    "std_ghz_state",
+    "std_teleportation",
+    "std_bbpssw_distillation",
+    "std_iqp_sampling",
+    "std_bell_state",
+    "std_qft",
+    "std_bit_flip_code",
+    "std_cluster_state",
+    "std_trotter_ising",
+    "std_bb84_encode",
+    "std_grover",
+    "std_vqe_uccsd"
+  ],
+  "metrics": {
+    "std_bell_state": {
+      "name": "std_bell_state",
+      "n_qubits": 2,
+      "total_gates": 2,
+      "n_1q_gates": 1,
+      "n_2q_gates": 1,
+      "depth": 2,
+      "gates_per_qubit": 1.0,
+      "two_qubit_ratio": 0.5,
+      "raw_vertices": 7,
+      "raw_edges": 6,
+      "reduced_vertices": 6,
+      "reduced_edges": 5,
+      "compression_ratio": 0.1428571428571429,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 7,
+          "edges": 6,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 6,
+          "edges": 5,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 6,
+          "edges": 5,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 6,
+          "edges": 5,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 6,
+          "edges": 5,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 7,
+          "edges": 6,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9989001,
+      "fidelity_p0.005": 0.9945025000000001,
+      "fidelity_p0.01": 0.98901,
+      "fidelity_p0.05": 0.9452499999999999,
+      "exact_fidelity_p0.001": 0.999175075266285,
+      "exact_fidelity_p0.005": 0.9958768755943398,
+      "exact_fidelity_p0.01": 0.991757500838592,
+      "exact_fidelity_p0.05": 0.9589375018405045,
+      "von_neumann_entropy": 1.0,
+      "concurrence": 0.0,
+      "purity": 0.4999999999999998
+    },
+    "std_ghz_state": {
+      "name": "std_ghz_state",
+      "n_qubits": 4,
+      "total_gates": 4,
+      "n_1q_gates": 1,
+      "n_2q_gates": 3,
+      "depth": 4,
+      "gates_per_qubit": 1.0,
+      "two_qubit_ratio": 0.75,
+      "raw_vertices": 15,
+      "raw_edges": 14,
+      "reduced_vertices": 14,
+      "reduced_edges": 13,
+      "compression_ratio": 0.06666666666666665,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 15,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 14,
+          "edges": 13,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 14,
+          "edges": 13,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 14,
+          "edges": 13,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 14,
+          "edges": 13,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 15,
+          "edges": 14,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9969032987001,
+      "fidelity_p0.005": 0.9845823375625,
+      "fidelity_p0.01": 0.969328701,
+      "fidelity_p0.05": 0.8530881249999999,
+      "exact_fidelity_p0.001": 0.997096842754514,
+      "exact_fidelity_p0.005": 0.9855459419599149,
+      "exact_fidelity_p0.01": 0.9712456578806868,
+      "exact_fidelity_p0.05": 0.8622701186169518,
+      "von_neumann_entropy": 1.0,
+      "concurrence": 0.0,
+      "purity": 0.4999999999999998
+    },
+    "std_cluster_state": {
+      "name": "std_cluster_state",
+      "n_qubits": 4,
+      "total_gates": 7,
+      "n_1q_gates": 4,
+      "n_2q_gates": 3,
+      "depth": 4,
+      "gates_per_qubit": 1.75,
+      "two_qubit_ratio": 0.42857142857142855,
+      "raw_vertices": 18,
+      "raw_edges": 17,
+      "reduced_vertices": 12,
+      "reduced_edges": 11,
+      "compression_ratio": 0.33333333333333337,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 18,
+          "edges": 17,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 12,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 12,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 12,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 12,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 18,
+          "edges": 17,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.996604257616592,
+      "fidelity_p0.005": 0.9831062023698368,
+      "fidelity_p0.01": 0.9664236219137744,
+      "fidelity_p0.05": 0.8403556780983592,
+      "exact_fidelity_p0.001": 0.9968164915897476,
+      "exact_fidelity_p0.005": 0.9841620648861563,
+      "exact_fidelity_p0.01": 0.9685221457741341,
+      "exact_fidelity_p0.05": 0.850333448687076,
+      "von_neumann_entropy": 1.0,
+      "concurrence": 2.220446049250313e-16,
+      "purity": 0.49999999999999944
+    },
+    "std_w_state": {
+      "name": "std_w_state",
+      "n_qubits": 4,
+      "total_gates": 13,
+      "n_1q_gates": 7,
+      "n_2q_gates": 6,
+      "depth": 10,
+      "gates_per_qubit": 3.25,
+      "two_qubit_ratio": 0.46153846153846156,
+      "raw_vertices": 39,
+      "raw_edges": 41,
+      "reduced_vertices": 22,
+      "reduced_edges": 26,
+      "compression_ratio": 0.4358974358974359,
+      "t_count": 2,
+      "levels": {
+        "raw": {
+          "vertices": 39,
+          "edges": 41,
+          "t_gates": 2
+        },
+        "spider_fused": {
+          "vertices": 36,
+          "edges": 38,
+          "t_gates": 2
+        },
+        "interior_cliff": {
+          "vertices": 22,
+          "edges": 26,
+          "t_gates": 2
+        },
+        "clifford_simp": {
+          "vertices": 22,
+          "edges": 26,
+          "t_gates": 2
+        },
+        "full_reduce": {
+          "vertices": 22,
+          "edges": 26,
+          "t_gates": 2
+        },
+        "teleport_reduce": {
+          "vertices": 39,
+          "edges": 41,
+          "t_gates": 2
+        }
+      },
+      "fidelity_p0.001": 0.9933193782373423,
+      "fidelity_p0.005": 0.9669812957859355,
+      "fidelity_p0.01": 0.9349095265194572,
+      "fidelity_p0.05": 0.7097463977006565,
+      "exact_fidelity_p0.001": 0.9937369181773731,
+      "exact_fidelity_p0.005": 0.969044967170019,
+      "exact_fidelity_p0.01": 0.9389776843885033,
+      "exact_fidelity_p0.05": 0.7278872539361754,
+      "von_neumann_entropy": 0.6008760366928558,
+      "concurrence": 0.0,
+      "purity": 0.75
+    },
+    "std_teleportation": {
+      "name": "std_teleportation",
+      "n_qubits": 3,
+      "total_gates": 4,
+      "n_1q_gates": 2,
+      "n_2q_gates": 2,
+      "depth": 4,
+      "gates_per_qubit": 1.3333333333333333,
+      "two_qubit_ratio": 0.5,
+      "raw_vertices": 12,
+      "raw_edges": 11,
+      "reduced_vertices": 10,
+      "reduced_edges": 9,
+      "compression_ratio": 0.16666666666666663,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 12,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 11,
+          "edges": 10,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 10,
+          "edges": 9,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 10,
+          "edges": 9,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 10,
+          "edges": 9,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 12,
+          "edges": 11,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9978014097800101,
+      "fidelity_p0.005": 0.9890352225062502,
+      "fidelity_p0.01": 0.9781407801,
+      "fidelity_p0.05": 0.8934975625,
+      "exact_fidelity_p0.001": 0.9980762336447632,
+      "exact_fidelity_p0.005": 0.9904058198870755,
+      "exact_fidelity_p0.01": 0.9808731828602435,
+      "exact_fidelity_p0.05": 0.9068103677663532,
+      "von_neumann_entropy": 1.601713251907458e-15,
+      "concurrence": 0.0,
+      "purity": 0.9999999999999991
+    },
+    "std_grover": {
+      "name": "std_grover",
+      "n_qubits": 4,
+      "total_gates": 34,
+      "n_1q_gates": 32,
+      "n_2q_gates": 2,
+      "depth": 13,
+      "gates_per_qubit": 8.5,
+      "two_qubit_ratio": 0.058823529411764705,
+      "raw_vertices": 130,
+      "raw_edges": 154,
+      "reduced_vertices": 68,
+      "reduced_edges": 110,
+      "compression_ratio": 0.4769230769230769,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 130,
+          "edges": 154,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 104,
+          "edges": 128,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 68,
+          "edges": 108,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 68,
+          "edges": 108,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 68,
+          "edges": 110,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 130,
+          "edges": 154,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9948123419384622,
+      "fidelity_p0.005": 0.9743067515033668,
+      "fidelity_p0.01": 0.9492181033519121,
+      "fidelity_p0.05": 0.768751178289313,
+      "exact_fidelity_p0.001": 0.9951365742028835,
+      "exact_fidelity_p0.005": 0.9759125875467913,
+      "exact_fidelity_p0.01": 0.9523919830202109,
+      "exact_fidelity_p0.05": 0.7832042511802089,
+      "von_neumann_entropy": 0.42502268017855294,
+      "concurrence": 0.18749999999999906,
+      "purity": 0.841796874999993
+    },
+    "std_qft": {
+      "name": "std_qft",
+      "n_qubits": 4,
+      "total_gates": 12,
+      "n_1q_gates": 4,
+      "n_2q_gates": 8,
+      "depth": 8,
+      "gates_per_qubit": 3.0,
+      "two_qubit_ratio": 0.6666666666666666,
+      "raw_vertices": 66,
+      "raw_edges": 80,
+      "reduced_vertices": 26,
+      "reduced_edges": 28,
+      "compression_ratio": 0.6060606060606061,
+      "t_count": 9,
+      "levels": {
+        "raw": {
+          "vertices": 66,
+          "edges": 80,
+          "t_gates": 9
+        },
+        "spider_fused": {
+          "vertices": 49,
+          "edges": 63,
+          "t_gates": 7
+        },
+        "interior_cliff": {
+          "vertices": 33,
+          "edges": 41,
+          "t_gates": 7
+        },
+        "clifford_simp": {
+          "vertices": 36,
+          "edges": 61,
+          "t_gates": 6
+        },
+        "full_reduce": {
+          "vertices": 26,
+          "edges": 28,
+          "t_gates": 5
+        },
+        "teleport_reduce": {
+          "vertices": 66,
+          "edges": 80,
+          "t_gates": 5
+        }
+      },
+      "fidelity_p0.001": 0.9916311924100246,
+      "fidelity_p0.005": 0.958773098047565,
+      "fidelity_p0.01": 0.919059248428319,
+      "fidelity_p0.05": 0.6502512044323965,
+      "exact_fidelity_p0.001": 0.9921542430006017,
+      "exact_fidelity_p0.005": 0.961349779673473,
+      "exact_fidelity_p0.01": 0.9241180457503243,
+      "exact_fidelity_p0.05": 0.6721105047736708,
+      "von_neumann_entropy": 9.61027951144475e-16,
+      "concurrence": 2.24682651307888e-20,
+      "purity": 0.999999999999999
+    },
+    "std_phase_estimation": {
+      "name": "std_phase_estimation",
+      "n_qubits": 4,
+      "total_gates": 18,
+      "n_1q_gates": 7,
+      "n_2q_gates": 11,
+      "depth": 14,
+      "gates_per_qubit": 4.5,
+      "two_qubit_ratio": 0.6111111111111112,
+      "raw_vertices": 91,
+      "raw_edges": 110,
+      "reduced_vertices": 24,
+      "reduced_edges": 28,
+      "compression_ratio": 0.7362637362637363,
+      "t_count": 6,
+      "levels": {
+        "raw": {
+          "vertices": 91,
+          "edges": 110,
+          "t_gates": 6
+        },
+        "spider_fused": {
+          "vertices": 58,
+          "edges": 77,
+          "t_gates": 6
+        },
+        "interior_cliff": {
+          "vertices": 53,
+          "edges": 71,
+          "t_gates": 6
+        },
+        "clifford_simp": {
+          "vertices": 35,
+          "edges": 69,
+          "t_gates": 5
+        },
+        "full_reduce": {
+          "vertices": 24,
+          "edges": 28,
+          "t_gates": 5
+        },
+        "teleport_reduce": {
+          "vertices": 91,
+          "edges": 110,
+          "t_gates": 5
+        }
+      },
+      "fidelity_p0.001": 0.9883627046117097,
+      "fidelity_p0.005": 0.9430473030074086,
+      "fidelity_p0.01": 0.889089657276724,
+      "fidelity_p0.05": 0.5491882330000617,
+      "exact_fidelity_p0.001": 0.9890900374959023,
+      "exact_fidelity_p0.005": 0.9466068507299628,
+      "exact_fidelity_p0.01": 0.8960215593456562,
+      "exact_fidelity_p0.05": 0.5773639775792785,
+      "von_neumann_entropy": 1.6017132519074591e-15,
+      "concurrence": 1.7091115176909596e-16,
+      "purity": 0.9999999999999978
+    },
+    "std_qaoa_maxcut": {
+      "name": "std_qaoa_maxcut",
+      "n_qubits": 4,
+      "total_gates": 20,
+      "n_1q_gates": 12,
+      "n_2q_gates": 8,
+      "depth": 14,
+      "gates_per_qubit": 5.0,
+      "two_qubit_ratio": 0.4,
+      "raw_vertices": 36,
+      "raw_edges": 40,
+      "reduced_vertices": 21,
+      "reduced_edges": 31,
+      "compression_ratio": 0.41666666666666663,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 36,
+          "edges": 40,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 30,
+          "edges": 34,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 21,
+          "edges": 29,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 21,
+          "edges": 29,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 21,
+          "edges": 31,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 36,
+          "edges": 40,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9908381650573063,
+      "fidelity_p0.005": 0.9549447103598429,
+      "fidelity_p0.01": 0.9117324566968131,
+      "fidelity_p0.05": 0.6246918086747525,
+      "exact_fidelity_p0.001": 0.9914107825698123,
+      "exact_fidelity_p0.005": 0.9577606721276423,
+      "exact_fidelity_p0.01": 0.9172491865981949,
+      "exact_fidelity_p0.05": 0.648148585270637,
+      "von_neumann_entropy": 0.664449024935101,
+      "concurrence": 0.3058110688709812,
+      "purity": 0.7833587760584519
+    },
+    "std_vqe_uccsd": {
+      "name": "std_vqe_uccsd",
+      "n_qubits": 4,
+      "total_gates": 9,
+      "n_1q_gates": 3,
+      "n_2q_gates": 6,
+      "depth": 8,
+      "gates_per_qubit": 2.25,
+      "two_qubit_ratio": 0.6666666666666666,
+      "raw_vertices": 23,
+      "raw_edges": 25,
+      "reduced_vertices": 15,
+      "reduced_edges": 17,
+      "compression_ratio": 0.34782608695652173,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 23,
+          "edges": 25,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 19,
+          "edges": 21,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 15,
+          "edges": 17,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 15,
+          "edges": 17,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 15,
+          "edges": 17,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 23,
+          "edges": 25,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9937168053404448,
+      "fidelity_p0.005": 0.9689176782503168,
+      "fidelity_p0.01": 0.938658532451765,
+      "fidelity_p0.05": 0.7241205522709354,
+      "exact_fidelity_p0.001": 0.9941095050066667,
+      "exact_fidelity_p0.005": 0.9708603233596723,
+      "exact_fidelity_p0.01": 0.942492374173529,
+      "exact_fidelity_p0.05": 0.7413630177540019,
+      "von_neumann_entropy": 1.6017132519074586e-16,
+      "concurrence": 0.0,
+      "purity": 0.9999999999999998
+    },
+    "std_trotter_ising": {
+      "name": "std_trotter_ising",
+      "n_qubits": 4,
+      "total_gates": 13,
+      "n_1q_gates": 7,
+      "n_2q_gates": 6,
+      "depth": 10,
+      "gates_per_qubit": 3.25,
+      "two_qubit_ratio": 0.46153846153846156,
+      "raw_vertices": 27,
+      "raw_edges": 29,
+      "reduced_vertices": 19,
+      "reduced_edges": 23,
+      "compression_ratio": 0.2962962962962963,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 27,
+          "edges": 29,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 23,
+          "edges": 25,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 19,
+          "edges": 23,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 19,
+          "edges": 23,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 19,
+          "edges": 23,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 27,
+          "edges": 29,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9933193782373423,
+      "fidelity_p0.005": 0.9669812957859355,
+      "fidelity_p0.01": 0.9349095265194572,
+      "fidelity_p0.05": 0.7097463977006565,
+      "exact_fidelity_p0.001": 0.9937369177525484,
+      "exact_fidelity_p0.005": 0.969044966237374,
+      "exact_fidelity_p0.01": 0.9389776830995078,
+      "exact_fidelity_p0.05": 0.7278872515396316,
+      "von_neumann_entropy": 2.555399899174036e-15,
+      "concurrence": 0.0,
+      "purity": 1.0000000000000002
+    },
+    "std_bit_flip_code": {
+      "name": "std_bit_flip_code",
+      "n_qubits": 5,
+      "total_gates": 21,
+      "n_1q_gates": 9,
+      "n_2q_gates": 12,
+      "depth": 16,
+      "gates_per_qubit": 4.2,
+      "two_qubit_ratio": 0.5714285714285714,
+      "raw_vertices": 43,
+      "raw_edges": 50,
+      "reduced_vertices": 27,
+      "reduced_edges": 35,
+      "compression_ratio": 0.37209302325581395,
+      "t_count": 7,
+      "levels": {
+        "raw": {
+          "vertices": 43,
+          "edges": 50,
+          "t_gates": 7
+        },
+        "spider_fused": {
+          "vertices": 32,
+          "edges": 39,
+          "t_gates": 7
+        },
+        "interior_cliff": {
+          "vertices": 28,
+          "edges": 39,
+          "t_gates": 7
+        },
+        "clifford_simp": {
+          "vertices": 30,
+          "edges": 50,
+          "t_gates": 6
+        },
+        "full_reduce": {
+          "vertices": 27,
+          "edges": 35,
+          "t_gates": 7
+        },
+        "teleport_reduce": {
+          "vertices": 43,
+          "edges": 50,
+          "t_gates": 7
+        }
+      },
+      "fidelity_p0.001": 0.98717687691246,
+      "fidelity_p0.005": 0.9373939690088958,
+      "fidelity_p0.01": 0.8784392433813095,
+      "fidelity_p0.05": 0.5165245763570917,
+      "exact_fidelity_p0.001": 0.9875776118378806,
+      "exact_fidelity_p0.005": 0.9393504340457403,
+      "exact_fidelity_p0.01": 0.8822380529040085,
+      "exact_fidelity_p0.05": 0.5316332388898259,
+      "von_neumann_entropy": 9.61027951144475e-16,
+      "concurrence": 0.0,
+      "purity": 0.9999999999999987
+    },
+    "std_bbpssw_distillation": {
+      "name": "std_bbpssw_distillation",
+      "n_qubits": 4,
+      "total_gates": 6,
+      "n_1q_gates": 2,
+      "n_2q_gates": 4,
+      "depth": 3,
+      "gates_per_qubit": 1.5,
+      "two_qubit_ratio": 0.6666666666666666,
+      "raw_vertices": 18,
+      "raw_edges": 18,
+      "reduced_vertices": 14,
+      "reduced_edges": 14,
+      "compression_ratio": 0.2222222222222222,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 18,
+          "edges": 18,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 18,
+          "edges": 18,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9958068047618599,
+      "fidelity_p0.005": 0.9791695961617503,
+      "fidelity_p0.01": 0.9586757785760099,
+      "fidelity_p0.05": 0.8063815501562499,
+      "exact_fidelity_p0.001": 0.9960688795493627,
+      "exact_fidelity_p0.005": 0.9804714965898672,
+      "exact_fidelity_p0.01": 0.961258542677513,
+      "exact_fidelity_p0.05": 0.8184827037958005,
+      "von_neumann_entropy": 1.601713251907458e-15,
+      "concurrence": 0.9999999999999996,
+      "purity": 0.9999999999999991
+    },
+    "std_bb84_encode": {
+      "name": "std_bb84_encode",
+      "n_qubits": 4,
+      "total_gates": 4,
+      "n_1q_gates": 4,
+      "n_2q_gates": 0,
+      "depth": 2,
+      "gates_per_qubit": 1.0,
+      "two_qubit_ratio": 0.0,
+      "raw_vertices": 12,
+      "raw_edges": 8,
+      "reduced_vertices": 10,
+      "reduced_edges": 6,
+      "compression_ratio": 0.16666666666666663,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 12,
+          "edges": 8,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 12,
+          "edges": 8,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 10,
+          "edges": 6,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 10,
+          "edges": 6,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 10,
+          "edges": 6,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 12,
+          "edges": 8,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9996000599960001,
+      "fidelity_p0.005": 0.9980014995000627,
+      "fidelity_p0.01": 0.996005996001,
+      "fidelity_p0.05": 0.980149500625,
+      "exact_fidelity_p0.001": 0.9996250562725847,
+      "exact_fidelity_p0.005": 0.9981264058401332,
+      "exact_fidelity_p0.01": 0.9962556213340182,
+      "exact_fidelity_p0.05": 0.9813901570197702,
+      "von_neumann_entropy": 1.601713251907458e-15,
+      "concurrence": 0.0,
+      "purity": 0.9999999999999991
+    },
+    "std_iqp_sampling": {
+      "name": "std_iqp_sampling",
+      "n_qubits": 4,
+      "total_gates": 14,
+      "n_1q_gates": 10,
+      "n_2q_gates": 4,
+      "depth": 6,
+      "gates_per_qubit": 3.5,
+      "two_qubit_ratio": 0.2857142857142857,
+      "raw_vertices": 26,
+      "raw_edges": 26,
+      "reduced_vertices": 12,
+      "reduced_edges": 12,
+      "compression_ratio": 0.5384615384615384,
+      "t_count": 2,
+      "levels": {
+        "raw": {
+          "vertices": 26,
+          "edges": 26,
+          "t_gates": 2
+        },
+        "spider_fused": {
+          "vertices": 16,
+          "edges": 16,
+          "t_gates": 2
+        },
+        "interior_cliff": {
+          "vertices": 12,
+          "edges": 12,
+          "t_gates": 2
+        },
+        "clifford_simp": {
+          "vertices": 12,
+          "edges": 12,
+          "t_gates": 2
+        },
+        "full_reduce": {
+          "vertices": 12,
+          "edges": 12,
+          "t_gates": 2
+        },
+        "teleport_reduce": {
+          "vertices": 26,
+          "edges": 26,
+          "t_gates": 2
+        }
+      },
+      "fidelity_p0.001": 0.9950104380881976,
+      "fidelity_p0.005": 0.9752597651143718,
+      "fidelity_p0.01": 0.9510331616504121,
+      "fidelity_p0.05": 0.7746851457026864,
+      "exact_fidelity_p0.001": 0.9953222866874674,
+      "exact_fidelity_p0.005": 0.9768060319560685,
+      "exact_fidelity_p0.01": 0.9540935920524012,
+      "exact_fidelity_p0.05": 0.7887673299574862,
+      "von_neumann_entropy": 1.9999999999999991,
+      "concurrence": 0.0,
+      "purity": 0.24999999999999928
+    },
+    "covgap_distillation_q5": {
+      "name": "covgap_distillation_q5",
+      "n_qubits": 4,
+      "total_gates": 6,
+      "n_1q_gates": 0,
+      "n_2q_gates": 6,
+      "depth": 6,
+      "gates_per_qubit": 1.5,
+      "two_qubit_ratio": 1.0,
+      "raw_vertices": 20,
+      "raw_edges": 22,
+      "reduced_vertices": 15,
+      "reduced_edges": 16,
+      "compression_ratio": 0.25,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 20,
+          "edges": 22,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 18,
+          "edges": 20,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 15,
+          "edges": 16,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 15,
+          "edges": 16,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 15,
+          "edges": 16,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 20,
+          "edges": 22,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.994014980014994,
+      "fidelity_p0.005": 0.9703725093562656,
+      "fidelity_p0.01": 0.941480149401,
+      "fidelity_p0.05": 0.7350918906249998,
+      "exact_fidelity_p0.001": 0.9943890437640565,
+      "exact_fidelity_p0.005": 0.9722242275214992,
+      "exact_fidelity_p0.01": 0.9451376400634374,
+      "exact_fidelity_p0.05": 0.7516486474609374,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.1579,
+      "pca_isolation": 0.0112,
+      "motif_diversity": 0.0402,
+      "composite_novelty": 0.2661
+    },
+    "covgap_cryptography_q4": {
+      "name": "covgap_cryptography_q4",
+      "n_qubits": 4,
+      "total_gates": 10,
+      "n_1q_gates": 0,
+      "n_2q_gates": 10,
+      "depth": 9,
+      "gates_per_qubit": 2.5,
+      "two_qubit_ratio": 1.0,
+      "raw_vertices": 28,
+      "raw_edges": 34,
+      "reduced_vertices": 16,
+      "reduced_edges": 18,
+      "compression_ratio": 0.4285714285714286,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 28,
+          "edges": 34,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 20,
+          "edges": 24,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 16,
+          "edges": 18,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 16,
+          "edges": 18,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 16,
+          "edges": 18,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 28,
+          "edges": 34,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9900448802097482,
+      "fidelity_p0.005": 0.9511101304657719,
+      "fidelity_p0.01": 0.9043820750088044,
+      "fidelity_p0.05": 0.5987369392383787,
+      "exact_fidelity_p0.001": 0.9906670751966383,
+      "exact_fidelity_p0.005": 0.9541657473116616,
+      "exact_fidelity_p0.01": 0.910358195320754,
+      "exact_fidelity_p0.05": 0.6238158805359801,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.3158,
+      "pca_isolation": 0.0882,
+      "motif_diversity": 0.0344,
+      "composite_novelty": 0.3395
+    },
+    "covgap_sampling_q4": {
+      "name": "covgap_sampling_q4",
+      "n_qubits": 4,
+      "total_gates": 10,
+      "n_1q_gates": 0,
+      "n_2q_gates": 10,
+      "depth": 9,
+      "gates_per_qubit": 2.5,
+      "two_qubit_ratio": 1.0,
+      "raw_vertices": 28,
+      "raw_edges": 34,
+      "reduced_vertices": 14,
+      "reduced_edges": 15,
+      "compression_ratio": 0.5,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 28,
+          "edges": 34,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 20,
+          "edges": 26,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 14,
+          "edges": 15,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 14,
+          "edges": 15,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 14,
+          "edges": 15,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 28,
+          "edges": 34,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9900448802097482,
+      "fidelity_p0.005": 0.9511101304657719,
+      "fidelity_p0.01": 0.9043820750088044,
+      "fidelity_p0.05": 0.5987369392383787,
+      "exact_fidelity_p0.001": 0.9906670751966383,
+      "exact_fidelity_p0.005": 0.9541657473116616,
+      "exact_fidelity_p0.01": 0.910358195320754,
+      "exact_fidelity_p0.05": 0.6238158805359801,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.0911,
+      "pca_isolation": 0.0436,
+      "motif_diversity": 0.0373,
+      "composite_novelty": 0.2502
+    },
+    "bridge_comm_prot_q4": {
+      "name": "bridge_comm_prot_q4",
+      "n_qubits": 4,
+      "total_gates": 9,
+      "n_1q_gates": 2,
+      "n_2q_gates": 7,
+      "depth": 6,
+      "gates_per_qubit": 2.25,
+      "two_qubit_ratio": 0.7777777777777778,
+      "raw_vertices": 24,
+      "raw_edges": 27,
+      "reduced_vertices": 14,
+      "reduced_edges": 14,
+      "compression_ratio": 0.41666666666666663,
+      "t_count": 2,
+      "levels": {
+        "raw": {
+          "vertices": 24,
+          "edges": 27,
+          "t_gates": 2
+        },
+        "spider_fused": {
+          "vertices": 21,
+          "edges": 24,
+          "t_gates": 2
+        },
+        "interior_cliff": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 2
+        },
+        "clifford_simp": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 2
+        },
+        "full_reduce": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 2
+        },
+        "teleport_reduce": {
+          "vertices": 24,
+          "edges": 27,
+          "t_gates": 2
+        }
+      },
+      "fidelity_p0.001": 0.9928223707721818,
+      "fidelity_p0.005": 0.9645553675428366,
+      "fidelity_p0.01": 0.9302021492765239,
+      "fidelity_p0.05": 0.6913713815652146,
+      "exact_fidelity_p0.001": 0.9932709725989202,
+      "exact_fidelity_p0.005": 0.9667706570714099,
+      "exact_fidelity_p0.01": 0.9345645149467409,
+      "exact_fidelity_p0.05": 0.7106606702173891,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.3781,
+      "pca_isolation": 0.0141,
+      "motif_diversity": 0.0359,
+      "composite_novelty": 0.3431
+    },
+    "bridge_dist_enta_q4": {
+      "name": "bridge_dist_enta_q4",
+      "n_qubits": 4,
+      "total_gates": 5,
+      "n_1q_gates": 0,
+      "n_2q_gates": 5,
+      "depth": 5,
+      "gates_per_qubit": 1.25,
+      "two_qubit_ratio": 1.0,
+      "raw_vertices": 18,
+      "raw_edges": 19,
+      "reduced_vertices": 14,
+      "reduced_edges": 14,
+      "compression_ratio": 0.2222222222222222,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 18,
+          "edges": 19,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 16,
+          "edges": 17,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 18,
+          "edges": 19,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.995009990004999,
+      "fidelity_p0.005": 0.975248753121875,
+      "fidelity_p0.01": 0.9509900498999999,
+      "fidelity_p0.05": 0.7737809374999998,
+      "exact_fidelity_p0.001": 0.9953218656296862,
+      "exact_fidelity_p0.005": 0.976795706051758,
+      "exact_fidelity_p0.01": 0.9540531717812499,
+      "exact_fidelity_p0.05": 0.7879196289062498,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.1136,
+      "pca_isolation": 0.0573,
+      "motif_diversity": 0.0215,
+      "composite_novelty": 0.2584
+    },
+    "bridge_enta_prot_q4": {
+      "name": "bridge_enta_prot_q4",
+      "n_qubits": 4,
+      "total_gates": 10,
+      "n_1q_gates": 0,
+      "n_2q_gates": 10,
+      "depth": 9,
+      "gates_per_qubit": 2.5,
+      "two_qubit_ratio": 1.0,
+      "raw_vertices": 28,
+      "raw_edges": 34,
+      "reduced_vertices": 13,
+      "reduced_edges": 13,
+      "compression_ratio": 0.5357142857142857,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 28,
+          "edges": 34,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 20,
+          "edges": 26,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 13,
+          "edges": 13,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 13,
+          "edges": 13,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 13,
+          "edges": 13,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 28,
+          "edges": 34,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9900448802097482,
+      "fidelity_p0.005": 0.9511101304657719,
+      "fidelity_p0.01": 0.9043820750088044,
+      "fidelity_p0.05": 0.5987369392383787,
+      "exact_fidelity_p0.001": 0.9906670751966383,
+      "exact_fidelity_p0.005": 0.9541657473116616,
+      "exact_fidelity_p0.01": 0.910358195320754,
+      "exact_fidelity_p0.05": 0.6238158805359801,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.0202,
+      "pca_isolation": 0.0282,
+      "motif_diversity": 0.0129,
+      "composite_novelty": 0.2167
+    },
+    "bridge_line_mach_q4": {
+      "name": "bridge_line_mach_q4",
+      "n_qubits": 4,
+      "total_gates": 8,
+      "n_1q_gates": 0,
+      "n_2q_gates": 8,
+      "depth": 8,
+      "gates_per_qubit": 2.0,
+      "two_qubit_ratio": 1.0,
+      "raw_vertices": 24,
+      "raw_edges": 28,
+      "reduced_vertices": 14,
+      "reduced_edges": 14,
+      "compression_ratio": 0.41666666666666663,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 24,
+          "edges": 28,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 18,
+          "edges": 20,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 24,
+          "edges": 28,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.992027944069944,
+      "fidelity_p0.005": 0.9606930435754368,
+      "fidelity_p0.01": 0.9227446944279201,
+      "fidelity_p0.05": 0.6634204312890623,
+      "exact_fidelity_p0.001": 0.9925261975655721,
+      "exact_fidelity_p0.005": 0.9631497283519725,
+      "exact_fidelity_p0.01": 0.9275731510261748,
+      "exact_fidelity_p0.05": 0.684456654333496,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.2063,
+      "pca_isolation": 0.0223,
+      "motif_diversity": 0.0904,
+      "composite_novelty": 0.2959
+    },
+    "bridge_mach_vari_q4": {
+      "name": "bridge_mach_vari_q4",
+      "n_qubits": 4,
+      "total_gates": 8,
+      "n_1q_gates": 0,
+      "n_2q_gates": 8,
+      "depth": 8,
+      "gates_per_qubit": 2.0,
+      "two_qubit_ratio": 1.0,
+      "raw_vertices": 24,
+      "raw_edges": 28,
+      "reduced_vertices": 14,
+      "reduced_edges": 14,
+      "compression_ratio": 0.41666666666666663,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 24,
+          "edges": 28,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 18,
+          "edges": 20,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 14,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 24,
+          "edges": 28,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.992027944069944,
+      "fidelity_p0.005": 0.9606930435754368,
+      "fidelity_p0.01": 0.9227446944279201,
+      "fidelity_p0.05": 0.6634204312890623,
+      "exact_fidelity_p0.001": 0.9925261975655721,
+      "exact_fidelity_p0.005": 0.9631497283519725,
+      "exact_fidelity_p0.01": 0.9275731510261748,
+      "exact_fidelity_p0.05": 0.684456654333496,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.2469,
+      "pca_isolation": 0.0407,
+      "motif_diversity": 0.1062,
+      "composite_novelty": 0.3178
+    },
+    "bridge_prot_vari_q4": {
+      "name": "bridge_prot_vari_q4",
+      "n_qubits": 4,
+      "total_gates": 10,
+      "n_1q_gates": 0,
+      "n_2q_gates": 10,
+      "depth": 9,
+      "gates_per_qubit": 2.5,
+      "two_qubit_ratio": 1.0,
+      "raw_vertices": 28,
+      "raw_edges": 34,
+      "reduced_vertices": 14,
+      "reduced_edges": 15,
+      "compression_ratio": 0.5,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 28,
+          "edges": 34,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 20,
+          "edges": 26,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 14,
+          "edges": 15,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 14,
+          "edges": 15,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 14,
+          "edges": 15,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 28,
+          "edges": 34,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9900448802097482,
+      "fidelity_p0.005": 0.9511101304657719,
+      "fidelity_p0.01": 0.9043820750088044,
+      "fidelity_p0.05": 0.5987369392383787,
+      "exact_fidelity_p0.001": 0.9906670751966383,
+      "exact_fidelity_p0.005": 0.9541657473116616,
+      "exact_fidelity_p0.01": 0.910358195320754,
+      "exact_fidelity_p0.05": 0.6238158805359801,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.1047,
+      "pca_isolation": 0.0039,
+      "motif_diversity": 0.0273,
+      "composite_novelty": 0.2431
+    },
+    "irr_pair01_q6": {
+      "name": "irr_pair01_q6",
+      "n_qubits": 4,
+      "total_gates": 14,
+      "n_1q_gates": 1,
+      "n_2q_gates": 13,
+      "depth": 13,
+      "gates_per_qubit": 3.5,
+      "two_qubit_ratio": 0.9285714285714286,
+      "raw_vertices": 35,
+      "raw_edges": 44,
+      "reduced_vertices": 12,
+      "reduced_edges": 10,
+      "compression_ratio": 0.6571428571428571,
+      "t_count": 1,
+      "levels": {
+        "raw": {
+          "vertices": 35,
+          "edges": 44,
+          "t_gates": 1
+        },
+        "spider_fused": {
+          "vertices": 24,
+          "edges": 33,
+          "t_gates": 1
+        },
+        "interior_cliff": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "clifford_simp": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "full_reduce": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "teleport_reduce": {
+          "vertices": 35,
+          "edges": 44,
+          "t_gates": 1
+        }
+      },
+      "fidelity_p0.001": 0.9869790069422434,
+      "fidelity_p0.005": 0.936446235533364,
+      "fidelity_p0.01": 0.8766435019759689,
+      "fidelity_p0.05": 0.5107753728631073,
+      "exact_fidelity_p0.001": 0.9877928190083526,
+      "exact_fidelity_p0.005": 0.9404183458125296,
+      "exact_fidelity_p0.01": 0.8843532831024707,
+      "exact_fidelity_p0.05": 0.5413519120591636,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.1516,
+      "pca_isolation": 0.1124,
+      "motif_diversity": 0.0143,
+      "composite_novelty": 0.284
+    },
+    "irr_pair02_q4": {
+      "name": "irr_pair02_q4",
+      "n_qubits": 4,
+      "total_gates": 11,
+      "n_1q_gates": 2,
+      "n_2q_gates": 9,
+      "depth": 9,
+      "gates_per_qubit": 2.75,
+      "two_qubit_ratio": 0.8181818181818182,
+      "raw_vertices": 28,
+      "raw_edges": 33,
+      "reduced_vertices": 15,
+      "reduced_edges": 17,
+      "compression_ratio": 0.4642857142857143,
+      "t_count": 2,
+      "levels": {
+        "raw": {
+          "vertices": 28,
+          "edges": 33,
+          "t_gates": 2
+        },
+        "spider_fused": {
+          "vertices": 19,
+          "edges": 22,
+          "t_gates": 2
+        },
+        "interior_cliff": {
+          "vertices": 15,
+          "edges": 17,
+          "t_gates": 2
+        },
+        "clifford_simp": {
+          "vertices": 15,
+          "edges": 17,
+          "t_gates": 2
+        },
+        "full_reduce": {
+          "vertices": 15,
+          "edges": 17,
+          "t_gates": 2
+        },
+        "teleport_reduce": {
+          "vertices": 28,
+          "edges": 33,
+          "t_gates": 2
+        }
+      },
+      "fidelity_p0.001": 0.9908377188530081,
+      "fidelity_p0.005": 0.9549339277515968,
+      "fidelity_p0.01": 0.9116911265059211,
+      "fidelity_p0.05": 0.6239626718626061,
+      "exact_fidelity_p0.001": 0.9914103614246946,
+      "exact_fidelity_p0.005": 0.9577505572671224,
+      "exact_fidelity_p0.01": 0.9172104310993007,
+      "exact_fidelity_p0.05": 0.6474650048711937,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.1835,
+      "pca_isolation": 0.0523,
+      "motif_diversity": 0.0072,
+      "composite_novelty": 0.2787
+    },
+    "irr_pair03_q5": {
+      "name": "irr_pair03_q5",
+      "n_qubits": 4,
+      "total_gates": 14,
+      "n_1q_gates": 4,
+      "n_2q_gates": 10,
+      "depth": 11,
+      "gates_per_qubit": 3.5,
+      "two_qubit_ratio": 0.7142857142857143,
+      "raw_vertices": 32,
+      "raw_edges": 38,
+      "reduced_vertices": 17,
+      "reduced_edges": 22,
+      "compression_ratio": 0.46875,
+      "t_count": 2,
+      "levels": {
+        "raw": {
+          "vertices": 32,
+          "edges": 38,
+          "t_gates": 2
+        },
+        "spider_fused": {
+          "vertices": 20,
+          "edges": 24,
+          "t_gates": 2
+        },
+        "interior_cliff": {
+          "vertices": 17,
+          "edges": 22,
+          "t_gates": 2
+        },
+        "clifford_simp": {
+          "vertices": 17,
+          "edges": 22,
+          "t_gates": 2
+        },
+        "full_reduce": {
+          "vertices": 17,
+          "edges": 22,
+          "t_gates": 2
+        },
+        "teleport_reduce": {
+          "vertices": 32,
+          "edges": 38,
+          "t_gates": 2
+        }
+      },
+      "fidelity_p0.001": 0.9896489216563971,
+      "fidelity_p0.005": 0.9492093363945405,
+      "fidelity_p0.01": 0.9007699693845954,
+      "fidelity_p0.05": 0.5868517120002378,
+      "exact_fidelity_p0.001": 0.9902958641862216,
+      "exact_fidelity_p0.005": 0.9523837531595589,
+      "exact_fidelity_p0.01": 0.9069718466931826,
+      "exact_fidelity_p0.05": 0.612673480662871,
+      "von_neumann_entropy": 1.0000000000000004,
+      "concurrence": 0.0,
+      "purity": 0.49999999999999956,
+      "cosine_novelty": 0.2302,
+      "pca_isolation": 0.7679,
+      "motif_diversity": 0.0086,
+      "composite_novelty": 0.4743
+    },
+    "irr_pair04_q6": {
+      "name": "irr_pair04_q6",
+      "n_qubits": 4,
+      "total_gates": 14,
+      "n_1q_gates": 4,
+      "n_2q_gates": 10,
+      "depth": 12,
+      "gates_per_qubit": 3.5,
+      "two_qubit_ratio": 0.7142857142857143,
+      "raw_vertices": 32,
+      "raw_edges": 38,
+      "reduced_vertices": 16,
+      "reduced_edges": 18,
+      "compression_ratio": 0.5,
+      "t_count": 2,
+      "levels": {
+        "raw": {
+          "vertices": 32,
+          "edges": 38,
+          "t_gates": 2
+        },
+        "spider_fused": {
+          "vertices": 22,
+          "edges": 28,
+          "t_gates": 2
+        },
+        "interior_cliff": {
+          "vertices": 16,
+          "edges": 18,
+          "t_gates": 2
+        },
+        "clifford_simp": {
+          "vertices": 16,
+          "edges": 18,
+          "t_gates": 2
+        },
+        "full_reduce": {
+          "vertices": 16,
+          "edges": 18,
+          "t_gates": 2
+        },
+        "teleport_reduce": {
+          "vertices": 32,
+          "edges": 38,
+          "t_gates": 2
+        }
+      },
+      "fidelity_p0.001": 0.9896489216563971,
+      "fidelity_p0.005": 0.9492093363945405,
+      "fidelity_p0.01": 0.9007699693845954,
+      "fidelity_p0.05": 0.5868517120002378,
+      "exact_fidelity_p0.001": 0.9902958646911664,
+      "exact_fidelity_p0.005": 0.9523837542564577,
+      "exact_fidelity_p0.01": 0.9069718481893753,
+      "exact_fidelity_p0.05": 0.6126734831720798,
+      "von_neumann_entropy": 1.9999999999999996,
+      "concurrence": 0.0,
+      "purity": 0.24999999999999972,
+      "cosine_novelty": 0.1835,
+      "pca_isolation": 0.7868,
+      "motif_diversity": 0.0086,
+      "composite_novelty": 0.4626
+    },
+    "irr_pair05_q6": {
+      "name": "irr_pair05_q6",
+      "n_qubits": 4,
+      "total_gates": 14,
+      "n_1q_gates": 4,
+      "n_2q_gates": 10,
+      "depth": 12,
+      "gates_per_qubit": 3.5,
+      "two_qubit_ratio": 0.7142857142857143,
+      "raw_vertices": 32,
+      "raw_edges": 38,
+      "reduced_vertices": 16,
+      "reduced_edges": 18,
+      "compression_ratio": 0.5,
+      "t_count": 2,
+      "levels": {
+        "raw": {
+          "vertices": 32,
+          "edges": 38,
+          "t_gates": 2
+        },
+        "spider_fused": {
+          "vertices": 22,
+          "edges": 28,
+          "t_gates": 2
+        },
+        "interior_cliff": {
+          "vertices": 16,
+          "edges": 18,
+          "t_gates": 2
+        },
+        "clifford_simp": {
+          "vertices": 16,
+          "edges": 18,
+          "t_gates": 2
+        },
+        "full_reduce": {
+          "vertices": 16,
+          "edges": 18,
+          "t_gates": 2
+        },
+        "teleport_reduce": {
+          "vertices": 32,
+          "edges": 38,
+          "t_gates": 2
+        }
+      },
+      "fidelity_p0.001": 0.9896489216563971,
+      "fidelity_p0.005": 0.9492093363945405,
+      "fidelity_p0.01": 0.9007699693845954,
+      "fidelity_p0.05": 0.5868517120002378,
+      "exact_fidelity_p0.001": 0.9902958646911664,
+      "exact_fidelity_p0.005": 0.9523837542564577,
+      "exact_fidelity_p0.01": 0.9069718481893753,
+      "exact_fidelity_p0.05": 0.6126734831720798,
+      "von_neumann_entropy": 1.9999999999999996,
+      "concurrence": 0.0,
+      "purity": 0.24999999999999972,
+      "cosine_novelty": 0.1835,
+      "pca_isolation": 0.7868,
+      "motif_diversity": 0.0086,
+      "composite_novelty": 0.4626
+    },
+    "irr_pair06_q6": {
+      "name": "irr_pair06_q6",
+      "n_qubits": 4,
+      "total_gates": 13,
+      "n_1q_gates": 3,
+      "n_2q_gates": 10,
+      "depth": 10,
+      "gates_per_qubit": 3.25,
+      "two_qubit_ratio": 0.7692307692307693,
+      "raw_vertices": 31,
+      "raw_edges": 37,
+      "reduced_vertices": 17,
+      "reduced_edges": 20,
+      "compression_ratio": 0.4516129032258065,
+      "t_count": 1,
+      "levels": {
+        "raw": {
+          "vertices": 31,
+          "edges": 37,
+          "t_gates": 1
+        },
+        "spider_fused": {
+          "vertices": 23,
+          "edges": 29,
+          "t_gates": 1
+        },
+        "interior_cliff": {
+          "vertices": 17,
+          "edges": 20,
+          "t_gates": 1
+        },
+        "clifford_simp": {
+          "vertices": 17,
+          "edges": 20,
+          "t_gates": 1
+        },
+        "full_reduce": {
+          "vertices": 17,
+          "edges": 20,
+          "t_gates": 1
+        },
+        "teleport_reduce": {
+          "vertices": 31,
+          "edges": 37,
+          "t_gates": 1
+        }
+      },
+      "fidelity_p0.001": 0.9897478964460417,
+      "fidelity_p0.005": 0.9496841784837824,
+      "fidelity_p0.01": 0.9016716410256209,
+      "fidelity_p0.05": 0.5898007155781285,
+      "exact_fidelity_p0.001": 0.9903886530508796,
+      "exact_fidelity_p0.005": 0.9528289176169319,
+      "exact_fidelity_p0.01": 0.9078171638550263,
+      "exact_fidelity_p0.05": 0.6154381715162622,
+      "von_neumann_entropy": 1.601713251907458e-15,
+      "concurrence": 0.0,
+      "purity": 0.9999999999999991,
+      "cosine_novelty": 0.1228,
+      "pca_isolation": 0.179,
+      "motif_diversity": 0.0143,
+      "composite_novelty": 0.2906
+    },
+    "irr_pair07_q6": {
+      "name": "irr_pair07_q6",
+      "n_qubits": 4,
+      "total_gates": 13,
+      "n_1q_gates": 3,
+      "n_2q_gates": 10,
+      "depth": 10,
+      "gates_per_qubit": 3.25,
+      "two_qubit_ratio": 0.7692307692307693,
+      "raw_vertices": 31,
+      "raw_edges": 37,
+      "reduced_vertices": 17,
+      "reduced_edges": 20,
+      "compression_ratio": 0.4516129032258065,
+      "t_count": 3,
+      "levels": {
+        "raw": {
+          "vertices": 31,
+          "edges": 37,
+          "t_gates": 3
+        },
+        "spider_fused": {
+          "vertices": 22,
+          "edges": 28,
+          "t_gates": 3
+        },
+        "interior_cliff": {
+          "vertices": 17,
+          "edges": 20,
+          "t_gates": 3
+        },
+        "clifford_simp": {
+          "vertices": 17,
+          "edges": 20,
+          "t_gates": 3
+        },
+        "full_reduce": {
+          "vertices": 17,
+          "edges": 20,
+          "t_gates": 3
+        },
+        "teleport_reduce": {
+          "vertices": 31,
+          "edges": 37,
+          "t_gates": 3
+        }
+      },
+      "fidelity_p0.001": 0.9897478964460417,
+      "fidelity_p0.005": 0.9496841784837824,
+      "fidelity_p0.01": 0.9016716410256209,
+      "fidelity_p0.05": 0.5898007155781285,
+      "exact_fidelity_p0.001": 0.9903886529181635,
+      "exact_fidelity_p0.005": 0.9528289173285467,
+      "exact_fidelity_p0.01": 0.9078171634615194,
+      "exact_fidelity_p0.05": 0.6154381708544958,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.1228,
+      "pca_isolation": 0.0439,
+      "motif_diversity": 0.0143,
+      "composite_novelty": 0.2568
+    },
+    "irr_pair08_q6": {
+      "name": "irr_pair08_q6",
+      "n_qubits": 4,
+      "total_gates": 16,
+      "n_1q_gates": 5,
+      "n_2q_gates": 11,
+      "depth": 12,
+      "gates_per_qubit": 4.0,
+      "two_qubit_ratio": 0.6875,
+      "raw_vertices": 35,
+      "raw_edges": 42,
+      "reduced_vertices": 15,
+      "reduced_edges": 16,
+      "compression_ratio": 0.5714285714285714,
+      "t_count": 3,
+      "levels": {
+        "raw": {
+          "vertices": 35,
+          "edges": 42,
+          "t_gates": 3
+        },
+        "spider_fused": {
+          "vertices": 23,
+          "edges": 30,
+          "t_gates": 3
+        },
+        "interior_cliff": {
+          "vertices": 15,
+          "edges": 16,
+          "t_gates": 3
+        },
+        "clifford_simp": {
+          "vertices": 15,
+          "edges": 16,
+          "t_gates": 3
+        },
+        "full_reduce": {
+          "vertices": 15,
+          "edges": 16,
+          "t_gates": 3
+        },
+        "teleport_reduce": {
+          "vertices": 35,
+          "edges": 42,
+          "t_gates": 3
+        }
+      },
+      "fidelity_p0.001": 0.9885604068074672,
+      "fidelity_p0.005": 0.9439910580677116,
+      "fidelity_p0.01": 0.8908705074210587,
+      "fidelity_p0.05": 0.5547215807682248,
+      "exact_fidelity_p0.001": 0.9892753815221125,
+      "exact_fidelity_p0.005": 0.9474916172418907,
+      "exact_fidelity_p0.01": 0.8976911011194818,
+      "exact_fidelity_p0.05": 0.5825514826410189,
+      "von_neumann_entropy": 1.601713251907458e-15,
+      "concurrence": 0.0,
+      "purity": 0.9999999999999991,
+      "cosine_novelty": 0.2302,
+      "pca_isolation": 0.1355,
+      "motif_diversity": 0.0086,
+      "composite_novelty": 0.3162
+    },
+    "irr_pair09_q6": {
+      "name": "irr_pair09_q6",
+      "n_qubits": 4,
+      "total_gates": 14,
+      "n_1q_gates": 2,
+      "n_2q_gates": 12,
+      "depth": 11,
+      "gates_per_qubit": 3.5,
+      "two_qubit_ratio": 0.8571428571428571,
+      "raw_vertices": 34,
+      "raw_edges": 42,
+      "reduced_vertices": 15,
+      "reduced_edges": 16,
+      "compression_ratio": 0.5588235294117647,
+      "t_count": 2,
+      "levels": {
+        "raw": {
+          "vertices": 34,
+          "edges": 42,
+          "t_gates": 2
+        },
+        "spider_fused": {
+          "vertices": 25,
+          "edges": 33,
+          "t_gates": 2
+        },
+        "interior_cliff": {
+          "vertices": 15,
+          "edges": 16,
+          "t_gates": 2
+        },
+        "clifford_simp": {
+          "vertices": 15,
+          "edges": 16,
+          "t_gates": 2
+        },
+        "full_reduce": {
+          "vertices": 15,
+          "edges": 16,
+          "t_gates": 2
+        },
+        "teleport_reduce": {
+          "vertices": 34,
+          "edges": 42,
+          "t_gates": 2
+        }
+      },
+      "fidelity_p0.001": 0.987868177218768,
+      "fidelity_p0.005": 0.9406814195131632,
+      "fidelity_p0.01": 0.8846129883575687,
+      "fidelity_p0.05": 0.5349699957882019,
+      "exact_fidelity_p0.001": 0.9886264161425944,
+      "exact_fidelity_p0.005": 0.9443888307935911,
+      "exact_fidelity_p0.01": 0.8918246765852205,
+      "exact_fidelity_p0.05": 0.5640343710514397,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.1043,
+      "pca_isolation": 0.1674,
+      "motif_diversity": 0.0115,
+      "composite_novelty": 0.2807
+    },
+    "irr_pair10_q5": {
+      "name": "irr_pair10_q5",
+      "n_qubits": 4,
+      "total_gates": 11,
+      "n_1q_gates": 2,
+      "n_2q_gates": 9,
+      "depth": 9,
+      "gates_per_qubit": 2.75,
+      "two_qubit_ratio": 0.8181818181818182,
+      "raw_vertices": 28,
+      "raw_edges": 33,
+      "reduced_vertices": 15,
+      "reduced_edges": 17,
+      "compression_ratio": 0.4642857142857143,
+      "t_count": 2,
+      "levels": {
+        "raw": {
+          "vertices": 28,
+          "edges": 33,
+          "t_gates": 2
+        },
+        "spider_fused": {
+          "vertices": 19,
+          "edges": 22,
+          "t_gates": 2
+        },
+        "interior_cliff": {
+          "vertices": 15,
+          "edges": 17,
+          "t_gates": 2
+        },
+        "clifford_simp": {
+          "vertices": 15,
+          "edges": 17,
+          "t_gates": 2
+        },
+        "full_reduce": {
+          "vertices": 15,
+          "edges": 17,
+          "t_gates": 2
+        },
+        "teleport_reduce": {
+          "vertices": 28,
+          "edges": 33,
+          "t_gates": 2
+        }
+      },
+      "fidelity_p0.001": 0.9908377188530081,
+      "fidelity_p0.005": 0.9549339277515968,
+      "fidelity_p0.01": 0.9116911265059211,
+      "fidelity_p0.05": 0.6239626718626061,
+      "exact_fidelity_p0.001": 0.9914103614246946,
+      "exact_fidelity_p0.005": 0.9577505572671224,
+      "exact_fidelity_p0.01": 0.9172104310993007,
+      "exact_fidelity_p0.05": 0.6474650048711937,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.1835,
+      "pca_isolation": 0.0523,
+      "motif_diversity": 0.0072,
+      "composite_novelty": 0.2787
+    },
+    "irr_pair11_q6": {
+      "name": "irr_pair11_q6",
+      "n_qubits": 4,
+      "total_gates": 12,
+      "n_1q_gates": 2,
+      "n_2q_gates": 10,
+      "depth": 10,
+      "gates_per_qubit": 3.0,
+      "two_qubit_ratio": 0.8333333333333334,
+      "raw_vertices": 30,
+      "raw_edges": 36,
+      "reduced_vertices": 16,
+      "reduced_edges": 17,
+      "compression_ratio": 0.4666666666666667,
+      "t_count": 2,
+      "levels": {
+        "raw": {
+          "vertices": 30,
+          "edges": 36,
+          "t_gates": 2
+        },
+        "spider_fused": {
+          "vertices": 20,
+          "edges": 24,
+          "t_gates": 2
+        },
+        "interior_cliff": {
+          "vertices": 16,
+          "edges": 17,
+          "t_gates": 2
+        },
+        "clifford_simp": {
+          "vertices": 16,
+          "edges": 17,
+          "t_gates": 2
+        },
+        "full_reduce": {
+          "vertices": 16,
+          "edges": 17,
+          "t_gates": 2
+        },
+        "teleport_reduce": {
+          "vertices": 30,
+          "edges": 36,
+          "t_gates": 2
+        }
+      },
+      "fidelity_p0.001": 0.9898468811341552,
+      "fidelity_p0.005": 0.9501592581128389,
+      "fidelity_p0.01": 0.9025742152408618,
+      "fidelity_p0.05": 0.5927645382694758,
+      "exact_fidelity_p0.001": 0.9904814510632698,
+      "exact_fidelity_p0.005": 0.9532743044807868,
+      "exact_fidelity_p0.01": 0.9086633267883076,
+      "exact_fidelity_p0.05": 0.6182167546276338,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.1238,
+      "pca_isolation": 0.2716,
+      "motif_diversity": 0.0201,
+      "composite_novelty": 0.3153
+    },
+    "irr_pair12_q6": {
+      "name": "irr_pair12_q6",
+      "n_qubits": 4,
+      "total_gates": 15,
+      "n_1q_gates": 4,
+      "n_2q_gates": 11,
+      "depth": 12,
+      "gates_per_qubit": 3.75,
+      "two_qubit_ratio": 0.7333333333333333,
+      "raw_vertices": 34,
+      "raw_edges": 41,
+      "reduced_vertices": 18,
+      "reduced_edges": 32,
+      "compression_ratio": 0.47058823529411764,
+      "t_count": 2,
+      "levels": {
+        "raw": {
+          "vertices": 34,
+          "edges": 41,
+          "t_gates": 2
+        },
+        "spider_fused": {
+          "vertices": 24,
+          "edges": 31,
+          "t_gates": 2
+        },
+        "interior_cliff": {
+          "vertices": 18,
+          "edges": 32,
+          "t_gates": 1
+        },
+        "clifford_simp": {
+          "vertices": 18,
+          "edges": 32,
+          "t_gates": 1
+        },
+        "full_reduce": {
+          "vertices": 18,
+          "edges": 32,
+          "t_gates": 1
+        },
+        "teleport_reduce": {
+          "vertices": 34,
+          "edges": 41,
+          "t_gates": 2
+        }
+      },
+      "fidelity_p0.001": 0.9886592727347406,
+      "fidelity_p0.005": 0.9444632897125678,
+      "fidelity_p0.01": 0.8917622696907495,
+      "fidelity_p0.05": 0.5575091264002259,
+      "exact_fidelity_p0.001": 0.9893680687705361,
+      "exact_fidelity_p0.005": 0.9479343353655961,
+      "exact_fidelity_p0.01": 0.8985271295477252,
+      "exact_fidelity_p0.05": 0.5851648087947153,
+      "von_neumann_entropy": 0.6008760366928572,
+      "concurrence": 0.0,
+      "purity": 0.7499999999999993,
+      "cosine_novelty": 0.1301,
+      "pca_isolation": 0.271,
+      "motif_diversity": 0.0201,
+      "composite_novelty": 0.3173
+    },
+    "irr_pair13_q6": {
+      "name": "irr_pair13_q6",
+      "n_qubits": 4,
+      "total_gates": 14,
+      "n_1q_gates": 4,
+      "n_2q_gates": 10,
+      "depth": 11,
+      "gates_per_qubit": 3.5,
+      "two_qubit_ratio": 0.7142857142857143,
+      "raw_vertices": 32,
+      "raw_edges": 38,
+      "reduced_vertices": 15,
+      "reduced_edges": 19,
+      "compression_ratio": 0.53125,
+      "t_count": 2,
+      "levels": {
+        "raw": {
+          "vertices": 32,
+          "edges": 38,
+          "t_gates": 2
+        },
+        "spider_fused": {
+          "vertices": 21,
+          "edges": 27,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 15,
+          "edges": 19,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 15,
+          "edges": 19,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 15,
+          "edges": 19,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 32,
+          "edges": 38,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9896489216563971,
+      "fidelity_p0.005": 0.9492093363945405,
+      "fidelity_p0.01": 0.9007699693845954,
+      "fidelity_p0.05": 0.5868517120002378,
+      "exact_fidelity_p0.001": 0.9902958641862212,
+      "exact_fidelity_p0.005": 0.9523837531595594,
+      "exact_fidelity_p0.01": 0.9069718466931829,
+      "exact_fidelity_p0.05": 0.6126734806628715,
+      "von_neumann_entropy": 1.0000000000000004,
+      "concurrence": 0.0,
+      "purity": 0.49999999999999956,
+      "cosine_novelty": 0.1513,
+      "pca_isolation": 0.0041,
+      "motif_diversity": 0.0143,
+      "composite_novelty": 0.2568
+    },
+    "irr_pair14_q6": {
+      "name": "irr_pair14_q6",
+      "n_qubits": 4,
+      "total_gates": 13,
+      "n_1q_gates": 3,
+      "n_2q_gates": 10,
+      "depth": 10,
+      "gates_per_qubit": 3.25,
+      "two_qubit_ratio": 0.7692307692307693,
+      "raw_vertices": 31,
+      "raw_edges": 37,
+      "reduced_vertices": 17,
+      "reduced_edges": 20,
+      "compression_ratio": 0.4516129032258065,
+      "t_count": 3,
+      "levels": {
+        "raw": {
+          "vertices": 31,
+          "edges": 37,
+          "t_gates": 3
+        },
+        "spider_fused": {
+          "vertices": 22,
+          "edges": 28,
+          "t_gates": 3
+        },
+        "interior_cliff": {
+          "vertices": 17,
+          "edges": 20,
+          "t_gates": 3
+        },
+        "clifford_simp": {
+          "vertices": 17,
+          "edges": 20,
+          "t_gates": 3
+        },
+        "full_reduce": {
+          "vertices": 17,
+          "edges": 20,
+          "t_gates": 3
+        },
+        "teleport_reduce": {
+          "vertices": 31,
+          "edges": 37,
+          "t_gates": 3
+        }
+      },
+      "fidelity_p0.001": 0.9897478964460417,
+      "fidelity_p0.005": 0.9496841784837824,
+      "fidelity_p0.01": 0.9016716410256209,
+      "fidelity_p0.05": 0.5898007155781285,
+      "exact_fidelity_p0.001": 0.9903886529181635,
+      "exact_fidelity_p0.005": 0.9528289173285467,
+      "exact_fidelity_p0.01": 0.9078171634615194,
+      "exact_fidelity_p0.05": 0.6154381708544958,
+      "von_neumann_entropy": 0.0,
+      "concurrence": 0.0,
+      "purity": 1.0,
+      "cosine_novelty": 0.1339,
+      "pca_isolation": 0.0222,
+      "motif_diversity": 0.0143,
+      "composite_novelty": 0.2553
+    },
+    "irr_pair15_q6": {
+      "name": "irr_pair15_q6",
+      "n_qubits": 4,
+      "total_gates": 16,
+      "n_1q_gates": 4,
+      "n_2q_gates": 12,
+      "depth": 13,
+      "gates_per_qubit": 4.0,
+      "two_qubit_ratio": 0.75,
+      "raw_vertices": 36,
+      "raw_edges": 44,
+      "reduced_vertices": 16,
+      "reduced_edges": 20,
+      "compression_ratio": 0.5555555555555556,
+      "t_count": 1,
+      "levels": {
+        "raw": {
+          "vertices": 36,
+          "edges": 44,
+          "t_gates": 1
+        },
+        "spider_fused": {
+          "vertices": 22,
+          "edges": 28,
+          "t_gates": 1
+        },
+        "interior_cliff": {
+          "vertices": 16,
+          "edges": 20,
+          "t_gates": 1
+        },
+        "clifford_simp": {
+          "vertices": 16,
+          "edges": 20,
+          "t_gates": 1
+        },
+        "full_reduce": {
+          "vertices": 16,
+          "edges": 20,
+          "t_gates": 1
+        },
+        "teleport_reduce": {
+          "vertices": 36,
+          "edges": 44,
+          "t_gates": 1
+        }
+      },
+      "fidelity_p0.001": 0.9876706134620059,
+      "fidelity_p0.005": 0.939740973264005,
+      "fidelity_p0.01": 0.8828446469938419,
+      "fidelity_p0.05": 0.5296336700802146,
+      "exact_fidelity_p0.001": 0.9884412006646625,
+      "exact_fidelity_p0.005": 0.9435071636100733,
+      "exact_fidelity_p0.01": 0.8901668581481877,
+      "exact_fidelity_p0.05": 0.5590315682272602,
+      "von_neumann_entropy": 3.2034265038149176e-16,
+      "concurrence": 0.0,
+      "purity": 0.9999999999999989,
+      "cosine_novelty": 0.1515,
+      "pca_isolation": 0.0997,
+      "motif_diversity": 0.0115,
+      "composite_novelty": 0.2802
+    },
+    "irr_pair16_q4": {
+      "name": "irr_pair16_q4",
+      "n_qubits": 4,
+      "total_gates": 3,
+      "n_1q_gates": 2,
+      "n_2q_gates": 1,
+      "depth": 3,
+      "gates_per_qubit": 0.75,
+      "two_qubit_ratio": 0.3333333333333333,
+      "raw_vertices": 12,
+      "raw_edges": 9,
+      "reduced_vertices": 10,
+      "reduced_edges": 7,
+      "compression_ratio": 0.16666666666666663,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 12,
+          "edges": 9,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 11,
+          "edges": 8,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 12,
+          "edges": 9,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9988002099900001,
+      "fidelity_p0.005": 0.9940052487500002,
+      "fidelity_p0.01": 0.98802099,
+      "fidelity_p0.05": 0.94052375,
+      "exact_fidelity_p0.001": 0.9988751969112208,
+      "exact_fidelity_p0.005": 0.9943799208048149,
+      "exact_fidelity_p0.01": 0.988769678268342,
+      "exact_fidelity_p0.05": 0.9442410159371242,
+      "von_neumann_entropy": 4.805139755722375e-16,
+      "concurrence": 1.4524150232047395e-20,
+      "purity": 0.9999999999999991,
+      "cosine_novelty": 0.0,
+      "pca_isolation": 0.0,
+      "motif_diversity": 0.0014,
+      "composite_novelty": 0.2003
+    },
+    "irr_pair17_q6": {
+      "name": "irr_pair17_q6",
+      "n_qubits": 4,
+      "total_gates": 3,
+      "n_1q_gates": 2,
+      "n_2q_gates": 1,
+      "depth": 3,
+      "gates_per_qubit": 0.75,
+      "two_qubit_ratio": 0.3333333333333333,
+      "raw_vertices": 12,
+      "raw_edges": 9,
+      "reduced_vertices": 10,
+      "reduced_edges": 7,
+      "compression_ratio": 0.16666666666666663,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 12,
+          "edges": 9,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 11,
+          "edges": 8,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 12,
+          "edges": 9,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9988002099900001,
+      "fidelity_p0.005": 0.9940052487500002,
+      "fidelity_p0.01": 0.98802099,
+      "fidelity_p0.05": 0.94052375,
+      "exact_fidelity_p0.001": 0.9988751969112208,
+      "exact_fidelity_p0.005": 0.9943799208048149,
+      "exact_fidelity_p0.01": 0.988769678268342,
+      "exact_fidelity_p0.05": 0.9442410159371242,
+      "von_neumann_entropy": 4.805139755722375e-16,
+      "concurrence": 1.4524150232047395e-20,
+      "purity": 0.9999999999999991,
+      "cosine_novelty": 0.0,
+      "pca_isolation": 0.0,
+      "motif_diversity": 0.0014,
+      "composite_novelty": 0.2003
+    },
+    "irr_pair18_q6": {
+      "name": "irr_pair18_q6",
+      "n_qubits": 4,
+      "total_gates": 3,
+      "n_1q_gates": 2,
+      "n_2q_gates": 1,
+      "depth": 3,
+      "gates_per_qubit": 0.75,
+      "two_qubit_ratio": 0.3333333333333333,
+      "raw_vertices": 12,
+      "raw_edges": 9,
+      "reduced_vertices": 10,
+      "reduced_edges": 7,
+      "compression_ratio": 0.16666666666666663,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 12,
+          "edges": 9,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 11,
+          "edges": 8,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 12,
+          "edges": 9,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9988002099900001,
+      "fidelity_p0.005": 0.9940052487500002,
+      "fidelity_p0.01": 0.98802099,
+      "fidelity_p0.05": 0.94052375,
+      "exact_fidelity_p0.001": 0.9988751969112208,
+      "exact_fidelity_p0.005": 0.9943799208048149,
+      "exact_fidelity_p0.01": 0.988769678268342,
+      "exact_fidelity_p0.05": 0.9442410159371242,
+      "von_neumann_entropy": 4.805139755722375e-16,
+      "concurrence": 1.4524150232047395e-20,
+      "purity": 0.9999999999999991,
+      "cosine_novelty": 0.0,
+      "pca_isolation": 0.0,
+      "motif_diversity": 0.0014,
+      "composite_novelty": 0.2003
+    },
+    "irr_pair19_q5": {
+      "name": "irr_pair19_q5",
+      "n_qubits": 4,
+      "total_gates": 3,
+      "n_1q_gates": 2,
+      "n_2q_gates": 1,
+      "depth": 3,
+      "gates_per_qubit": 0.75,
+      "two_qubit_ratio": 0.3333333333333333,
+      "raw_vertices": 12,
+      "raw_edges": 9,
+      "reduced_vertices": 10,
+      "reduced_edges": 7,
+      "compression_ratio": 0.16666666666666663,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 12,
+          "edges": 9,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 11,
+          "edges": 8,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 12,
+          "edges": 9,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9988002099900001,
+      "fidelity_p0.005": 0.9940052487500002,
+      "fidelity_p0.01": 0.98802099,
+      "fidelity_p0.05": 0.94052375,
+      "exact_fidelity_p0.001": 0.9988751969112208,
+      "exact_fidelity_p0.005": 0.9943799208048149,
+      "exact_fidelity_p0.01": 0.988769678268342,
+      "exact_fidelity_p0.05": 0.9442410159371242,
+      "von_neumann_entropy": 4.805139755722375e-16,
+      "concurrence": 1.4524150232047395e-20,
+      "purity": 0.9999999999999991,
+      "cosine_novelty": 0.0,
+      "pca_isolation": 0.0,
+      "motif_diversity": 0.0014,
+      "composite_novelty": 0.2003
+    },
+    "irr_pair20_q5": {
+      "name": "irr_pair20_q5",
+      "n_qubits": 4,
+      "total_gates": 5,
+      "n_1q_gates": 3,
+      "n_2q_gates": 2,
+      "depth": 4,
+      "gates_per_qubit": 1.25,
+      "two_qubit_ratio": 0.4,
+      "raw_vertices": 15,
+      "raw_edges": 13,
+      "reduced_vertices": 12,
+      "reduced_edges": 10,
+      "compression_ratio": 0.19999999999999996,
+      "t_count": 1,
+      "levels": {
+        "raw": {
+          "vertices": 15,
+          "edges": 13,
+          "t_gates": 1
+        },
+        "spider_fused": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "interior_cliff": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "clifford_simp": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "full_reduce": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "teleport_reduce": {
+          "vertices": 15,
+          "edges": 13,
+          "t_gates": 1
+        }
+      },
+      "fidelity_p0.001": 0.997701629639032,
+      "fidelity_p0.005": 0.988540704894997,
+      "fidelity_p0.01": 0.9771626393199,
+      "fidelity_p0.05": 0.8890300746875,
+      "exact_fidelity_p0.001": 0.9978452778496668,
+      "exact_fidelity_p0.005": 0.989256910979293,
+      "exact_fidelity_p0.01": 0.9785899745593026,
+      "exact_fidelity_p0.05": 0.8959656954348326,
+      "von_neumann_entropy": 4.805139755722375e-16,
+      "concurrence": 1.4524150232047395e-20,
+      "purity": 0.9999999999999991,
+      "cosine_novelty": 0.1429,
+      "pca_isolation": 0.0828,
+      "motif_diversity": 0.0014,
+      "composite_novelty": 0.271
+    },
+    "irr_pair21_q5": {
+      "name": "irr_pair21_q5",
+      "n_qubits": 4,
+      "total_gates": 5,
+      "n_1q_gates": 3,
+      "n_2q_gates": 2,
+      "depth": 4,
+      "gates_per_qubit": 1.25,
+      "two_qubit_ratio": 0.4,
+      "raw_vertices": 15,
+      "raw_edges": 13,
+      "reduced_vertices": 12,
+      "reduced_edges": 10,
+      "compression_ratio": 0.19999999999999996,
+      "t_count": 1,
+      "levels": {
+        "raw": {
+          "vertices": 15,
+          "edges": 13,
+          "t_gates": 1
+        },
+        "spider_fused": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "interior_cliff": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "clifford_simp": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "full_reduce": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "teleport_reduce": {
+          "vertices": 15,
+          "edges": 13,
+          "t_gates": 1
+        }
+      },
+      "fidelity_p0.001": 0.997701629639032,
+      "fidelity_p0.005": 0.988540704894997,
+      "fidelity_p0.01": 0.9771626393199,
+      "fidelity_p0.05": 0.8890300746875,
+      "exact_fidelity_p0.001": 0.9978452778496668,
+      "exact_fidelity_p0.005": 0.989256910979293,
+      "exact_fidelity_p0.01": 0.9785899745593026,
+      "exact_fidelity_p0.05": 0.8959656954348326,
+      "von_neumann_entropy": 4.805139755722375e-16,
+      "concurrence": 1.4524150232047395e-20,
+      "purity": 0.9999999999999991,
+      "cosine_novelty": 0.1429,
+      "pca_isolation": 0.0828,
+      "motif_diversity": 0.0014,
+      "composite_novelty": 0.271
+    },
+    "irr_pair23_q6": {
+      "name": "irr_pair23_q6",
+      "n_qubits": 4,
+      "total_gates": 3,
+      "n_1q_gates": 2,
+      "n_2q_gates": 1,
+      "depth": 3,
+      "gates_per_qubit": 0.75,
+      "two_qubit_ratio": 0.3333333333333333,
+      "raw_vertices": 12,
+      "raw_edges": 9,
+      "reduced_vertices": 10,
+      "reduced_edges": 7,
+      "compression_ratio": 0.16666666666666663,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 12,
+          "edges": 9,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 11,
+          "edges": 8,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 12,
+          "edges": 9,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9988002099900001,
+      "fidelity_p0.005": 0.9940052487500002,
+      "fidelity_p0.01": 0.98802099,
+      "fidelity_p0.05": 0.94052375,
+      "exact_fidelity_p0.001": 0.9988751969112208,
+      "exact_fidelity_p0.005": 0.9943799208048149,
+      "exact_fidelity_p0.01": 0.988769678268342,
+      "exact_fidelity_p0.05": 0.9442410159371242,
+      "von_neumann_entropy": 4.805139755722375e-16,
+      "concurrence": 1.4524150232047395e-20,
+      "purity": 0.9999999999999991,
+      "cosine_novelty": 0.0,
+      "pca_isolation": 0.0,
+      "motif_diversity": 0.0014,
+      "composite_novelty": 0.2003
+    },
+    "irr_pair24_q6": {
+      "name": "irr_pair24_q6",
+      "n_qubits": 4,
+      "total_gates": 3,
+      "n_1q_gates": 2,
+      "n_2q_gates": 1,
+      "depth": 3,
+      "gates_per_qubit": 0.75,
+      "two_qubit_ratio": 0.3333333333333333,
+      "raw_vertices": 12,
+      "raw_edges": 9,
+      "reduced_vertices": 10,
+      "reduced_edges": 7,
+      "compression_ratio": 0.16666666666666663,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 12,
+          "edges": 9,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 11,
+          "edges": 8,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 10,
+          "edges": 7,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 12,
+          "edges": 9,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9988002099900001,
+      "fidelity_p0.005": 0.9940052487500002,
+      "fidelity_p0.01": 0.98802099,
+      "fidelity_p0.05": 0.94052375,
+      "exact_fidelity_p0.001": 0.9988751969112208,
+      "exact_fidelity_p0.005": 0.9943799208048149,
+      "exact_fidelity_p0.01": 0.988769678268342,
+      "exact_fidelity_p0.05": 0.9442410159371242,
+      "von_neumann_entropy": 4.805139755722375e-16,
+      "concurrence": 1.4524150232047395e-20,
+      "purity": 0.9999999999999991,
+      "cosine_novelty": 0.0,
+      "pca_isolation": 0.0,
+      "motif_diversity": 0.0014,
+      "composite_novelty": 0.2003
+    },
+    "irr_pair25_q6": {
+      "name": "irr_pair25_q6",
+      "n_qubits": 4,
+      "total_gates": 8,
+      "n_1q_gates": 5,
+      "n_2q_gates": 3,
+      "depth": 7,
+      "gates_per_qubit": 2.0,
+      "two_qubit_ratio": 0.375,
+      "raw_vertices": 19,
+      "raw_edges": 18,
+      "reduced_vertices": 12,
+      "reduced_edges": 11,
+      "compression_ratio": 0.368421052631579,
+      "t_count": 1,
+      "levels": {
+        "raw": {
+          "vertices": 19,
+          "edges": 18,
+          "t_gates": 1
+        },
+        "spider_fused": {
+          "vertices": 14,
+          "edges": 13,
+          "t_gates": 1
+        },
+        "interior_cliff": {
+          "vertices": 12,
+          "edges": 11,
+          "t_gates": 1
+        },
+        "clifford_simp": {
+          "vertices": 12,
+          "edges": 11,
+          "t_gates": 1
+        },
+        "full_reduce": {
+          "vertices": 12,
+          "edges": 11,
+          "t_gates": 1
+        },
+        "teleport_reduce": {
+          "vertices": 19,
+          "edges": 18,
+          "t_gates": 1
+        }
+      },
+      "fidelity_p0.001": 0.9965045971908304,
+      "fidelity_p0.005": 0.9826146492686519,
+      "fidelity_p0.01": 0.9654571982918606,
+      "fidelity_p0.05": 0.8361538997078675,
+      "exact_fidelity_p0.001": 0.9967230601122417,
+      "exact_fidelity_p0.005": 0.9837012342340374,
+      "exact_fidelity_p0.01": 0.9676161241600753,
+      "exact_fidelity_p0.05": 0.8463942825271531,
+      "von_neumann_entropy": 1.6017132519074586e-16,
+      "concurrence": 0.0,
+      "purity": 0.9999999999999987,
+      "cosine_novelty": 0.1919,
+      "pca_isolation": 0.2211,
+      "motif_diversity": 0.0029,
+      "composite_novelty": 0.323
+    },
+    "irr_pair26_q6": {
+      "name": "irr_pair26_q6",
+      "n_qubits": 4,
+      "total_gates": 5,
+      "n_1q_gates": 3,
+      "n_2q_gates": 2,
+      "depth": 4,
+      "gates_per_qubit": 1.25,
+      "two_qubit_ratio": 0.4,
+      "raw_vertices": 15,
+      "raw_edges": 13,
+      "reduced_vertices": 12,
+      "reduced_edges": 10,
+      "compression_ratio": 0.19999999999999996,
+      "t_count": 1,
+      "levels": {
+        "raw": {
+          "vertices": 15,
+          "edges": 13,
+          "t_gates": 1
+        },
+        "spider_fused": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "interior_cliff": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "clifford_simp": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "full_reduce": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "teleport_reduce": {
+          "vertices": 15,
+          "edges": 13,
+          "t_gates": 1
+        }
+      },
+      "fidelity_p0.001": 0.997701629639032,
+      "fidelity_p0.005": 0.988540704894997,
+      "fidelity_p0.01": 0.9771626393199,
+      "fidelity_p0.05": 0.8890300746875,
+      "exact_fidelity_p0.001": 0.9978452778496668,
+      "exact_fidelity_p0.005": 0.989256910979293,
+      "exact_fidelity_p0.01": 0.9785899745593026,
+      "exact_fidelity_p0.05": 0.8959656954348326,
+      "von_neumann_entropy": 4.805139755722375e-16,
+      "concurrence": 1.4524150232047395e-20,
+      "purity": 0.9999999999999991,
+      "cosine_novelty": 0.1429,
+      "pca_isolation": 0.0828,
+      "motif_diversity": 0.0014,
+      "composite_novelty": 0.271
+    },
+    "irr_pair27_q6": {
+      "name": "irr_pair27_q6",
+      "n_qubits": 4,
+      "total_gates": 8,
+      "n_1q_gates": 5,
+      "n_2q_gates": 3,
+      "depth": 7,
+      "gates_per_qubit": 2.0,
+      "two_qubit_ratio": 0.375,
+      "raw_vertices": 19,
+      "raw_edges": 18,
+      "reduced_vertices": 13,
+      "reduced_edges": 12,
+      "compression_ratio": 0.3157894736842105,
+      "t_count": 1,
+      "levels": {
+        "raw": {
+          "vertices": 19,
+          "edges": 18,
+          "t_gates": 1
+        },
+        "spider_fused": {
+          "vertices": 15,
+          "edges": 14,
+          "t_gates": 1
+        },
+        "interior_cliff": {
+          "vertices": 13,
+          "edges": 12,
+          "t_gates": 1
+        },
+        "clifford_simp": {
+          "vertices": 13,
+          "edges": 12,
+          "t_gates": 1
+        },
+        "full_reduce": {
+          "vertices": 13,
+          "edges": 12,
+          "t_gates": 1
+        },
+        "teleport_reduce": {
+          "vertices": 19,
+          "edges": 18,
+          "t_gates": 1
+        }
+      },
+      "fidelity_p0.001": 0.9965045971908304,
+      "fidelity_p0.005": 0.9826146492686519,
+      "fidelity_p0.01": 0.9654571982918606,
+      "fidelity_p0.05": 0.8361538997078675,
+      "exact_fidelity_p0.001": 0.9967230601122412,
+      "exact_fidelity_p0.005": 0.9837012342340368,
+      "exact_fidelity_p0.01": 0.9676161241600739,
+      "exact_fidelity_p0.05": 0.8463942825271529,
+      "von_neumann_entropy": 1.6017132519074586e-16,
+      "concurrence": 0.0,
+      "purity": 0.9999999999999987,
+      "cosine_novelty": 0.1056,
+      "pca_isolation": 1.0,
+      "motif_diversity": 0.0029,
+      "composite_novelty": 0.4875
+    },
+    "irr_pair29_q6": {
+      "name": "irr_pair29_q6",
+      "n_qubits": 4,
+      "total_gates": 8,
+      "n_1q_gates": 6,
+      "n_2q_gates": 2,
+      "depth": 7,
+      "gates_per_qubit": 2.0,
+      "two_qubit_ratio": 0.25,
+      "raw_vertices": 18,
+      "raw_edges": 16,
+      "reduced_vertices": 12,
+      "reduced_edges": 11,
+      "compression_ratio": 0.33333333333333337,
+      "t_count": 1,
+      "levels": {
+        "raw": {
+          "vertices": 18,
+          "edges": 16,
+          "t_gates": 1
+        },
+        "spider_fused": {
+          "vertices": 14,
+          "edges": 12,
+          "t_gates": 1
+        },
+        "interior_cliff": {
+          "vertices": 13,
+          "edges": 11,
+          "t_gates": 1
+        },
+        "clifford_simp": {
+          "vertices": 12,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 12,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 18,
+          "edges": 16,
+          "t_gates": 1
+        }
+      },
+      "fidelity_p0.001": 0.9974023490801917,
+      "fidelity_p0.005": 0.9870586351196159,
+      "fidelity_p0.01": 0.9742340819126956,
+      "fidelity_p0.05": 0.8757611896940297,
+      "exact_fidelity_p0.001": 0.9975647024746978,
+      "exact_fidelity_p0.005": 0.9878674708955671,
+      "exact_fidelity_p0.01": 0.9758444524535841,
+      "exact_fidelity_p0.05": 0.8835261167180712,
+      "von_neumann_entropy": 6.406853007629839e-16,
+      "concurrence": 6.265876143775339e-25,
+      "purity": 0.9999999999999987,
+      "cosine_novelty": 0.3939,
+      "pca_isolation": 0.1089,
+      "motif_diversity": 0.0029,
+      "composite_novelty": 0.3657
+    },
+    "irr_pair30_q6": {
+      "name": "irr_pair30_q6",
+      "n_qubits": 4,
+      "total_gates": 6,
+      "n_1q_gates": 5,
+      "n_2q_gates": 1,
+      "depth": 3,
+      "gates_per_qubit": 1.5,
+      "two_qubit_ratio": 0.16666666666666666,
+      "raw_vertices": 15,
+      "raw_edges": 12,
+      "reduced_vertices": 11,
+      "reduced_edges": 8,
+      "compression_ratio": 0.2666666666666667,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 15,
+          "edges": 12,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 13,
+          "edges": 10,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 11,
+          "edges": 8,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 11,
+          "edges": 8,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 11,
+          "edges": 8,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 15,
+          "edges": 12,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9985005998900106,
+      "fidelity_p0.005": 0.9925149862565611,
+      "fidelity_p0.01": 0.985059890104949,
+      "fidelity_p0.05": 0.9264863154657812,
+      "exact_fidelity_p0.001": 0.9985943125379152,
+      "exact_fidelity_p0.005": 0.9929827999297447,
+      "exact_fidelity_p0.01": 0.9859936474157546,
+      "exact_fidelity_p0.05": 0.9310809217027234,
+      "von_neumann_entropy": 1.5659930256767968e-15,
+      "concurrence": 0.0,
+      "purity": 0.9999999999999987,
+      "cosine_novelty": 0.2929,
+      "pca_isolation": 0.333,
+      "motif_diversity": 0.0029,
+      "composite_novelty": 0.3863
+    },
+    "irr_pair31_q6": {
+      "name": "irr_pair31_q6",
+      "n_qubits": 4,
+      "total_gates": 6,
+      "n_1q_gates": 4,
+      "n_2q_gates": 2,
+      "depth": 5,
+      "gates_per_qubit": 1.5,
+      "two_qubit_ratio": 0.3333333333333333,
+      "raw_vertices": 16,
+      "raw_edges": 14,
+      "reduced_vertices": 13,
+      "reduced_edges": 11,
+      "compression_ratio": 0.1875,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 16,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 13,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 13,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 13,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 13,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 16,
+          "edges": 14,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9976018594760682,
+      "fidelity_p0.005": 0.9880464345425496,
+      "fidelity_p0.01": 0.9761854766805801,
+      "fidelity_p0.05": 0.8845849243140624,
+      "exact_fidelity_p0.001": 0.9977517434998743,
+      "exact_fidelity_p0.005": 0.9887935329194123,
+      "exact_fidelity_p0.01": 0.9776738851400074,
+      "exact_fidelity_p0.05": 0.8917983681254763,
+      "von_neumann_entropy": 9.61027951144475e-16,
+      "concurrence": 2.9357123514588005e-20,
+      "purity": 0.9999999999999986,
+      "cosine_novelty": 0.982,
+      "pca_isolation": 0.0004,
+      "motif_diversity": 0.0014,
+      "composite_novelty": 0.5441
+    },
+    "irr_pair32_q6": {
+      "name": "irr_pair32_q6",
+      "n_qubits": 4,
+      "total_gates": 5,
+      "n_1q_gates": 3,
+      "n_2q_gates": 2,
+      "depth": 4,
+      "gates_per_qubit": 1.25,
+      "two_qubit_ratio": 0.4,
+      "raw_vertices": 15,
+      "raw_edges": 13,
+      "reduced_vertices": 12,
+      "reduced_edges": 10,
+      "compression_ratio": 0.19999999999999996,
+      "t_count": 1,
+      "levels": {
+        "raw": {
+          "vertices": 15,
+          "edges": 13,
+          "t_gates": 1
+        },
+        "spider_fused": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "interior_cliff": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "clifford_simp": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "full_reduce": {
+          "vertices": 12,
+          "edges": 10,
+          "t_gates": 1
+        },
+        "teleport_reduce": {
+          "vertices": 15,
+          "edges": 13,
+          "t_gates": 1
+        }
+      },
+      "fidelity_p0.001": 0.997701629639032,
+      "fidelity_p0.005": 0.988540704894997,
+      "fidelity_p0.01": 0.9771626393199,
+      "fidelity_p0.05": 0.8890300746875,
+      "exact_fidelity_p0.001": 0.9978452778496668,
+      "exact_fidelity_p0.005": 0.989256910979293,
+      "exact_fidelity_p0.01": 0.9785899745593026,
+      "exact_fidelity_p0.05": 0.8959656954348326,
+      "von_neumann_entropy": 4.805139755722375e-16,
+      "concurrence": 1.4524150232047395e-20,
+      "purity": 0.9999999999999991,
+      "cosine_novelty": 0.1429,
+      "pca_isolation": 0.0828,
+      "motif_diversity": 0.0014,
+      "composite_novelty": 0.271
+    },
+    "irr_pair33_q6": {
+      "name": "irr_pair33_q6",
+      "n_qubits": 4,
+      "total_gates": 6,
+      "n_1q_gates": 4,
+      "n_2q_gates": 2,
+      "depth": 5,
+      "gates_per_qubit": 1.5,
+      "two_qubit_ratio": 0.3333333333333333,
+      "raw_vertices": 16,
+      "raw_edges": 14,
+      "reduced_vertices": 13,
+      "reduced_edges": 11,
+      "compression_ratio": 0.1875,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 16,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 13,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 13,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 13,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 13,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 16,
+          "edges": 14,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9976018594760682,
+      "fidelity_p0.005": 0.9880464345425496,
+      "fidelity_p0.01": 0.9761854766805801,
+      "fidelity_p0.05": 0.8845849243140624,
+      "exact_fidelity_p0.001": 0.9977517434998743,
+      "exact_fidelity_p0.005": 0.9887935329194123,
+      "exact_fidelity_p0.01": 0.9776738851400074,
+      "exact_fidelity_p0.05": 0.8917983681254763,
+      "von_neumann_entropy": 9.61027951144475e-16,
+      "concurrence": 2.9357123514588005e-20,
+      "purity": 0.9999999999999986,
+      "cosine_novelty": 0.982,
+      "pca_isolation": 0.0004,
+      "motif_diversity": 0.0014,
+      "composite_novelty": 0.5441
+    },
+    "irr_pair34_q6": {
+      "name": "irr_pair34_q6",
+      "n_qubits": 4,
+      "total_gates": 6,
+      "n_1q_gates": 4,
+      "n_2q_gates": 2,
+      "depth": 5,
+      "gates_per_qubit": 1.5,
+      "two_qubit_ratio": 0.3333333333333333,
+      "raw_vertices": 16,
+      "raw_edges": 14,
+      "reduced_vertices": 13,
+      "reduced_edges": 11,
+      "compression_ratio": 0.1875,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 16,
+          "edges": 14,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 13,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 13,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 13,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 13,
+          "edges": 11,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 16,
+          "edges": 14,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9976018594760682,
+      "fidelity_p0.005": 0.9880464345425496,
+      "fidelity_p0.01": 0.9761854766805801,
+      "fidelity_p0.05": 0.8845849243140624,
+      "exact_fidelity_p0.001": 0.9977517434998743,
+      "exact_fidelity_p0.005": 0.9887935329194123,
+      "exact_fidelity_p0.01": 0.9776738851400074,
+      "exact_fidelity_p0.05": 0.8917983681254763,
+      "von_neumann_entropy": 9.61027951144475e-16,
+      "concurrence": 2.9357123514588005e-20,
+      "purity": 0.9999999999999986,
+      "cosine_novelty": 0.982,
+      "pca_isolation": 0.0004,
+      "motif_diversity": 0.0014,
+      "composite_novelty": 0.5441
+    },
+    "irr_layered_q5": {
+      "name": "irr_layered_q5",
+      "n_qubits": 4,
+      "total_gates": 18,
+      "n_1q_gates": 7,
+      "n_2q_gates": 11,
+      "depth": 14,
+      "gates_per_qubit": 4.5,
+      "two_qubit_ratio": 0.6111111111111112,
+      "raw_vertices": 37,
+      "raw_edges": 44,
+      "reduced_vertices": 16,
+      "reduced_edges": 17,
+      "compression_ratio": 0.5675675675675675,
+      "t_count": 2,
+      "levels": {
+        "raw": {
+          "vertices": 37,
+          "edges": 44,
+          "t_gates": 2
+        },
+        "spider_fused": {
+          "vertices": 25,
+          "edges": 30,
+          "t_gates": 2
+        },
+        "interior_cliff": {
+          "vertices": 16,
+          "edges": 17,
+          "t_gates": 2
+        },
+        "clifford_simp": {
+          "vertices": 16,
+          "edges": 17,
+          "t_gates": 2
+        },
+        "full_reduce": {
+          "vertices": 16,
+          "edges": 17,
+          "t_gates": 2
+        },
+        "teleport_reduce": {
+          "vertices": 37,
+          "edges": 44,
+          "t_gates": 2
+        }
+      },
+      "fidelity_p0.001": 0.9883627046117097,
+      "fidelity_p0.005": 0.9430473030074086,
+      "fidelity_p0.01": 0.889089657276724,
+      "fidelity_p0.05": 0.5491882330000617,
+      "exact_fidelity_p0.001": 0.9890900363667811,
+      "exact_fidelity_p0.005": 0.9466068482863155,
+      "exact_fidelity_p0.01": 0.896021556027922,
+      "exact_fidelity_p0.05": 0.5773639722099635,
+      "von_neumann_entropy": 0.6008760366928573,
+      "concurrence": 0.0,
+      "purity": 0.7499999999999987,
+      "cosine_novelty": 0.3287,
+      "pca_isolation": 0.779,
+      "motif_diversity": 0.0172,
+      "composite_novelty": 0.5132
+    },
+    "void_0_q5": {
+      "name": "void_0_q5",
+      "n_qubits": 4,
+      "total_gates": 13,
+      "n_1q_gates": 7,
+      "n_2q_gates": 6,
+      "depth": 9,
+      "gates_per_qubit": 3.25,
+      "two_qubit_ratio": 0.46153846153846156,
+      "raw_vertices": 27,
+      "raw_edges": 29,
+      "reduced_vertices": 13,
+      "reduced_edges": 12,
+      "compression_ratio": 0.5185185185185186,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 27,
+          "edges": 29,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 18,
+          "edges": 20,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 13,
+          "edges": 12,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 13,
+          "edges": 12,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 13,
+          "edges": 12,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 27,
+          "edges": 29,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9933193782373423,
+      "fidelity_p0.005": 0.9669812957859355,
+      "fidelity_p0.01": 0.9349095265194572,
+      "fidelity_p0.05": 0.7097463977006565,
+      "exact_fidelity_p0.001": 0.9937369174949571,
+      "exact_fidelity_p0.005": 0.9690449656718636,
+      "exact_fidelity_p0.01": 0.9389776823179299,
+      "exact_fidelity_p0.05": 0.7278872500864928,
+      "von_neumann_entropy": 1.0000000000000007,
+      "concurrence": 3.766435984788314e-20,
+      "purity": 0.4999999999999989,
+      "cosine_novelty": 0.2437,
+      "pca_isolation": 0.5658,
+      "motif_diversity": 0.0215,
+      "composite_novelty": 0.431
+    },
+    "void_1_q5": {
+      "name": "void_1_q5",
+      "n_qubits": 4,
+      "total_gates": 13,
+      "n_1q_gates": 7,
+      "n_2q_gates": 6,
+      "depth": 9,
+      "gates_per_qubit": 3.25,
+      "two_qubit_ratio": 0.46153846153846156,
+      "raw_vertices": 27,
+      "raw_edges": 29,
+      "reduced_vertices": 13,
+      "reduced_edges": 12,
+      "compression_ratio": 0.5185185185185186,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 27,
+          "edges": 29,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 18,
+          "edges": 20,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 13,
+          "edges": 12,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 13,
+          "edges": 12,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 13,
+          "edges": 12,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 27,
+          "edges": 29,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9933193782373423,
+      "fidelity_p0.005": 0.9669812957859355,
+      "fidelity_p0.01": 0.9349095265194572,
+      "fidelity_p0.05": 0.7097463977006565,
+      "exact_fidelity_p0.001": 0.9937369174949571,
+      "exact_fidelity_p0.005": 0.9690449656718636,
+      "exact_fidelity_p0.01": 0.9389776823179299,
+      "exact_fidelity_p0.05": 0.7278872500864928,
+      "von_neumann_entropy": 1.0000000000000007,
+      "concurrence": 3.766435984788314e-20,
+      "purity": 0.4999999999999989,
+      "cosine_novelty": 0.2437,
+      "pca_isolation": 0.5658,
+      "motif_diversity": 0.0215,
+      "composite_novelty": 0.431
+    },
+    "void_2_q5": {
+      "name": "void_2_q5",
+      "n_qubits": 4,
+      "total_gates": 14,
+      "n_1q_gates": 5,
+      "n_2q_gates": 9,
+      "depth": 12,
+      "gates_per_qubit": 3.5,
+      "two_qubit_ratio": 0.6428571428571429,
+      "raw_vertices": 31,
+      "raw_edges": 36,
+      "reduced_vertices": 15,
+      "reduced_edges": 18,
+      "compression_ratio": 0.5161290322580645,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 31,
+          "edges": 36,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 21,
+          "edges": 26,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 15,
+          "edges": 18,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 15,
+          "edges": 18,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 15,
+          "edges": 18,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 31,
+          "edges": 36,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.990540497261493,
+      "fidelity_p0.005": 0.9535022429410486,
+      "fidelity_p0.01": 0.9089587872880917,
+      "fidelity_p0.05": 0.6146499509897227,
+      "exact_fidelity_p0.001": 0.9911317163762023,
+      "exact_fidelity_p0.005": 0.9564083531787753,
+      "exact_fidelity_p0.01": 0.9146488636594187,
+      "exact_fidelity_p0.05": 0.6387343300445929,
+      "von_neumann_entropy": 6.406853007629835e-16,
+      "concurrence": 0.9999999999999993,
+      "purity": 0.9999999999999984,
+      "cosine_novelty": 0.2457,
+      "pca_isolation": 0.38,
+      "motif_diversity": 0.023,
+      "composite_novelty": 0.3856
+    },
+    "void_3_q5": {
+      "name": "void_3_q5",
+      "n_qubits": 4,
+      "total_gates": 13,
+      "n_1q_gates": 7,
+      "n_2q_gates": 6,
+      "depth": 9,
+      "gates_per_qubit": 3.25,
+      "two_qubit_ratio": 0.46153846153846156,
+      "raw_vertices": 27,
+      "raw_edges": 29,
+      "reduced_vertices": 13,
+      "reduced_edges": 12,
+      "compression_ratio": 0.5185185185185186,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 27,
+          "edges": 29,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 18,
+          "edges": 20,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 13,
+          "edges": 12,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 13,
+          "edges": 12,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 13,
+          "edges": 12,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 27,
+          "edges": 29,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9933193782373423,
+      "fidelity_p0.005": 0.9669812957859355,
+      "fidelity_p0.01": 0.9349095265194572,
+      "fidelity_p0.05": 0.7097463977006565,
+      "exact_fidelity_p0.001": 0.9937369174949571,
+      "exact_fidelity_p0.005": 0.9690449656718636,
+      "exact_fidelity_p0.01": 0.9389776823179299,
+      "exact_fidelity_p0.05": 0.7278872500864928,
+      "von_neumann_entropy": 1.0000000000000007,
+      "concurrence": 3.766435984788314e-20,
+      "purity": 0.4999999999999989,
+      "cosine_novelty": 0.2437,
+      "pca_isolation": 0.5658,
+      "motif_diversity": 0.0215,
+      "composite_novelty": 0.431
+    },
+    "legacy_tvh": {
+      "name": "legacy_tvh",
+      "n_qubits": 4,
+      "total_gates": 60,
+      "n_1q_gates": 42,
+      "n_2q_gates": 18,
+      "depth": 31,
+      "gates_per_qubit": 15.0,
+      "two_qubit_ratio": 0.3,
+      "raw_vertices": 86,
+      "raw_edges": 100,
+      "reduced_vertices": 27,
+      "reduced_edges": 55,
+      "compression_ratio": 0.686046511627907,
+      "t_count": 0,
+      "levels": {
+        "raw": {
+          "vertices": 86,
+          "edges": 100,
+          "t_gates": 0
+        },
+        "spider_fused": {
+          "vertices": 61,
+          "edges": 75,
+          "t_gates": 0
+        },
+        "interior_cliff": {
+          "vertices": 27,
+          "edges": 45,
+          "t_gates": 0
+        },
+        "clifford_simp": {
+          "vertices": 28,
+          "edges": 59,
+          "t_gates": 0
+        },
+        "full_reduce": {
+          "vertices": 27,
+          "edges": 55,
+          "t_gates": 0
+        },
+        "teleport_reduce": {
+          "vertices": 86,
+          "edges": 100,
+          "t_gates": 0
+        }
+      },
+      "fidelity_p0.001": 0.9780355929320431,
+      "fidelity_p0.005": 0.894732037860695,
+      "fidelity_p0.01": 0.8001732123013973,
+      "fidelity_p0.05": 0.3218061106728703,
+      "exact_fidelity_p0.001": 0.9794083783884875,
+      "exact_fidelity_p0.005": 0.9013113065264666,
+      "exact_fidelity_p0.01": 0.8126624140481221,
+      "exact_fidelity_p0.05": 0.364193262690156,
+      "von_neumann_entropy": 0.780262254191839,
+      "concurrence": 0.0,
+      "purity": 0.691930749070248
+    },
+    "legacy_deb": {
+      "name": "legacy_deb",
+      "n_qubits": 4,
+      "total_gates": 12,
+      "n_1q_gates": 7,
+      "n_2q_gates": 5,
+      "depth": 6,
+      "gates_per_qubit": 3.0,
+      "two_qubit_ratio": 0.4166666666666667,
+      "raw_vertices": 33,
+      "raw_edges": 34,
+      "reduced_vertices": 20,
+      "reduced_edges": 19,
+      "compression_ratio": 0.3939393939393939,
+      "t_count": 4,
+      "levels": {
+        "raw": {
+          "vertices": 33,
+          "edges": 34,
+          "t_gates": 4
+        },
+        "spider_fused": {
+          "vertices": 27,
+          "edges": 28,
+          "t_gates": 4
+        },
+        "interior_cliff": {
+          "vertices": 20,
+          "edges": 19,
+          "t_gates": 4
+        },
+        "clifford_simp": {
+          "vertices": 20,
+          "edges": 19,
+          "t_gates": 4
+        },
+        "full_reduce": {
+          "vertices": 20,
+          "edges": 19,
+          "t_gates": 4
+        },
+        "teleport_reduce": {
+          "vertices": 33,
+          "edges": 34,
+          "t_gates": 4
+        }
+      },
+      "fidelity_p0.001": 0.9943136919292717,
+      "fidelity_p0.005": 0.9718404982773221,
+      "fidelity_p0.01": 0.9443530570903608,
+      "fidelity_p0.05": 0.7471014712638488,
+      "exact_fidelity_p0.001": 0.9946690870184218,
+      "exact_fidelity_p0.005": 0.9736004689727722,
+      "exact_fidelity_p0.01": 0.9478309935712596,
+      "exact_fidelity_p0.05": 0.7629076341851526,
+      "von_neumann_entropy": 0.8112781244591337,
+      "concurrence": 0.4999999984337079,
+      "purity": 0.6249999999999993
+    },
+    "legacy_icc": {
+      "name": "legacy_icc",
+      "n_qubits": 4,
+      "total_gates": 39,
+      "n_1q_gates": 23,
+      "n_2q_gates": 16,
+      "depth": 20,
+      "gates_per_qubit": 9.75,
+      "two_qubit_ratio": 0.41025641025641024,
+      "raw_vertices": 63,
+      "raw_edges": 75,
+      "reduced_vertices": 19,
+      "reduced_edges": 28,
+      "compression_ratio": 0.6984126984126984,
+      "t_count": 3,
+      "levels": {
+        "raw": {
+          "vertices": 63,
+          "edges": 75,
+          "t_gates": 3
+        },
+        "spider_fused": {
+          "vertices": 38,
+          "edges": 46,
+          "t_gates": 3
+        },
+        "interior_cliff": {
+          "vertices": 19,
+          "edges": 28,
+          "t_gates": 3
+        },
+        "clifford_simp": {
+          "vertices": 19,
+          "edges": 28,
+          "t_gates": 3
+        },
+        "full_reduce": {
+          "vertices": 19,
+          "edges": 28,
+          "t_gates": 3
+        },
+        "teleport_reduce": {
+          "vertices": 63,
+          "edges": 75,
+          "t_gates": 3
+        }
+      },
+      "fidelity_p0.001": 0.9818584551796475,
+      "fidelity_p0.005": 0.912375587638063,
+      "fidelity_p0.01": 0.8320881607551615,
+      "fidelity_p0.05": 0.39220086012596345,
+      "exact_fidelity_p0.001": 0.9829923045843921,
+      "exact_fidelity_p0.005": 0.9178521194705198,
+      "exact_fidelity_p0.01": 0.8425826587452422,
+      "exact_fidelity_p0.05": 0.4301883172943524,
+      "von_neumann_entropy": 1.2017520733857128,
+      "concurrence": 0.0,
+      "purity": 0.5624999999999969
+    }
+  },
+  "winners": [
+    {
+      "candidate": "irr_pair17_q6",
+      "metric": "gates_per_qubit",
+      "candidate_value": 0.75,
+      "best_standard": "std_ghz_state",
+      "standard_value": 1.0,
+      "margin": 0.25
+    },
+    {
+      "candidate": "irr_pair24_q6",
+      "metric": "gates_per_qubit",
+      "candidate_value": 0.75,
+      "best_standard": "std_ghz_state",
+      "standard_value": 1.0,
+      "margin": 0.25
+    },
+    {
+      "candidate": "irr_pair16_q4",
+      "metric": "gates_per_qubit",
+      "candidate_value": 0.75,
+      "best_standard": "std_ghz_state",
+      "standard_value": 1.0,
+      "margin": 0.25
+    },
+    {
+      "candidate": "irr_pair19_q5",
+      "metric": "gates_per_qubit",
+      "candidate_value": 0.75,
+      "best_standard": "std_ghz_state",
+      "standard_value": 1.0,
+      "margin": 0.25
+    },
+    {
+      "candidate": "irr_pair23_q6",
+      "metric": "gates_per_qubit",
+      "candidate_value": 0.75,
+      "best_standard": "std_ghz_state",
+      "standard_value": 1.0,
+      "margin": 0.25
+    },
+    {
+      "candidate": "irr_pair18_q6",
+      "metric": "gates_per_qubit",
+      "candidate_value": 0.75,
+      "best_standard": "std_ghz_state",
+      "standard_value": 1.0,
+      "margin": 0.25
+    },
+    {
+      "candidate": "irr_pair15_q6",
+      "metric": "t_count",
+      "candidate_value": 1,
+      "best_standard": "std_w_state",
+      "standard_value": 2,
+      "margin": 0.5
+    },
+    {
+      "candidate": "irr_pair27_q6",
+      "metric": "t_count",
+      "candidate_value": 1,
+      "best_standard": "std_w_state",
+      "standard_value": 2,
+      "margin": 0.5
+    },
+    {
+      "candidate": "irr_pair29_q6",
+      "metric": "t_count",
+      "candidate_value": 1,
+      "best_standard": "std_w_state",
+      "standard_value": 2,
+      "margin": 0.5
+    },
+    {
+      "candidate": "irr_pair01_q6",
+      "metric": "t_count",
+      "candidate_value": 1,
+      "best_standard": "std_w_state",
+      "standard_value": 2,
+      "margin": 0.5
+    },
+    {
+      "candidate": "irr_pair26_q6",
+      "metric": "t_count",
+      "candidate_value": 1,
+      "best_standard": "std_w_state",
+      "standard_value": 2,
+      "margin": 0.5
+    },
+    {
+      "candidate": "irr_pair25_q6",
+      "metric": "t_count",
+      "candidate_value": 1,
+      "best_standard": "std_w_state",
+      "standard_value": 2,
+      "margin": 0.5
+    },
+    {
+      "candidate": "irr_pair06_q6",
+      "metric": "t_count",
+      "candidate_value": 1,
+      "best_standard": "std_w_state",
+      "standard_value": 2,
+      "margin": 0.5
+    },
+    {
+      "candidate": "irr_pair32_q6",
+      "metric": "t_count",
+      "candidate_value": 1,
+      "best_standard": "std_w_state",
+      "standard_value": 2,
+      "margin": 0.5
+    },
+    {
+      "candidate": "irr_pair21_q5",
+      "metric": "t_count",
+      "candidate_value": 1,
+      "best_standard": "std_w_state",
+      "standard_value": 2,
+      "margin": 0.5
+    },
+    {
+      "candidate": "irr_pair20_q5",
+      "metric": "t_count",
+      "candidate_value": 1,
+      "best_standard": "std_w_state",
+      "standard_value": 2,
+      "margin": 0.5
+    }
+  ],
+  "elapsed_seconds": 4.734112977981567
+}
