@@ -1,0 +1,484 @@
+{
+  "irr_pair11_q6_6q_heisenberg": {
+    "1.1_circuit_identity": {
+      "4q": {
+        "n_gates": 12,
+        "n_2q_gates": 10,
+        "depth": 10,
+        "gate_sequence": [
+          {
+            "gate": "cx",
+            "qubits": [
+              1,
+              0
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              2,
+              0
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              3,
+              0
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              0,
+              1
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              0,
+              2
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              1,
+              2
+            ],
+            "params": []
+          },
+          {
+            "gate": "t",
+            "qubits": [
+              0
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              0,
+              1
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              1,
+              2
+            ],
+            "params": []
+          },
+          {
+            "gate": "t",
+            "qubits": [
+              3
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              1,
+              2
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              2,
+              3
+            ],
+            "params": []
+          }
+        ],
+        "unitary_fidelity": 0.9999999999999989
+      },
+      "6q": {
+        "n_gates": 12,
+        "n_2q_gates": 10,
+        "depth": 8,
+        "gate_sequence": [
+          {
+            "gate": "cx",
+            "qubits": [
+              1,
+              0
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              2,
+              0
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              3,
+              0
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              1,
+              2
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              1,
+              3
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              2,
+              3
+            ],
+            "params": []
+          },
+          {
+            "gate": "t",
+            "qubits": [
+              3
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              3,
+              4
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              4,
+              5
+            ],
+            "params": []
+          },
+          {
+            "gate": "t",
+            "qubits": [
+              2
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              0,
+              1
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              1,
+              2
+            ],
+            "params": []
+          }
+        ],
+        "unitary_fidelity": 0.9999999999999978
+      },
+      "8q": {
+        "n_gates": 12,
+        "n_2q_gates": 10,
+        "depth": 10,
+        "gate_sequence": [
+          {
+            "gate": "cx",
+            "qubits": [
+              1,
+              0
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              2,
+              0
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              3,
+              0
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              1,
+              2
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              1,
+              3
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              2,
+              3
+            ],
+            "params": []
+          },
+          {
+            "gate": "t",
+            "qubits": [
+              3
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              3,
+              4
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              4,
+              5
+            ],
+            "params": []
+          },
+          {
+            "gate": "t",
+            "qubits": [
+              6
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              4,
+              5
+            ],
+            "params": []
+          },
+          {
+            "gate": "cx",
+            "qubits": [
+              5,
+              6
+            ],
+            "params": []
+          }
+        ],
+        "unitary_fidelity": null
+      }
+    },
+    "1.2_optimizer_sensitivity": {
+      "COBYLA_candidate": {
+        "optimizer": "COBYLA",
+        "circuit": "candidate",
+        "best_energy": -9.306204354467793,
+        "error": 0.06698250597548387,
+        "n_evals": "31905"
+      },
+      "COBYLA_cx_chain": {
+        "optimizer": "COBYLA",
+        "circuit": "cx_chain",
+        "best_energy": -4.999999940895079,
+        "error": 0.49871212394589154,
+        "n_evals": "32000"
+      },
+      "COBYLA_hea": {
+        "optimizer": "COBYLA",
+        "circuit": "hea",
+        "best_energy": -4.999999997763453,
+        "error": 0.4987121182444062,
+        "n_evals": "30533"
+      },
+      "L-BFGS-B_candidate": {
+        "optimizer": "L-BFGS-B",
+        "circuit": "candidate",
+        "best_energy": -9.307992096307204,
+        "error": 0.06680327131144281,
+        "n_evals": 45350
+      },
+      "L-BFGS-B_cx_chain": {
+        "optimizer": "L-BFGS-B",
+        "circuit": "cx_chain",
+        "best_energy": -4.999999999970813,
+        "error": 0.49871211802310167,
+        "n_evals": 38275
+      },
+      "L-BFGS-B_hea": {
+        "optimizer": "L-BFGS-B",
+        "circuit": "hea",
+        "best_energy": -4.999999999976824,
+        "error": 0.498712118022499,
+        "n_evals": 22650
+      },
+      "Nelder-Mead_candidate": {
+        "optimizer": "Nelder-Mead",
+        "circuit": "candidate",
+        "best_energy": -8.773150074081068,
+        "error": 0.12042523621455209,
+        "n_evals": 38835
+      },
+      "Nelder-Mead_cx_chain": {
+        "optimizer": "Nelder-Mead",
+        "circuit": "cx_chain",
+        "best_energy": -4.983382555031309,
+        "error": 0.5003781427786297,
+        "n_evals": 39079
+      },
+      "Nelder-Mead_hea": {
+        "optimizer": "Nelder-Mead",
+        "circuit": "hea",
+        "best_energy": -4.999976788863924,
+        "error": 0.4987144451124238,
+        "n_evals": 39774
+      },
+      "Powell_candidate": {
+        "optimizer": "Powell",
+        "circuit": "candidate",
+        "best_energy": -9.30795181256315,
+        "error": 0.06680731006198985,
+        "n_evals": 117269
+      },
+      "Powell_cx_chain": {
+        "optimizer": "Powell",
+        "circuit": "cx_chain",
+        "best_energy": -4.999997486197033,
+        "error": 0.4987123700479684,
+        "n_evals": 62845
+      },
+      "Powell_hea": {
+        "optimizer": "Powell",
+        "circuit": "hea",
+        "best_energy": -4.999998289503571,
+        "error": 0.4987122895104018,
+        "n_evals": 54999
+      },
+      "SPSA_candidate": {
+        "optimizer": "SPSA",
+        "circuit": "candidate",
+        "best_energy": -8.878731756605045,
+        "error": 0.10983987261288988,
+        "n_evals": 128000
+      },
+      "SPSA_cx_chain": {
+        "optimizer": "SPSA",
+        "circuit": "cx_chain",
+        "best_energy": -4.971409804031992,
+        "error": 0.5015785017766137,
+        "n_evals": 128000
+      },
+      "SPSA_hea": {
+        "optimizer": "SPSA",
+        "circuit": "hea",
+        "best_energy": -4.995330581897674,
+        "error": 0.4991802625622941,
+        "n_evals": 128000
+      },
+      "candidate_wins_all": true,
+      "wins_by_optimizer": {
+        "COBYLA": true,
+        "L-BFGS-B": true,
+        "Nelder-Mead": true,
+        "Powell": true,
+        "SPSA": true
+      }
+    },
+    "1.3_statistical_significance": {
+      "n_trials": 20,
+      "candidate_errors": [
+        0.06992818237135918,
+        0.07077128472089263,
+        0.0724065878416759,
+        0.0680395722259156,
+        0.07361906402447428,
+        0.07346830627136014,
+        0.07632494105178636,
+        0.08385862140700605,
+        0.06791514436396291,
+        0.20330179704754836,
+        0.07098636173646872,
+        0.08047584073322632,
+        0.07440631010167312,
+        0.0869171536143033,
+        0.07430021544038717,
+        0.16895278971413344,
+        0.06716990509901986,
+        0.07240501674743138,
+        0.07303989203420869,
+        0.06746494838550159
+      ],
+      "baseline_errors": [
+        0.4987170577782005,
+        0.49876611615383193,
+        0.4987150503205107,
+        0.49877404752561244,
+        0.49889594969883533,
+        0.4988547540306716,
+        0.49874416880369105,
+        0.49890335289432997,
+        0.49871906424268814,
+        0.4987158916955091,
+        0.49877138911169594,
+        0.4988111517466778,
+        0.4988333721784567,
+        0.4987642867707648,
+        0.4987482896376133,
+        0.49885935286565963,
+        0.49873672099888866,
+        0.49877098942535913,
+        0.4987332873087678,
+        0.49872837432564904
+      ],
+      "candidate_mean": 0.08478759674661676,
+      "candidate_std": 0.034585844365436665,
+      "baseline_mean": 0.4987781333756708,
+      "baseline_std": 5.913462943805565e-05,
+      "t_statistic": -52.175689452433296,
+      "p_value": 5.567860017289348e-22,
+      "cohens_d": 16.928028982902134,
+      "ci_95_low": 0.31179801718715433,
+      "ci_95_high": 0.43142270566900115,
+      "significant_at_005": "True"
+    }
+  }
+}
