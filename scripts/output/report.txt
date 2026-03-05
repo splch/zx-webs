@@ -2,63 +2,76 @@
 QUANTUM ALGORITHM PHYLOGENY — ZX MOTIF FINGERPRINT ANALYSIS
 ======================================================================
 
-Corpus: 88 algorithm instances
-Motif library: 367 motifs (15 hand-crafted + discovered)
+Corpus: 184 algorithm instances
+Motif library: 697 motifs (15 hand-crafted + discovered)
 
 ─── Motif Universality ───
-  universal   : 8
-  common      : 29
-  specific    : 323
-  unused      : 7
+  universal   : 6
+  common      : 30
+  specific    : 655
+  unused      : 6
 
 Universal motifs (present in ≥80% of families):
-  cx_pair                         (10/10 families)
-  syndrome_extraction             (10/10 families)
-  syndrome_extraction_param       (10/10 families)
-  x_hub_3z_param                  (8/10 families)
-  auto_e6f788f36bca2b43309cccea1713d508  (10/10 families)
-  auto_91d4674adae9a55e1397977512c89818  (8/10 families)
-  nbr_8f631cd937b2165b7a499b3b3f22145b  (10/10 families)
-  nbr_7aee5bd6bba6f751b6478b70d1c35d51  (9/10 families)
+  cx_pair                         (17/19 families)
+  syndrome_extraction             (17/19 families)
+  syndrome_extraction_param       (18/19 families)
+  x_hub_3z_param                  (17/19 families)
+  auto_e6f788f36bca2b43309cccea1713d508  (17/19 families)
+  nbr_8f631cd937b2165b7a499b3b3f22145b  (17/19 families)
 
 ─── PCA Variance Explained ───
-  PC1: 33.2%  PC2: 20.1%
+  PC1: 21.5%  PC2: 15.0%
 
 ─── Motifs Surviving Full Reduction ───
   phase_gadget_2t
   phase_gadget_3t
   hadamard_sandwich
   cluster_chain
+  auto_56c28531e8d24933b1cd4783868f1a39
+  auto_a4116c0e9161996c346ae2d5e02595a3
+  auto_7d224d9ecf8c5241ca0fdb53978426b9
+  auto_4f85981043c4bce2d1d579a234e586b1
+  auto_b71107166c6dbf434e12e77ee4a6088a
+  auto_610792fa287d7141ed2c6a5c053b57c0
 
 ─── Cross-family Structural Relatives (30 found) ───
-  bbpssw_distillation_q4         (distillation      ) <-> ghz_state_q6                   (entanglement      )  sim=0.990
+  bell_state_q2                  (entanglement      ) <-> pauli_twirling_q2              (error_mitigation  )  sim=1.000
+  data_reuploading_q4            (machine_learning  ) <-> varqite_q3                     (variational       )  sim=1.000
+  data_reuploading_q4            (machine_learning  ) <-> varqite_q4                     (variational       )  sim=1.000
+  data_reuploading_q5            (machine_learning  ) <-> varqite_q5                     (variational       )  sim=1.000
+  swap_test_q5                   (protocol          ) <-> vqd_q4                         (variational       )  sim=0.993
+  swap_test_q5                   (protocol          ) <-> vqd_q5                         (variational       )  sim=0.993
+  qgan_generator_q2              (machine_learning  ) <-> vqls_q2                        (linear_algebra    )  sim=0.991
   bbpssw_distillation_q4         (distillation      ) <-> ghz_state_q5                   (entanglement      )  sim=0.982
-  ghz_state_q3                   (entanglement      ) <-> teleportation_q3               (protocol          )  sim=0.978
-  entanglement_swapping_q4       (protocol          ) <-> ghz_state_q4                   (entanglement      )  sim=0.958
-  bbpssw_distillation_q4         (distillation      ) <-> ghz_state_q4                   (entanglement      )  sim=0.956
-  entanglement_swapping_q4       (protocol          ) <-> ghz_state_q5                   (entanglement      )  sim=0.953
-  entanglement_swapping_q4       (protocol          ) <-> ghz_state_q6                   (entanglement      )  sim=0.947
-  qaoa_maxcut_q6                 (variational       ) <-> trotter_ising_q6               (simulation        )  sim=0.936
-  qaoa_maxcut_q5                 (variational       ) <-> trotter_ising_q6               (simulation        )  sim=0.933
-  qaoa_maxcut_q6                 (variational       ) <-> trotter_ising_q5               (simulation        )  sim=0.931
-  qaoa_maxcut_q5                 (variational       ) <-> trotter_ising_q5               (simulation        )  sim=0.929
-  qaoa_maxcut_q4                 (variational       ) <-> trotter_ising_q6               (simulation        )  sim=0.925
-  qaoa_maxcut_q4                 (variational       ) <-> trotter_ising_q5               (simulation        )  sim=0.923
-  ghz_state_q4                   (entanglement      ) <-> teleportation_q3               (protocol          )  sim=0.923
-  bbpssw_distillation_q4         (distillation      ) <-> entanglement_swapping_q4       (protocol          )  sim=0.916
+  qgan_generator_q5              (machine_learning  ) <-> vqls_q5                        (linear_algebra    )  sim=0.982
+  data_reuploading_q4            (machine_learning  ) <-> varqite_q5                     (variational       )  sim=0.980
+  data_reuploading_q5            (machine_learning  ) <-> varqite_q3                     (variational       )  sim=0.980
+  data_reuploading_q5            (machine_learning  ) <-> varqite_q4                     (variational       )  sim=0.980
+  qgan_generator_q4              (machine_learning  ) <-> vqls_q5                        (linear_algebra    )  sim=0.979
+  qgan_generator_q4              (machine_learning  ) <-> vqls_q4                        (linear_algebra    )  sim=0.978
+  qgan_generator_q3              (machine_learning  ) <-> vqls_q3                        (linear_algebra    )  sim=0.976
 
 ─── Motif Coverage ───
-  Overall mean coverage: 81.8%
-  simulation          : 86.2%
-  transform           : 85.6%
-  error_correction    : 85.5%
-  entanglement        : 85.0%
-  machine_learning    : 83.4%
-  oracle              : 82.0%
-  arithmetic          : 79.4%
-  variational         : 73.6%
-  protocol            : 70.5%
-  distillation        : 61.1%
+  Overall mean coverage: 78.6%
+  error_correction    : 90.3%
+  tda                 : 86.7%
+  entanglement        : 85.3%
+  metrology           : 85.0%
+  communication       : 84.2%
+  topological         : 83.8%
+  variational         : 83.5%
+  machine_learning    : 82.7%
+  transform           : 82.5%
+  differential_equations: 81.8%
+  oracle              : 79.7%
+  protocol            : 79.6%
+  error_mitigation    : 78.5%
+  arithmetic          : 77.7%
+  linear_algebra      : 77.0%
+  simulation          : 73.9%
+  sampling            : 63.9%
+  cryptography        : 56.5%
+  distillation        : 41.7%
 
 ======================================================================
 Outputs saved to: scripts/output/

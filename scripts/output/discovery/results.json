@@ -45,103 +45,121 @@
   },
   "placement": {
     "trotter_variational_hybrid_q4": {
-      "nearest_algorithm": "cluster_state_q3",
+      "nearest_algorithm": "graph_state_q5",
       "nearest_family": "entanglement",
-      "nearest_similarity": 0.7434,
-      "closest_family": "entanglement",
+      "nearest_similarity": 0.9317,
+      "closest_family": "error_correction",
       "family_distances": {
-        "arithmetic": 0.2193,
-        "distillation": 0.202,
-        "entanglement": 0.0926,
-        "error_correction": 0.1977,
-        "machine_learning": 0.2174,
-        "oracle": 0.2049,
-        "protocol": 0.3594,
-        "simulation": 0.2011,
-        "transform": 0.2027,
-        "variational": 0.178
+        "arithmetic": 0.1426,
+        "communication": 0.1348,
+        "cryptography": 0.2399,
+        "differential_equations": 0.1298,
+        "distillation": 0.1509,
+        "entanglement": 0.1326,
+        "error_correction": 0.0552,
+        "error_mitigation": 0.1652,
+        "linear_algebra": 0.1422,
+        "machine_learning": 0.144,
+        "metrology": 0.1424,
+        "oracle": 0.1244,
+        "protocol": 0.1968,
+        "sampling": 0.0914,
+        "simulation": 0.1435,
+        "tda": 0.1344,
+        "topological": 0.139,
+        "transform": 0.13,
+        "variational": 0.1334
       },
-      "novelty_score": 0.2566,
+      "novelty_score": 0.0683,
       "pca_coords": [
-        0.15452955042969668,
-        0.003063869984958202
+        0.1055376416419896,
+        -0.008823359899699647
       ],
       "top_motifs": [
         [
+          "auto_56c28531e8d24933b1cd4783868f1a39",
+          0.18382352941176472
+        ],
+        [
+          "auto_a4116c0e9161996c346ae2d5e02595a3",
+          0.17647058823529413
+        ],
+        [
           "cluster_chain",
-          0.20189274447949526
+          0.11764705882352941
         ],
         [
           "x_hub_3z_param",
-          0.07570977917981073
+          0.04411764705882353
         ],
         [
           "syndrome_extraction_param",
-          0.07570977917981073
+          0.04411764705882353
         ],
         [
           "syndrome_extraction",
-          0.056782334384858045
+          0.03308823529411765
         ],
         [
           "auto_7d495f0205427371fcb334bb4d0d0513",
-          0.056782334384858045
+          0.03308823529411765
         ],
         [
           "nbr_f3764a7356c68fff7bcaa4cc912c1bec",
-          0.04416403785488959
+          0.025735294117647058
         ],
         [
           "cx_pair",
-          0.04100946372239748
+          0.02389705882352941
         ],
         [
           "auto_404a1083ce742d80c7e014eaad7db875",
-          0.04100946372239748
-        ],
-        [
-          "auto_0ca20755a855b01e4fd4ae848c2fbf66",
-          0.04100946372239748
-        ],
-        [
-          "auto_91d4674adae9a55e1397977512c89818",
-          0.03785488958990536
+          0.02389705882352941
         ]
       ]
     },
     "distillation_entanglement_bridge_q4": {
       "nearest_algorithm": "w_state_q3",
       "nearest_family": "entanglement",
-      "nearest_similarity": 0.3461,
+      "nearest_similarity": 0.3228,
       "closest_family": "simulation",
       "family_distances": {
-        "arithmetic": 0.0766,
-        "distillation": 0.0436,
-        "entanglement": 0.222,
-        "error_correction": 0.0472,
-        "machine_learning": 0.0673,
-        "oracle": 0.0678,
-        "protocol": 0.2979,
-        "simulation": 0.0174,
-        "transform": 0.0506,
-        "variational": 0.0325
+        "arithmetic": 0.031,
+        "communication": 0.0198,
+        "cryptography": 0.2016,
+        "differential_equations": 0.0247,
+        "distillation": 0.0458,
+        "entanglement": 0.2425,
+        "error_correction": 0.099,
+        "error_mitigation": 0.1362,
+        "linear_algebra": 0.0445,
+        "machine_learning": 0.0347,
+        "metrology": 0.0371,
+        "oracle": 0.0548,
+        "protocol": 0.1214,
+        "sampling": 0.0575,
+        "simulation": 0.0097,
+        "tda": 0.0287,
+        "topological": 0.0459,
+        "transform": 0.0253,
+        "variational": 0.0132
       },
-      "novelty_score": 0.6539,
+      "novelty_score": 0.6772,
       "pca_coords": [
-        -0.027190193951536358,
-        -0.030316654029033597
+        -0.03040802490726569,
+        -0.005898538512767726
       ],
       "top_motifs": [
-        [
-          "nbr_bf89b33727a327bdcb3142f36bd2d6f7",
-          0.18181818181818182
-        ],
         [
           "nbr_7c5c4035b383abf03295d7a6cd48011b",
           0.18181818181818182
         ],
         [
           "nbr_f57af3eca06e42716bd2a4aa34d0a2aa",
+          0.18181818181818182
+        ],
+        [
+          "nbr_bf89b33727a327bdcb3142f36bd2d6f7",
           0.18181818181818182
         ],
         [
@@ -161,77 +179,86 @@
           0.045454545454545456
         ],
         [
-          "cx_pair",
+          "nbr_554631d374cfacc4077e2dae8c0840a2",
           0.045454545454545456
         ],
         [
-          "nbr_554631d374cfacc4077e2dae8c0840a2",
+          "cx_pair",
           0.045454545454545456
         ]
       ]
     },
     "irreducible_core_circuit_q4": {
-      "nearest_algorithm": "trotter_heisenberg_q2",
-      "nearest_family": "simulation",
-      "nearest_similarity": 0.641,
-      "closest_family": "entanglement",
+      "nearest_algorithm": "quantum_walk_search_q4",
+      "nearest_family": "oracle",
+      "nearest_similarity": 0.6116,
+      "closest_family": "error_correction",
       "family_distances": {
-        "arithmetic": 0.223,
-        "distillation": 0.1528,
-        "entanglement": 0.0698,
-        "error_correction": 0.1939,
-        "machine_learning": 0.2168,
-        "oracle": 0.1431,
-        "protocol": 0.2581,
-        "simulation": 0.1697,
-        "transform": 0.1989,
-        "variational": 0.1709
+        "arithmetic": 0.129,
+        "communication": 0.1174,
+        "cryptography": 0.2689,
+        "differential_equations": 0.1153,
+        "distillation": 0.1039,
+        "entanglement": 0.134,
+        "error_correction": 0.0177,
+        "error_mitigation": 0.0994,
+        "linear_algebra": 0.1352,
+        "machine_learning": 0.1319,
+        "metrology": 0.1318,
+        "oracle": 0.0736,
+        "protocol": 0.1343,
+        "sampling": 0.0935,
+        "simulation": 0.1127,
+        "tda": 0.1215,
+        "topological": 0.1334,
+        "transform": 0.1158,
+        "variational": 0.1129
       },
-      "novelty_score": 0.359,
+      "novelty_score": 0.3884,
       "pca_coords": [
-        0.08774336068491542,
-        0.07949972719502574
+        0.06638509272647579,
+        0.04397763950529693
       ],
       "top_motifs": [
         [
           "cluster_chain",
-          0.14925373134328357
+          0.09950248756218906
+        ],
+        [
+          "auto_8262be817a51e5c738331e20ee99a47e",
+          0.09950248756218906
         ],
         [
           "auto_404a1083ce742d80c7e014eaad7db875",
-          0.12686567164179105
+          0.0845771144278607
         ],
         [
           "cx_pair",
-          0.1044776119402985
-        ],
-        [
-          "syndrome_extraction_param",
-          0.08955223880597014
+          0.06965174129353234
         ],
         [
           "x_hub_3z_param",
-          0.08955223880597014
-        ],
-        [
-          "auto_55510e60cee8e707d80ee5a24639737b",
-          0.07462686567164178
-        ],
-        [
-          "auto_c0e8e88cff208f04140640955bcb0657",
-          0.06716417910447761
-        ],
-        [
-          "auto_e6f788f36bca2b43309cccea1713d508",
           0.05970149253731343
         ],
         [
-          "auto_16061487470b9819df308cc2cbf396e4",
-          0.04477611940298507
+          "auto_56c28531e8d24933b1cd4783868f1a39",
+          0.05970149253731343
         ],
         [
-          "syndrome_extraction",
-          0.04477611940298507
+          "syndrome_extraction_param",
+          0.05970149253731343
+        ],
+        [
+          "auto_29b7cda4b1e32f0b0ad39a4ffdd17fb3",
+          0.05970149253731343
+        ],
+        [
+          "nbr_a66352d5557159cbb1f504c018289460",
+          0.05970149253731343
+        ],
+        [
+          "auto_55510e60cee8e707d80ee5a24639737b",
+          0.04975124378109453
         ]
       ]
     }

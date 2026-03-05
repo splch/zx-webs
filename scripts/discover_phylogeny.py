@@ -34,6 +34,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from tqdm import tqdm
 from scipy.cluster.hierarchy import dendrogram, linkage
 from scipy.spatial.distance import cosine, pdist, squareform
 
@@ -94,7 +95,7 @@ def build_corpus() -> dict[tuple[str, str], "nx.Graph"]:
     corpus: dict[tuple[str, str], nx.Graph] = {}
     errors: list[str] = []
 
-    for entry in REGISTRY:
+    for entry in tqdm(REGISTRY, desc="Building corpus", unit="algo"):
         lo, hi = entry.qubit_range
         # Cap at 5 qubits to keep VF2 matching tractable with 78 algorithms
         qubit_sizes = list(range(lo, min(hi, 5) + 1))
@@ -202,10 +203,7 @@ def build_fingerprint_matrix(
 
     counts = np.zeros((len(instances), len(motifs)), dtype=int)
 
-    total = len(instances)
-    for i, inst in enumerate(instances):
-        if i % 20 == 0:
-            print(f"    Fingerprinting {i}/{total}...")
+    for i, inst in enumerate(tqdm(instances, desc="Fingerprinting", unit="inst")):
         key = (inst, "spider_fused")
         if key not in corpus:
             continue
@@ -435,17 +433,19 @@ def analysis_cross_level_survival(
     motif_ids = [mp.motif_id for mp in motifs]
     survival = np.zeros((len(motifs), len(levels)), dtype=float)
 
-    for j, level in enumerate(levels):
-        print(f"    Level {level}...")
-        for rep in representatives:
-            key = (rep, level)
-            if key not in corpus:
-                continue
-            host = corpus[key]
-            for i, mp in enumerate(motifs):
-                matches = find_motif_in_graph(mp.graph, host, max_matches=1)
-                if len(matches) > 0:
-                    survival[i, j] += 1
+    total_checks = len(levels) * len(representatives)
+    with tqdm(total=total_checks, desc="Cross-level survival", unit="check") as pbar:
+        for j, level in enumerate(levels):
+            for rep in representatives:
+                key = (rep, level)
+                pbar.update(1)
+                if key not in corpus:
+                    continue
+                host = corpus[key]
+                for i, mp in enumerate(motifs):
+                    matches = find_motif_in_graph(mp.graph, host, max_matches=1)
+                    if len(matches) > 0:
+                        survival[i, j] += 1
 
     # Normalise by number of representatives checked
     n_reps = len(representatives)
