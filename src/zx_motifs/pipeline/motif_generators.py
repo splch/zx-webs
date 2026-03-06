@@ -332,21 +332,28 @@ _PARAMETRIC_MOTIFS_INLINE = [
     make_pauli_x_hub_3z_motif(),
 ]
 
-# ── Load from the declarative JSON registry ──────────────────────────
-# The module-level lists now come from the JSON-based motif registry.
-# The inline make_* functions above are preserved for backward compat.
+HANDCRAFTED_MOTIFS = [
+    make_phase_gadget_motif(2),
+    make_phase_gadget_motif(3),
+    make_cx_spider_motif(),
+    make_hadamard_sandwich_motif(),
+    make_zz_interaction_motif(),
+    make_syndrome_extraction_motif(),
+    make_toffoli_core_motif(),
+    make_cluster_chain_motif(),
+    make_trotter_layer_motif(),
+]
 
-from zx_motifs.motifs import MOTIF_REGISTRY
+PARAMETRIC_MOTIFS = [
+    make_syndrome_extraction_param_motif(),
+    make_zz_interaction_param_motif(),
+    make_toffoli_core_param_motif(),
+    make_x_hub_3z_param_motif(),
+    make_hadamard_pauli_pair_motif(),
+    make_pauli_x_hub_3z_motif(),
+]
 
-EXTENDED_MOTIFS = list(MOTIF_REGISTRY)
-
-_HANDCRAFTED_IDS = {
-    "phase_gadget_2t", "phase_gadget_3t", "cx_pair", "hadamard_sandwich",
-    "zz_interaction", "syndrome_extraction", "toffoli_core", "cluster_chain",
-    "trotter_layer",
-}
-HANDCRAFTED_MOTIFS = [m for m in EXTENDED_MOTIFS if m.motif_id in _HANDCRAFTED_IDS]
-PARAMETRIC_MOTIFS = [m for m in EXTENDED_MOTIFS if m.motif_id not in _HANDCRAFTED_IDS]
+EXTENDED_MOTIFS = HANDCRAFTED_MOTIFS + PARAMETRIC_MOTIFS
 
 
 # ════════════════════════════════════════════════════════════════════
