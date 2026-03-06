@@ -1,0 +1,80 @@
+========================================================================
+GENERALIZED irr_pair11 EVALUATION REPORT
+========================================================================
+Settings: 10 restarts, 400 iterations, COBYLA
+Total runtime: 1276s
+
+CIRCUIT STRUCTURE
+--------------------------------------------------
+  4q: 6 gates (1 1Q + 5 2Q), depth=6
+  5q: 7 gates (1 1Q + 6 2Q), depth=7
+  6q: 9 gates (2 1Q + 7 2Q), depth=9
+  7q: 10 gates (2 1Q + 8 2Q), depth=10
+  8q: 11 gates (2 1Q + 9 2Q), depth=11
+  10q: 15 gates (3 1Q + 12 2Q), depth=14
+
+VQE RESULTS
+----------------------------------------------------------------------
+Config                              Gen       CX      HEA   Improv   Win
+gen_irr11_10q_heisenberg         0.2511   0.2280   0.2352  -0.0231      
+gen_irr11_10q_random_2local      0.1148   0.1420   0.0884  -0.0264      
+gen_irr11_10q_tfim               0.0357   0.0320   0.0350  -0.0037      
+gen_irr11_10q_xxz                0.2327   0.2293   0.1992  -0.0335      
+gen_irr11_10q_xy                 0.1613   0.1976   0.1534  -0.0079      
+gen_irr11_4q_heisenberg          0.2712   0.3260   0.4077  +0.0548   YES
+gen_irr11_4q_random_2local       0.0687   0.1294   0.1358  +0.0606   YES
+gen_irr11_4q_tfim                0.0428   0.0617   0.0689  +0.0189   YES
+gen_irr11_4q_xxz                 0.2234   0.2780   0.3548  +0.0546   YES
+gen_irr11_4q_xy                  0.1672   0.2287   0.2764  +0.0616   YES
+gen_irr11_5q_heisenberg          0.1147   0.2685   0.1837  +0.0690   YES
+gen_irr11_5q_random_2local       0.0651   0.0878   0.1124  +0.0227   YES
+gen_irr11_5q_tfim                0.0389   0.0474   0.0492  +0.0085   YES
+gen_irr11_5q_xxz                 0.0924   0.2123   0.1658  +0.0734   YES
+gen_irr11_5q_xy                  0.0768   0.1515   0.1418  +0.0650   YES
+gen_irr11_6q_heisenberg          0.2389   0.2495   0.2481  +0.0092   YES
+gen_irr11_6q_random_2local       0.0742   0.0701   0.0482  -0.0261      
+gen_irr11_6q_tfim                0.0385   0.0396   0.0399  +0.0012   YES
+gen_irr11_6q_xxz                 0.1963   0.2227   0.2070  +0.0106   YES
+gen_irr11_6q_xy                  0.1456   0.1793   0.1559  +0.0103   YES
+gen_irr11_7q_heisenberg          0.2133   0.2096   0.2541  -0.0036      
+gen_irr11_7q_random_2local       0.0806   0.0547   0.0910  -0.0259      
+gen_irr11_7q_tfim                0.0415   0.0337   0.0363  -0.0078      
+gen_irr11_7q_xxz                 0.1726   0.1808   0.2077  +0.0082   YES
+gen_irr11_7q_xy                  0.1401   0.1465   0.1453  +0.0052   YES
+gen_irr11_8q_heisenberg          0.1982   0.2115   0.2517  +0.0133   YES
+gen_irr11_8q_random_2local       0.0866   0.0786   0.1049  -0.0080      
+gen_irr11_8q_tfim                0.0356   0.0313   0.0334  -0.0043      
+gen_irr11_8q_xxz                 0.1828   0.1994   0.2096  +0.0166   YES
+gen_irr11_8q_xy                  0.1260   0.1683   0.1551  +0.0291   YES
+
+STATISTICAL SIGNIFICANCE
+----------------------------------------------------------------------
+  gen_irr11_4q_heisenberg: p=0.000000 d=450.04 [SIGNIFICANT]
+  gen_irr11_4q_random_2local: p=0.000000 d=5.93 [SIGNIFICANT]
+  gen_irr11_4q_tfim: p=0.000000 d=5.79 [SIGNIFICANT]
+  gen_irr11_4q_xxz: p=0.000000 d=12.66 [SIGNIFICANT]
+  gen_irr11_4q_xy: p=0.000000 d=9.46 [SIGNIFICANT]
+  gen_irr11_5q_heisenberg: p=0.000000 d=40.94 [SIGNIFICANT]
+  gen_irr11_5q_random_2local: p=0.006186 d=1.31 [SIGNIFICANT]
+  gen_irr11_5q_tfim: p=0.000000 d=4.38 [SIGNIFICANT]
+  gen_irr11_5q_xxz: p=0.000000 d=20.53 [SIGNIFICANT]
+  gen_irr11_5q_xy: p=0.000000 d=25.66 [SIGNIFICANT]
+  gen_irr11_6q_heisenberg: p=0.000000 d=9.27 [SIGNIFICANT]
+  gen_irr11_6q_tfim: p=0.856256 d=-0.52 [not significant]
+  gen_irr11_6q_xxz: p=0.000000 d=4.67 [SIGNIFICANT]
+  gen_irr11_6q_xy: p=0.000042 d=2.38 [SIGNIFICANT]
+  gen_irr11_7q_xxz: p=0.000033 d=2.43 [SIGNIFICANT]
+  gen_irr11_7q_xy: p=0.000005 d=2.87 [SIGNIFICANT]
+  gen_irr11_8q_heisenberg: p=0.000000 d=3.72 [SIGNIFICANT]
+  gen_irr11_8q_xxz: p=0.000003 d=2.96 [SIGNIFICANT]
+  gen_irr11_8q_xy: p=0.000784 d=1.75 [SIGNIFICANT]
+
+OVERALL: 19/30 wins over best baseline
+
+6q GENERALIZED vs ORIGINAL
+--------------------------------------------------
+  heisenberg           gen=0.2389 orig=0.0704 diff=+0.1685
+  random_2local        gen=0.0742 orig=0.0688 diff=+0.0054
+  tfim                 gen=0.0385 orig=0.0466 diff=-0.0081
+  xxz                  gen=0.1963 orig=0.0911 diff=+0.1053
+  xy                   gen=0.1456 orig=0.1075 diff=+0.0381
