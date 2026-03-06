@@ -149,14 +149,14 @@ assert zx.compare_tensors(composed.graph, box_bell.graph)
 
 ## Notebooks
 
-Four Jupyter notebooks walk through the pipeline interactively:
+Four Jupyter notebooks walk through the full discovery pipeline interactively:
 
 | Notebook | Purpose |
 |----------|---------|
 | `01_conversion_explorer` | Batch conversion, simplification cascade visualization, feature clustering |
-| `02_motif_detection` | Hand-crafted and bottom-up motif scans, cross-algorithm heatmap |
-| `03_box_library` | Grover and QFT decomposition into boxes, reconstruction validation |
-| `04_novel_compositions` | Box substitution experiments, systematic exploration sweep |
+| `02_motif_phylogeny` | Corpus fingerprinting, phylogenetic clustering, universality spectrum, cross-level survival |
+| `03_algorithm_discovery` | Four discovery strategies, candidate generation, validation, fingerprint scoring |
+| `04_irr_pair11_evaluation` | VQE benchmarking, baseline comparison, ablation study, ZX analysis |
 
 ```bash
 uv pip install -e ".[notebooks]"
@@ -176,7 +176,10 @@ src/zx_motifs/
     motif_generators.py  # Motif-finding strategies
     catalog.py           # JSON-serialized motif catalog
     composer.py          # ZX box composition (sequential, parallel)
-notebooks/               # Exploration notebooks
+    fingerprint.py       # Corpus building + motif fingerprint matrix
+    ansatz.py            # irr_pair11 entangler + baselines + Hamiltonians
+    evaluation.py        # VQE harness + entangling power
+notebooks/               # Discovery pipeline notebooks (01-04)
 tests/                   # Tests
 ```
 

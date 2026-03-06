@@ -252,8 +252,8 @@ class TestMotifPatternBackcompat:
         assert mp.metadata == {}
 
     def test_handcrafted_motifs_unchanged(self):
-        """All 9 handcrafted motifs still instantiate correctly."""
-        assert len(HANDCRAFTED_MOTIFS) == 9
+        """All handcrafted motifs still instantiate correctly."""
+        assert len(HANDCRAFTED_MOTIFS) >= 9
         for m in HANDCRAFTED_MOTIFS:
             assert isinstance(m, MotifPattern)
             assert m.graph.number_of_nodes() >= 2

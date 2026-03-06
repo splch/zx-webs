@@ -33,6 +33,9 @@ registry.py ──► converter.py ──► featurizer.py ──► matcher.py 
                                                        (candidate patterns)
                      converter.py ──► composer.py
                      (PyZX Graph)     (ZXBox composition + validation)
+
+                fingerprint.py ──► ansatz.py ──► evaluation.py
+                (corpus + motifs)  (irr_pair11)   (VQE harness)
 ```
 
 **Data types that flow through the pipeline:**
@@ -40,6 +43,13 @@ registry.py ──► converter.py ──► featurizer.py ──► matcher.py 
 - `ZXSnapshot`: a PyZX graph at a specific simplification level with metadata
 - `MotifPattern`: a small NetworkX graph used as a search template; accumulates `MotifMatch` occurrences
 - `ZXBox`: a PyZX graph with explicit `left_boundary` / `right_boundary` vertex ID lists and `BoundarySpec`
+
+**Pipeline modules:**
+- `fingerprint.py`: `build_corpus()`, `discover_motifs()`, `build_fingerprint_matrix()` — corpus building and motif fingerprinting
+- `ansatz.py`: `irr_pair11_entangler()`, baselines (`cx_chain_entangler`, `hea_entangler`), `build_hamiltonian()` — ansatz construction
+- `evaluation.py`: `vqe_test()`, `run_benchmark()`, `compute_entangling_power()` — VQE harness and scoring
+
+**Generated outputs are gitignored:** `scripts/output/`, `notebooks/*.png`, `motif_library/`
 
 **Simplification levels** (enum `SimplificationLevel` in converter.py): RAW → SPIDER_FUSED → INTERIOR_CLIFFORD → CLIFFORD_SIMP → FULL_REDUCE → TELEPORT_REDUCE. Default for motif detection is SPIDER_FUSED. Phase classification in featurizer.py groups phases into: zero, pauli (pi), clifford (pi/2), t_like (pi/4), arbitrary.
 

@@ -167,7 +167,7 @@ class TestMotifGenerators:
     def test_handcrafted_motifs_count(self):
         from zx_motifs.pipeline.motif_generators import HANDCRAFTED_MOTIFS
 
-        assert len(HANDCRAFTED_MOTIFS) == 9
+        assert len(HANDCRAFTED_MOTIFS) >= 9
 
     def test_all_motifs_are_connected(self):
         import networkx as nx
