@@ -32,6 +32,9 @@ dev = [
     "jupyter>=1.0",
 ]
 
+[project.scripts]
+zx-motifs = "zx_motifs.cli:main"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
