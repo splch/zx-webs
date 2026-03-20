@@ -3,6 +3,9 @@
 Two circuits are considered duplicates if they implement the same unitary
 transformation (up to a global phase).  For circuits that are too large to
 compare via full unitary matrices, a fallback QASM-string comparison is used.
+
+When CuPy is available, GPU-accelerated matrix operations are used for the
+unitary comparison.  Otherwise, NumPy is used as a fallback.
 """
 from __future__ import annotations
 
@@ -18,10 +21,61 @@ logger = logging.getLogger(__name__)
 # matrix becomes impractical.
 _MAX_UNITARY_QUBITS = 8
 
+# ---------------------------------------------------------------------------
+# GPU detection
+# ---------------------------------------------------------------------------
+
+try:
+    import cupy as cp
+    _HAS_CUPY = True
+    logger.debug("CuPy available -- GPU-accelerated deduplication enabled.")
+except ImportError:
+    _HAS_CUPY = False
+
 
 # ---------------------------------------------------------------------------
 # Unitary equivalence
 # ---------------------------------------------------------------------------
+
+
+def _matrices_equal_up_to_phase(u1: np.ndarray, u2: np.ndarray, atol: float = 1e-8) -> bool:
+    """Check if u1 == e^(i*theta) * u2 using GPU if available.
+
+    Finds the first non-zero element in both matrices, computes the phase
+    difference, and checks whether the entire matrices match under that
+    global phase.
+
+    Parameters
+    ----------
+    u1, u2:
+        Unitary matrices as NumPy arrays.
+    atol:
+        Absolute tolerance for ``allclose`` comparison.
+
+    Returns
+    -------
+    bool
+    """
+    if _HAS_CUPY:
+        u1_gpu = cp.asarray(u1)
+        u2_gpu = cp.asarray(u2)
+        flat1 = u1_gpu.ravel()
+        flat2 = u2_gpu.ravel()
+        for i in range(len(flat1)):
+            if cp.abs(flat2[i]) > atol:
+                phase = flat1[i] / flat2[i]
+                return bool(cp.allclose(u1_gpu, phase * u2_gpu, atol=atol))
+        # All elements of u2 are near-zero -- compare directly.
+        return bool(cp.allclose(u1_gpu, u2_gpu, atol=atol))
+    else:
+        # NumPy fallback
+        flat1 = u1.ravel()
+        flat2 = u2.ravel()
+        for i in range(len(flat1)):
+            if abs(flat2[i]) > atol:
+                phase = flat1[i] / flat2[i]
+                return bool(np.allclose(u1, phase * u2, atol=atol))
+        return bool(np.allclose(u1, u2, atol=atol))
 
 
 def _normalise_global_phase(mat: np.ndarray) -> np.ndarray:
@@ -75,12 +129,12 @@ def circuits_equivalent(
         return qasm1.strip() == qasm2.strip()
 
     try:
-        m1 = _normalise_global_phase(c1.to_matrix())
-        m2 = _normalise_global_phase(c2.to_matrix())
+        m1 = c1.to_matrix()
+        m2 = c2.to_matrix()
     except Exception:  # noqa: BLE001
         return qasm1.strip() == qasm2.strip()
 
-    return bool(np.allclose(m1, m2, atol=1e-8))
+    return _matrices_equal_up_to_phase(m1, m2, atol=1e-8)
 
 
 # ---------------------------------------------------------------------------

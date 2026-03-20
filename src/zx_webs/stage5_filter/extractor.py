@@ -23,6 +23,7 @@ import os
 import signal
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass, field
+from multiprocessing import Pool
 from pathlib import Path
 from typing import Any
 
@@ -272,6 +273,23 @@ def _evaluate_candidate_data(
     return None
 
 
+def _extract_worker(args: tuple[dict[str, Any], float, float]) -> dict[str, Any] | None:
+    """Worker function for multiprocessing Pool-based parallel extraction.
+
+    Parameters
+    ----------
+    args:
+        Tuple of ``(candidate_data, timeout, max_cnot_blowup)``.
+
+    Returns
+    -------
+    dict | None
+        Survivor dict on success, ``None`` on failure.
+    """
+    cand_data, timeout, max_cnot_blowup = args
+    return _evaluate_candidate_data(cand_data, timeout, max_cnot_blowup)
+
+
 # ---------------------------------------------------------------------------
 # Stage 5 entry point
 # ---------------------------------------------------------------------------
@@ -287,7 +305,7 @@ def run_stage5(
     Workflow
     -------
     1. Load candidate algorithms from Stage 4 output.
-    2. Attempt circuit extraction on each candidate.
+    2. Attempt circuit extraction on each candidate (in parallel if n_workers > 1).
     3. Deduplicate surviving circuits.
     4. Persist the survivors and a manifest under *output_dir*.
 
@@ -335,36 +353,70 @@ def run_stage5(
     logger.info("Loaded %d candidates for filtering.", len(candidates))
 
     # -- 2. Attempt extraction ------------------------------------------------
+    # Determine number of worker processes.
+    n_workers = config.n_workers
+    if n_workers <= 0:
+        n_workers = min(os.cpu_count() or 1, len(candidates), 16)
+    else:
+        n_workers = min(n_workers, len(candidates))
+
     survivors: list[dict[str, Any]] = []
     n_success = 0
     n_fail = 0
 
-    for cand in candidates:
-        g = zx.Graph.from_json(cand.graph_json)
-        result = try_extract_circuit(
-            g,
-            timeout=config.extract_timeout_seconds,
-            max_cnot_blowup=config.max_cnot_blowup_factor,
+    # Prepare worker arguments.
+    worker_args: list[tuple[dict[str, Any], float, float]] = [
+        (
+            cand.to_dict(),
+            config.extract_timeout_seconds,
+            config.max_cnot_blowup_factor,
         )
-        if result.success:
-            n_success += 1
-            survivors.append(
-                {
-                    "candidate_id": cand.candidate_id,
-                    "circuit_qasm": result.circuit_qasm,
-                    "stats": result.stats,
-                    "composition_type": cand.composition_type,
-                    "component_web_ids": cand.component_web_ids,
-                    "n_qubits": cand.n_qubits,
-                }
+        for cand in candidates
+    ]
+
+    if n_workers > 1 and len(candidates) > 1:
+        logger.info(
+            "Running parallel extraction with %d workers on %d candidates.",
+            n_workers,
+            len(candidates),
+        )
+        with Pool(processes=n_workers) as pool:
+            results = pool.map(_extract_worker, worker_args)
+
+        for result in results:
+            if result is not None:
+                n_success += 1
+                survivors.append(result)
+            else:
+                n_fail += 1
+    else:
+        # Sequential fallback.
+        for cand in candidates:
+            g = zx.Graph.from_json(cand.graph_json)
+            result = try_extract_circuit(
+                g,
+                timeout=config.extract_timeout_seconds,
+                max_cnot_blowup=config.max_cnot_blowup_factor,
             )
-        else:
-            n_fail += 1
-            logger.debug(
-                "Candidate %s failed extraction: %s",
-                cand.candidate_id,
-                result.error,
-            )
+            if result.success:
+                n_success += 1
+                survivors.append(
+                    {
+                        "candidate_id": cand.candidate_id,
+                        "circuit_qasm": result.circuit_qasm,
+                        "stats": result.stats,
+                        "composition_type": cand.composition_type,
+                        "component_web_ids": cand.component_web_ids,
+                        "n_qubits": cand.n_qubits,
+                    }
+                )
+            else:
+                n_fail += 1
+                logger.debug(
+                    "Candidate %s failed extraction: %s",
+                    cand.candidate_id,
+                    result.error,
+                )
 
     logger.info(
         "Extraction: %d succeeded, %d failed out of %d candidates.",

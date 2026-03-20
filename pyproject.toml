@@ -27,6 +27,9 @@ dev = [
     "mypy>=1.0",
     "ipykernel>=6.0",
 ]
+gpu = [
+    "cupy-cuda12x",
+]
 bench = [
     "qiskit-aer>=0.13",
     "supermarq",

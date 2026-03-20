@@ -3,10 +3,10 @@ data_dir: data
 corpus:
   families:
     - oracular
-    - entanglement
-    - variational
     - arithmetic
-    - error_correction
+    - variational
+    - simulation
+    - entanglement
   max_qubits: 10
   qubit_counts: [3, 5, 7, 10]
   seed: 42
@@ -16,21 +16,21 @@ zx:
   normalize: true
 
 mining:
-  min_support: 3
+  min_support: 2
   min_vertices: 2
-  max_vertices: 20
+  max_vertices: 12
   phase_discretization: 8
   include_phase_in_label: true
 
 compose:
   max_webs_per_candidate: 4
-  max_candidates: 10000
+  max_candidates: 5000
   composition_modes: [sequential, parallel]
   boundary_match_strategy: exact_type
   seed: 42
 
 filter:
-  extract_timeout_seconds: 30.0
+  extract_timeout_seconds: 60.0
   max_cnot_blowup_factor: 5.0
   dedup_method: unitary
 

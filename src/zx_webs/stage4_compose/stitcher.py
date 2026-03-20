@@ -25,9 +25,11 @@ composition, and persists the results.
 from __future__ import annotations
 
 import logging
+import os
 import random
 from fractions import Fraction
 from itertools import combinations
+from multiprocessing import Pool
 from pathlib import Path
 from typing import Any
 
@@ -458,6 +460,103 @@ class Stitcher:
             "Generated %d candidates from %d webs.", len(candidates), len(webs)
         )
         return candidates
+
+    # ------------------------------------------------------------------
+    # Parallel batch composition
+    # ------------------------------------------------------------------
+
+    def _compose_pair_batch(
+        self,
+        webs: list[ZXWeb],
+        pairs: list[tuple[int, int]],
+        mode: str,
+    ) -> list[CandidateAlgorithm]:
+        """Compose a batch of web pairs and return valid candidates.
+
+        This method is designed to be called within a process pool worker.
+        Each pair is tried and valid candidates (those under ``_MAX_QUBITS``)
+        are returned.
+
+        Parameters
+        ----------
+        webs:
+            The full list of ZX-Webs (indexed by the pairs).
+        pairs:
+            List of ``(i, j)`` index pairs into *webs*.
+        mode:
+            ``"sequential"`` or ``"parallel"`` -- selects the composition
+            strategy.
+
+        Returns
+        -------
+        list[CandidateAlgorithm]
+        """
+        results: list[CandidateAlgorithm] = []
+        for i, j in pairs:
+            if mode == "sequential":
+                # Try both orderings for sequential.
+                for a_idx, b_idx in [(i, j), (j, i)]:
+                    g = self.compose_sequential(webs[a_idx], webs[b_idx])
+                    if g is not None:
+                        n_qubits = len(g.inputs()) if g.inputs() else 0
+                        if 0 < n_qubits <= _MAX_QUBITS:
+                            n_spiders = sum(
+                                1 for v in g.vertices()
+                                if g.type(v) != _VT_BOUNDARY
+                            )
+                            results.append(CandidateAlgorithm(
+                                candidate_id="",  # assigned later
+                                graph_json=g.to_json(),
+                                component_web_ids=[
+                                    webs[a_idx].web_id, webs[b_idx].web_id,
+                                ],
+                                composition_type="sequential",
+                                n_qubits=n_qubits,
+                                n_spiders=n_spiders,
+                            ))
+            elif mode == "parallel":
+                # Pure parallel (tensor).
+                g = self.compose_parallel(webs[i], webs[j])
+                if g is not None:
+                    n_qubits = len(g.inputs()) if g.inputs() else 0
+                    if 0 < n_qubits <= _MAX_QUBITS:
+                        n_spiders = sum(
+                            1 for v in g.vertices()
+                            if g.type(v) != _VT_BOUNDARY
+                        )
+                        results.append(CandidateAlgorithm(
+                            candidate_id="",
+                            graph_json=g.to_json(),
+                            component_web_ids=[
+                                webs[i].web_id, webs[j].web_id,
+                            ],
+                            composition_type="parallel",
+                            n_qubits=n_qubits,
+                            n_spiders=n_spiders,
+                        ))
+
+                # Parallel with Hadamard stitching.
+                g_stitch = self.compose_parallel_stitch(
+                    webs[i], webs[j], n_hadamard_edges=1,
+                )
+                if g_stitch is not None:
+                    n_qubits = len(g_stitch.inputs()) if g_stitch.inputs() else 0
+                    if 0 < n_qubits <= _MAX_QUBITS:
+                        n_spiders = sum(
+                            1 for v in g_stitch.vertices()
+                            if g_stitch.type(v) != _VT_BOUNDARY
+                        )
+                        results.append(CandidateAlgorithm(
+                            candidate_id="",
+                            graph_json=g_stitch.to_json(),
+                            component_web_ids=[
+                                webs[i].web_id, webs[j].web_id,
+                            ],
+                            composition_type="parallel_stitch",
+                            n_qubits=n_qubits,
+                            n_spiders=n_spiders,
+                        ))
+        return results
 
     # ------------------------------------------------------------------
     # Internal helpers (kept for backward compatibility)

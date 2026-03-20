@@ -59,6 +59,7 @@ class FilterConfig(BaseModel):
     extract_timeout_seconds: float = 30.0
     max_cnot_blowup_factor: float = 5.0
     dedup_method: str = "unitary"
+    n_workers: int = 0  # 0 = auto (os.cpu_count()), 1 = sequential
 
 
 class BackendConfig(BaseModel):
