@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import logging
+from fractions import Fraction
 from pathlib import Path
 from typing import Any
 
@@ -34,6 +35,107 @@ logger = logging.getLogger(__name__)
 
 # PyZX vertex type constants.
 _VT_BOUNDARY = 0
+
+
+def _ensure_proper_boundaries(pyzx_graph: zx.Graph) -> zx.Graph:
+    """Ensure a sub-diagram has proper PyZX boundary vertices.
+
+    When gSpan mines a sub-graph, boundary (type 0) vertices and
+    input/output designations are lost.  This function:
+
+    1. Identifies leaf vertices (degree 1) as cut points.
+    2. For each leaf non-boundary vertex, adds a boundary (type 0) vertex
+       connected to it.
+    3. Assigns the first half of boundary vertices as inputs and the
+       second half as outputs.
+    4. If the graph already has proper boundaries, returns it unchanged.
+
+    Parameters
+    ----------
+    pyzx_graph:
+        The sub-diagram as a PyZX ``Graph``.
+
+    Returns
+    -------
+    zx.Graph
+        The graph with proper boundary vertices set.
+    """
+    # If the graph already has inputs and outputs, return as-is.
+    if pyzx_graph.inputs() and pyzx_graph.outputs():
+        return pyzx_graph
+
+    g = pyzx_graph
+
+    # Collect existing boundary vertices.
+    existing_boundaries = [
+        v for v in g.vertices() if g.type(v) == _VT_BOUNDARY
+    ]
+
+    # If there are existing boundary vertices but no inputs/outputs set,
+    # assign them now.
+    if existing_boundaries:
+        half = len(existing_boundaries) // 2
+        if half == 0:
+            half = 1
+        inputs = tuple(existing_boundaries[:half])
+        outputs = tuple(existing_boundaries[half:])
+        if not outputs:
+            outputs = inputs  # single boundary acts as both
+        g.set_inputs(inputs)
+        g.set_outputs(outputs)
+        return g
+
+    # No boundary vertices exist.  Identify leaf vertices (degree 1)
+    # that are interior spiders -- these were cut from the parent graph.
+    leaf_vertices = []
+    for v in sorted(g.vertices()):
+        if g.type(v) == _VT_BOUNDARY:
+            continue
+        if g.vertex_degree(v) <= 1:
+            leaf_vertices.append(v)
+
+    if not leaf_vertices:
+        # No leaves found -- pick the two vertices with lowest/highest row
+        # as boundary attachment points.
+        all_verts = sorted(g.vertices(), key=lambda v: (g.row(v), v))
+        if len(all_verts) >= 2:
+            leaf_vertices = [all_verts[0], all_verts[-1]]
+        elif len(all_verts) == 1:
+            leaf_vertices = [all_verts[0]]
+        else:
+            return g  # empty graph, nothing to do
+
+    # Add boundary vertices for each leaf.
+    boundary_verts = []
+    for lv in leaf_vertices:
+        bv = g.add_vertex(
+            ty=_VT_BOUNDARY,
+            qubit=g.qubit(lv),
+            row=g.row(lv) - 0.5 if len(boundary_verts) < len(leaf_vertices) // 2 + 1
+            else g.row(lv) + 0.5,
+        )
+        g.add_edge((bv, lv), edgetype=1)  # simple edge
+        boundary_verts.append(bv)
+
+    # Assign inputs/outputs: first half -> inputs, second half -> outputs.
+    if len(boundary_verts) == 1:
+        # Single boundary: duplicate it (add another boundary vertex
+        # connected to the same leaf).
+        lv = leaf_vertices[0]
+        bv2 = g.add_vertex(
+            ty=_VT_BOUNDARY,
+            qubit=g.qubit(lv),
+            row=g.row(lv) + 0.5,
+        )
+        g.add_edge((bv2, lv), edgetype=1)
+        g.set_inputs(tuple([boundary_verts[0]]))
+        g.set_outputs(tuple([bv2]))
+    else:
+        half = max(1, len(boundary_verts) // 2)
+        g.set_inputs(tuple(boundary_verts[:half]))
+        g.set_outputs(tuple(boundary_verts[half:]))
+
+    return g
 
 
 def _identify_boundary_wires(
@@ -94,7 +196,7 @@ def _identify_boundary_wires(
                         direction=direction,
                     )
                 )
-        elif len(neighbors) == 1:
+        elif len(neighbors) == 1 and v not in input_set and v not in output_set:
             # A leaf non-boundary vertex -- likely had more connections in the
             # original graph.  Record it as a potential boundary wire.
             nb = neighbors[0]
@@ -125,6 +227,10 @@ def _result_to_zx_web(
 ) -> ZXWeb:
     """Convert a :class:`GSpanResult` to a :class:`ZXWeb`.
 
+    Ensures the resulting graph has proper boundary vertices with
+    inputs/outputs set, so it can be used with PyZX's native ``compose()``
+    and ``tensor()`` methods.
+
     Parameters
     ----------
     result:
@@ -140,6 +246,9 @@ def _result_to_zx_web(
     """
     pyzx_graph = adapter.result_to_pyzx(result)
 
+    # Ensure proper boundary vertices.
+    pyzx_graph = _ensure_proper_boundaries(pyzx_graph)
+
     # Count spiders (non-boundary vertices).
     n_spiders = sum(
         1 for v in pyzx_graph.vertices() if pyzx_graph.type(v) != _VT_BOUNDARY
@@ -150,8 +259,8 @@ def _result_to_zx_web(
     # Identify boundary wires.
     boundary_wires = _identify_boundary_wires(pyzx_graph)
 
-    n_inputs = sum(1 for bw in boundary_wires if bw.direction == "input")
-    n_outputs = sum(1 for bw in boundary_wires if bw.direction == "output")
+    n_inputs = len(pyzx_graph.inputs()) if pyzx_graph.inputs() else 0
+    n_outputs = len(pyzx_graph.outputs()) if pyzx_graph.outputs() else 0
 
     return ZXWeb(
         web_id=web_id,

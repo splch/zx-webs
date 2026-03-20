@@ -16,6 +16,7 @@ from zx_webs.stage3_mining.graph_encoder import (
     pyzx_graphs_to_gspan_file,
 )
 from zx_webs.stage3_mining.gspan_adapter import GSpanAdapter
+from zx_webs.stage3_mining.miner import _ensure_proper_boundaries
 from zx_webs.stage3_mining.zx_web import BoundaryWire, ZXWeb
 
 
@@ -256,6 +257,73 @@ class TestGSpanAdapterMine:
 
 
 # ---------------------------------------------------------------------------
+# Boundary vertex handling tests
+# ---------------------------------------------------------------------------
+
+
+class TestEnsureProperBoundaries:
+    """Tests for _ensure_proper_boundaries."""
+
+    def test_adds_boundary_to_bare_graph(self) -> None:
+        """A graph with no boundaries gets boundary vertices added."""
+        g = _make_z_z_x_chain()
+        assert not g.inputs()
+        assert not g.outputs()
+
+        g = _ensure_proper_boundaries(g)
+
+        assert len(g.inputs()) > 0, "Should have inputs after boundary fix"
+        assert len(g.outputs()) > 0, "Should have outputs after boundary fix"
+
+    def test_preserves_existing_boundaries(self) -> None:
+        """A graph that already has proper boundaries is unchanged."""
+        g = zx.Graph()
+        i0 = g.add_vertex(ty=0, qubit=0, row=0)
+        z0 = g.add_vertex(ty=1, phase=Fraction(0), qubit=0, row=1)
+        o0 = g.add_vertex(ty=0, qubit=0, row=2)
+        g.add_edge((i0, z0), edgetype=1)
+        g.add_edge((z0, o0), edgetype=1)
+        g.set_inputs((i0,))
+        g.set_outputs((o0,))
+
+        n_verts_before = g.num_vertices()
+        g = _ensure_proper_boundaries(g)
+
+        assert g.num_vertices() == n_verts_before
+        assert len(g.inputs()) == 1
+        assert len(g.outputs()) == 1
+
+    def test_mined_web_has_boundaries(self) -> None:
+        """Mined sub-graphs should have proper boundary vertices."""
+        config = MiningConfig(
+            min_support=3,
+            min_vertices=2,
+            max_vertices=20,
+            phase_discretization=8,
+            include_phase_in_label=True,
+        )
+        adapter = GSpanAdapter(config)
+
+        graphs = [
+            _make_z_z_x_chain(),
+            _make_z_z_x_plus_extra(),
+            _make_z_z_x_plus_different_extra(),
+        ]
+        results = adapter.mine(graphs)
+        assert len(results) > 0
+
+        for result in results:
+            pyzx_g = adapter.result_to_pyzx(result)
+            pyzx_g = _ensure_proper_boundaries(pyzx_g)
+            assert len(pyzx_g.inputs()) > 0, (
+                "Mined web should have inputs after boundary fix"
+            )
+            assert len(pyzx_g.outputs()) > 0, (
+                "Mined web should have outputs after boundary fix"
+            )
+
+
+# ---------------------------------------------------------------------------
 # ZXWeb serialisation tests
 # ---------------------------------------------------------------------------
 
@@ -394,6 +462,15 @@ class TestRunStage3EndToEnd:
         # At least one web should have support == 3.
         max_support = max(w.support for w in webs)
         assert max_support == 3
+
+        # Webs should have proper boundary info.
+        for web in webs:
+            assert web.n_inputs > 0, (
+                f"Web {web.web_id} should have n_inputs > 0"
+            )
+            assert web.n_outputs > 0, (
+                f"Web {web.web_id} should have n_outputs > 0"
+            )
 
     def test_run_stage3_empty_manifest(self, tmp_path: Path) -> None:
         """run_stage3 on an empty manifest should return no webs."""

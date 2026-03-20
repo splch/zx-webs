@@ -5,6 +5,13 @@ circuit.  The attempt may fail (the diagram is not graph-like or extraction
 diverges) or succeed but produce an unacceptably large circuit.  Both cases
 are handled gracefully and reported via :class:`ExtractionResult`.
 
+The extraction pipeline uses a multi-step approach:
+
+1. Ensure graph-like form via ``to_graph_like()``.
+2. Apply ``full_reduce()`` for simplification.
+3. Check generalized flow (gflow) as a fast pre-filter.
+4. Extract the circuit with ``extract_circuit()``.
+
 :func:`run_stage5` is the Stage 5 entry point that loads candidates produced
 by Stage 4, attempts extraction on each, deduplicates the survivors, and
 persists the results.
@@ -12,7 +19,9 @@ persists the results.
 from __future__ import annotations
 
 import logging
+import os
 import signal
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -47,14 +56,19 @@ class _Timeout:
 
     def __enter__(self) -> _Timeout:
         if self._can_alarm:
-            self._old_handler = signal.signal(signal.SIGALRM, self._handler)
-            signal.alarm(self.seconds)
+            try:
+                self._old_handler = signal.signal(signal.SIGALRM, self._handler)
+                signal.alarm(self.seconds)
+            except ValueError:
+                # Not in the main thread -- skip alarm.
+                self._can_alarm = False
         return self
 
     def __exit__(self, *args: Any) -> None:
         if self._can_alarm:
             signal.alarm(0)
-            signal.signal(signal.SIGALRM, self._old_handler)
+            if self._old_handler is not None:
+                signal.signal(signal.SIGALRM, self._old_handler)
 
     @staticmethod
     def _handler(signum: int, frame: Any) -> None:
@@ -117,9 +131,11 @@ def try_extract_circuit(
     Steps
     -----
     1. Copy the graph.
-    2. Run ``zx.full_reduce`` to put it in graph-like form.
-    3. Call ``zx.extract_circuit`` inside a timeout guard.
-    4. Check for CNOT blowup (more than *max_cnot_blowup* x qubits).
+    2. Ensure graph-like form via ``to_graph_like()``.
+    3. Run ``zx.full_reduce`` for simplification.
+    4. Check generalized flow (gflow) as a fast pre-filter.
+    5. Call ``zx.extract_circuit`` inside a timeout guard.
+    6. Check for CNOT blowup (more than *max_cnot_blowup* x qubits).
 
     Parameters
     ----------
@@ -144,6 +160,14 @@ def try_extract_circuit(
             error="Graph has no input/output boundary vertices",
         )
 
+    # Step 1: Ensure graph-like form.
+    try:
+        from pyzx.simplify import to_graph_like
+        to_graph_like(g)
+    except Exception:  # noqa: BLE001
+        pass  # Best effort; full_reduce may still succeed.
+
+    # Step 2: Apply full_reduce.
     try:
         zx.full_reduce(g)
     except Exception as exc:  # noqa: BLE001
@@ -152,9 +176,22 @@ def try_extract_circuit(
             error=f"full_reduce failed: {exc}",
         )
 
+    # Step 3: Check gflow (fast pre-filter).
+    try:
+        from pyzx.gflow import gflow
+        gf = gflow(g)
+        if gf is None:
+            return ExtractionResult(
+                success=False,
+                error="No generalized flow (gflow) found",
+            )
+    except Exception:  # noqa: BLE001
+        pass  # gflow check failed; try extraction anyway.
+
+    # Step 4: Extract circuit.
     try:
         with _Timeout(timeout):
-            circuit = zx.extract_circuit(g.copy())
+            circuit = zx.extract_circuit(g.copy(), optimize_cnots=2)
     except TimeoutError:
         return ExtractionResult(success=False, error="Extraction timed out")
     except ValueError as exc:
@@ -188,6 +225,51 @@ def try_extract_circuit(
         circuit_qasm=qasm,
         stats=stats,
     )
+
+
+# ---------------------------------------------------------------------------
+# Worker function for parallel evaluation
+# ---------------------------------------------------------------------------
+
+
+def _evaluate_candidate_data(
+    cand_data: dict[str, Any],
+    timeout: float,
+    max_cnot_blowup: float,
+) -> dict[str, Any] | None:
+    """Evaluate a single candidate (designed for process-pool execution).
+
+    Parameters
+    ----------
+    cand_data:
+        Serialised candidate dict (must contain ``graph_json``).
+    timeout:
+        Extraction timeout in seconds.
+    max_cnot_blowup:
+        Maximum CNOT blowup factor.
+
+    Returns
+    -------
+    dict | None
+        Survivor dict on success, ``None`` on failure.
+    """
+    try:
+        g = zx.Graph.from_json(cand_data["graph_json"])
+        result = try_extract_circuit(
+            g, timeout=timeout, max_cnot_blowup=max_cnot_blowup,
+        )
+        if result.success:
+            return {
+                "candidate_id": cand_data.get("candidate_id", ""),
+                "circuit_qasm": result.circuit_qasm,
+                "stats": result.stats,
+                "composition_type": cand_data.get("composition_type", ""),
+                "component_web_ids": cand_data.get("component_web_ids", []),
+                "n_qubits": cand_data.get("n_qubits", 0),
+            }
+    except Exception:  # noqa: BLE001
+        pass
+    return None
 
 
 # ---------------------------------------------------------------------------

@@ -1,13 +1,26 @@
 """Integration tests for multi-stage pipeline execution."""
 from __future__ import annotations
 
+from fractions import Fraction
 from pathlib import Path
 
+import pyzx as zx
 import pytest
 
-from zx_webs.config import CorpusConfig, PipelineConfig, ZXConfig
-from zx_webs.persistence import load_manifest
+from zx_webs.config import (
+    ComposeConfig,
+    CorpusConfig,
+    FilterConfig,
+    MiningConfig,
+    PipelineConfig,
+    ZXConfig,
+)
+from zx_webs.persistence import load_manifest, save_json, save_manifest
 from zx_webs.pipeline import Pipeline, run_stage1
+from zx_webs.stage3_mining.zx_web import BoundaryWire, ZXWeb
+from zx_webs.stage4_compose.candidate import CandidateAlgorithm
+from zx_webs.stage4_compose.stitcher import Stitcher
+from zx_webs.stage5_filter.extractor import try_extract_circuit
 
 
 # ---------------------------------------------------------------------------
@@ -99,6 +112,140 @@ class TestStages1And2EndToEnd:
         # ZX stage should NOT have run
         zx_dir = data_dir / "zx_diagrams"
         assert not zx_dir.exists() or len(load_manifest(zx_dir)) == 0
+
+
+# ---------------------------------------------------------------------------
+# Composition -> Extraction integration
+# ---------------------------------------------------------------------------
+
+
+class TestCompositionExtraction:
+    """Integration test: compose webs and verify circuit extraction succeeds."""
+
+    def test_sequential_compose_extracts(self) -> None:
+        """Sequentially composed 1-qubit webs should produce extractable circuits."""
+        # Build two 1-qubit webs.
+        def _make_1q_web(web_id: str, phase: Fraction) -> ZXWeb:
+            g = zx.Graph()
+            i0 = g.add_vertex(ty=0, qubit=0, row=0)
+            z0 = g.add_vertex(ty=1, phase=phase, qubit=0, row=1)
+            o0 = g.add_vertex(ty=0, qubit=0, row=2)
+            g.add_edge((i0, z0), edgetype=1)
+            g.add_edge((z0, o0), edgetype=1)
+            g.set_inputs((i0,))
+            g.set_outputs((o0,))
+            return ZXWeb(
+                web_id=web_id,
+                graph_json=g.to_json(),
+                n_inputs=1,
+                n_outputs=1,
+            )
+
+        web_a = _make_1q_web("web_a", Fraction(0))
+        web_b = _make_1q_web("web_b", Fraction(1, 4))
+
+        config = ComposeConfig(seed=42)
+        stitcher = Stitcher(config)
+        composed = stitcher.compose_sequential(web_a, web_b)
+
+        assert composed is not None, "Sequential compose should succeed"
+
+        result = try_extract_circuit(composed, timeout=10.0)
+        assert result.success is True, (
+            f"Extraction should succeed: {result.error}"
+        )
+
+    def test_parallel_compose_extracts(self) -> None:
+        """Parallel composed webs should produce extractable circuits."""
+        def _make_1q_web(web_id: str, phase: Fraction) -> ZXWeb:
+            g = zx.Graph()
+            i0 = g.add_vertex(ty=0, qubit=0, row=0)
+            z0 = g.add_vertex(ty=1, phase=phase, qubit=0, row=1)
+            o0 = g.add_vertex(ty=0, qubit=0, row=2)
+            g.add_edge((i0, z0), edgetype=1)
+            g.add_edge((z0, o0), edgetype=1)
+            g.set_inputs((i0,))
+            g.set_outputs((o0,))
+            return ZXWeb(
+                web_id=web_id,
+                graph_json=g.to_json(),
+                n_inputs=1,
+                n_outputs=1,
+            )
+
+        web_a = _make_1q_web("web_a", Fraction(0))
+        web_b = _make_1q_web("web_b", Fraction(1, 4))
+
+        config = ComposeConfig(seed=42)
+        stitcher = Stitcher(config)
+        composed = stitcher.compose_parallel(web_a, web_b)
+
+        assert composed is not None, "Parallel compose should succeed"
+
+        result = try_extract_circuit(composed, timeout=10.0)
+        assert result.success is True, (
+            f"Extraction should succeed: {result.error}"
+        )
+
+    def test_phase_perturb_extracts(self) -> None:
+        """Phase-perturbed graphs should produce extractable circuits."""
+        c = zx.Circuit(1)
+        c.add_gate("HAD", 0)
+        c.add_gate("ZPhase", 0, phase=Fraction(1, 4))
+        g = c.to_graph()
+
+        config = ComposeConfig(seed=42)
+        stitcher = Stitcher(config)
+        perturbed = stitcher.perturb_phases(g, rate=1.0)
+
+        result = try_extract_circuit(perturbed, timeout=10.0)
+        assert result.success is True, (
+            f"Phase-perturbed extraction should succeed: {result.error}"
+        )
+
+    def test_full_pipeline_produces_survivors(self, tmp_path: Path) -> None:
+        """End-to-end: compose webs -> filter -> survivors should be non-empty."""
+        # Build webs from circuit round-trips (guaranteed extractable).
+        webs = []
+        for i in range(3):
+            g = zx.Graph()
+            i0 = g.add_vertex(ty=0, qubit=0, row=0)
+            z0 = g.add_vertex(ty=1, phase=Fraction(i, 4), qubit=0, row=1)
+            o0 = g.add_vertex(ty=0, qubit=0, row=2)
+            g.add_edge((i0, z0), edgetype=1)
+            g.add_edge((z0, o0), edgetype=1)
+            g.set_inputs((i0,))
+            g.set_outputs((o0,))
+            webs.append(ZXWeb(
+                web_id=f"web_{i:04d}",
+                graph_json=g.to_json(),
+                n_inputs=1,
+                n_outputs=1,
+            ))
+
+        # Stage 4: compose
+        compose_config = ComposeConfig(
+            max_candidates=20,
+            composition_modes=["sequential", "parallel"],
+            seed=42,
+        )
+        stitcher = Stitcher(compose_config)
+        candidates = stitcher.generate_candidates(webs)
+
+        assert len(candidates) > 0, "Should generate at least one candidate"
+
+        # Stage 5: filter
+        n_success = 0
+        for cand in candidates:
+            g = zx.Graph.from_json(cand.graph_json)
+            result = try_extract_circuit(g, timeout=10.0, max_cnot_blowup=10.0)
+            if result.success:
+                n_success += 1
+
+        assert n_success > 0, (
+            f"At least one candidate should extract successfully "
+            f"(out of {len(candidates)} candidates)"
+        )
 
 
 # ---------------------------------------------------------------------------
