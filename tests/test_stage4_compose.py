@@ -1,0 +1,427 @@
+"""Tests for Stage 4 -- combinatorial stitching of ZX-Webs."""
+from __future__ import annotations
+
+import json
+from fractions import Fraction
+from pathlib import Path
+
+import pyzx as zx
+import pytest
+
+from zx_webs.config import ComposeConfig
+from zx_webs.persistence import save_json, save_manifest
+from zx_webs.stage3_mining.zx_web import BoundaryWire, ZXWeb
+from zx_webs.stage4_compose.boundary import (
+    count_boundary_wires,
+    junction_edge_type,
+    wires_compatible,
+)
+from zx_webs.stage4_compose.candidate import CandidateAlgorithm
+from zx_webs.stage4_compose.stitcher import Stitcher, run_stage4
+
+
+# ---------------------------------------------------------------------------
+# Helpers -- build small ZXWeb objects with known boundary structure
+# ---------------------------------------------------------------------------
+
+
+def _make_1q_identity_graph() -> zx.Graph:
+    """Build a 1-qubit identity: boundary -> Z(0) -> boundary."""
+    g = zx.Graph()
+    i0 = g.add_vertex(ty=0, qubit=0, row=0)   # input boundary
+    z0 = g.add_vertex(ty=1, phase=Fraction(0), qubit=0, row=1)
+    o0 = g.add_vertex(ty=0, qubit=0, row=2)   # output boundary
+    g.add_edge((i0, z0), edgetype=1)
+    g.add_edge((z0, o0), edgetype=1)
+    g.set_inputs((i0,))
+    g.set_outputs((o0,))
+    return g
+
+
+def _make_1q_phase_graph(phase: Fraction = Fraction(1, 2)) -> zx.Graph:
+    """Build a 1-qubit Z-phase gate: boundary -> Z(phase) -> boundary."""
+    g = zx.Graph()
+    i0 = g.add_vertex(ty=0, qubit=0, row=0)
+    z0 = g.add_vertex(ty=1, phase=phase, qubit=0, row=1)
+    o0 = g.add_vertex(ty=0, qubit=0, row=2)
+    g.add_edge((i0, z0), edgetype=1)
+    g.add_edge((z0, o0), edgetype=1)
+    g.set_inputs((i0,))
+    g.set_outputs((o0,))
+    return g
+
+
+def _make_2q_graph() -> zx.Graph:
+    """Build a 2-qubit graph: two parallel Z-spiders with a Hadamard between."""
+    g = zx.Graph()
+    i0 = g.add_vertex(ty=0, qubit=0, row=0)
+    i1 = g.add_vertex(ty=0, qubit=1, row=0)
+    z0 = g.add_vertex(ty=1, phase=Fraction(0), qubit=0, row=1)
+    z1 = g.add_vertex(ty=1, phase=Fraction(0), qubit=1, row=1)
+    o0 = g.add_vertex(ty=0, qubit=0, row=2)
+    o1 = g.add_vertex(ty=0, qubit=1, row=2)
+    g.add_edge((i0, z0), edgetype=1)
+    g.add_edge((i1, z1), edgetype=1)
+    g.add_edge((z0, z1), edgetype=2)  # Hadamard
+    g.add_edge((z0, o0), edgetype=1)
+    g.add_edge((z1, o1), edgetype=1)
+    g.set_inputs((i0, i1))
+    g.set_outputs((o0, o1))
+    return g
+
+
+def _web_from_graph(
+    g: zx.Graph,
+    web_id: str,
+    boundary_wires: list[BoundaryWire] | None = None,
+) -> ZXWeb:
+    """Wrap a PyZX graph into a ZXWeb with optional explicit boundary wires."""
+    if boundary_wires is None:
+        boundary_wires = []
+    n_in = sum(1 for bw in boundary_wires if bw.direction == "input")
+    n_out = sum(1 for bw in boundary_wires if bw.direction == "output")
+    n_spiders = sum(1 for v in g.vertices() if g.type(v) != 0)
+    return ZXWeb(
+        web_id=web_id,
+        graph_json=g.to_json(),
+        boundary_wires=boundary_wires,
+        support=1,
+        source_graph_ids=[0],
+        n_spiders=n_spiders,
+        n_inputs=n_in,
+        n_outputs=n_out,
+    )
+
+
+def _make_1q_web(
+    web_id: str, phase: Fraction = Fraction(0)
+) -> ZXWeb:
+    """Create a 1-qubit web with explicit input/output boundary wires."""
+    g = _make_1q_phase_graph(phase)
+    verts = sorted(g.vertices())
+    # verts[0] = input boundary (type 0), verts[1] = Z spider, verts[2] = output boundary
+    z_vid = verts[1]
+    return _web_from_graph(
+        g,
+        web_id,
+        boundary_wires=[
+            BoundaryWire(
+                internal_vertex=z_vid,
+                spider_type=1,
+                spider_phase=float(phase),
+                edge_type=1,
+                direction="input",
+            ),
+            BoundaryWire(
+                internal_vertex=z_vid,
+                spider_type=1,
+                spider_phase=float(phase),
+                edge_type=1,
+                direction="output",
+            ),
+        ],
+    )
+
+
+def _make_2q_web(web_id: str) -> ZXWeb:
+    """Create a 2-qubit web with explicit boundary wires."""
+    g = _make_2q_graph()
+    verts = sorted(g.vertices())
+    # verts: 0=i0, 1=i1, 2=z0, 3=z1, 4=o0, 5=o1
+    return _web_from_graph(
+        g,
+        web_id,
+        boundary_wires=[
+            BoundaryWire(
+                internal_vertex=verts[2],
+                spider_type=1,
+                spider_phase=0.0,
+                edge_type=1,
+                direction="input",
+            ),
+            BoundaryWire(
+                internal_vertex=verts[3],
+                spider_type=1,
+                spider_phase=0.0,
+                edge_type=1,
+                direction="input",
+            ),
+            BoundaryWire(
+                internal_vertex=verts[2],
+                spider_type=1,
+                spider_phase=0.0,
+                edge_type=1,
+                direction="output",
+            ),
+            BoundaryWire(
+                internal_vertex=verts[3],
+                spider_type=1,
+                spider_phase=0.0,
+                edge_type=1,
+                direction="output",
+            ),
+        ],
+    )
+
+
+# ---------------------------------------------------------------------------
+# Boundary module tests
+# ---------------------------------------------------------------------------
+
+
+class TestBoundaryHelpers:
+    """Tests for boundary wire analysis helpers."""
+
+    def test_count_boundary_wires(self) -> None:
+        """count_boundary_wires should reflect explicit direction labels."""
+        web = _make_1q_web("web_test")
+        n_in, n_out = count_boundary_wires(web)
+        assert n_in == 1
+        assert n_out == 1
+
+    def test_wires_compatible_always_true(self) -> None:
+        """In ZX-calculus, any two spiders can be connected."""
+        bw1 = BoundaryWire(0, spider_type=1, spider_phase=0.0, edge_type=1)
+        bw2 = BoundaryWire(1, spider_type=2, spider_phase=0.5, edge_type=1)
+        assert wires_compatible(bw1, bw2) is True
+
+    def test_junction_edge_type_same_type(self) -> None:
+        """Same spider type -> simple edge."""
+        bw1 = BoundaryWire(0, spider_type=1, spider_phase=0.0, edge_type=1)
+        bw2 = BoundaryWire(1, spider_type=1, spider_phase=0.5, edge_type=1)
+        assert junction_edge_type(bw1, bw2) == 1
+
+    def test_junction_edge_type_different_type(self) -> None:
+        """Different spider types -> Hadamard edge."""
+        bw1 = BoundaryWire(0, spider_type=1, spider_phase=0.0, edge_type=1)
+        bw2 = BoundaryWire(1, spider_type=2, spider_phase=0.0, edge_type=1)
+        assert junction_edge_type(bw1, bw2) == 2
+
+
+# ---------------------------------------------------------------------------
+# CandidateAlgorithm serialisation tests
+# ---------------------------------------------------------------------------
+
+
+class TestCandidateSerialization:
+    """Tests for the CandidateAlgorithm data class."""
+
+    def test_roundtrip(self) -> None:
+        """Serialise a CandidateAlgorithm to dict and back."""
+        g = _make_1q_identity_graph()
+        cand = CandidateAlgorithm(
+            candidate_id="cand_0001",
+            graph_json=g.to_json(),
+            component_web_ids=["web_0000", "web_0001"],
+            composition_type="sequential",
+            n_qubits=1,
+            n_spiders=1,
+        )
+        d = cand.to_dict()
+        cand2 = CandidateAlgorithm.from_dict(d)
+
+        assert cand2.candidate_id == cand.candidate_id
+        assert cand2.component_web_ids == cand.component_web_ids
+        assert cand2.composition_type == cand.composition_type
+        assert cand2.n_qubits == cand.n_qubits
+        assert cand2.n_spiders == cand.n_spiders
+
+    def test_json_serializable(self) -> None:
+        """to_dict output should be JSON-serialisable."""
+        g = _make_1q_identity_graph()
+        cand = CandidateAlgorithm(
+            candidate_id="cand_json",
+            graph_json=g.to_json(),
+            component_web_ids=["web_0"],
+            composition_type="parallel",
+            n_qubits=1,
+            n_spiders=1,
+        )
+        json_str = json.dumps(cand.to_dict())
+        assert isinstance(json_str, str)
+        assert "cand_json" in json_str
+
+
+# ---------------------------------------------------------------------------
+# Stitcher composition tests
+# ---------------------------------------------------------------------------
+
+
+class TestStitcherComposition:
+    """Tests for the Stitcher composition methods."""
+
+    def test_compose_sequential_matching_wires(self) -> None:
+        """Two 1-qubit webs with matching I/O -> composed graph has vertices from both."""
+        config = ComposeConfig(seed=42)
+        stitcher = Stitcher(config)
+
+        web_a = _make_1q_web("web_a", phase=Fraction(0))
+        web_b = _make_1q_web("web_b", phase=Fraction(1, 2))
+
+        combined = stitcher.compose_sequential(web_a, web_b)
+        assert combined is not None
+
+        # Both webs contribute 3 vertices (boundary, spider, boundary).
+        # After composition, both sub-graphs are present.
+        assert combined.num_vertices() >= 4  # at least the spiders + some boundaries
+
+    def test_compose_sequential_mismatched(self) -> None:
+        """Different wire counts -> returns None."""
+        config = ComposeConfig(seed=42)
+        stitcher = Stitcher(config)
+
+        web_1q = _make_1q_web("web_1q")
+        web_2q = _make_2q_web("web_2q")
+
+        # 1-qubit output vs 2-qubit input -> mismatch
+        result = stitcher.compose_sequential(web_1q, web_2q)
+        assert result is None
+
+    def test_compose_parallel(self) -> None:
+        """Parallel composition always succeeds; combined graph has all vertices."""
+        config = ComposeConfig(seed=42)
+        stitcher = Stitcher(config)
+
+        web_a = _make_1q_web("web_a")
+        web_b = _make_1q_web("web_b", phase=Fraction(1, 4))
+
+        combined = stitcher.compose_parallel(web_a, web_b)
+
+        # Each web has 3 vertices -> combined has 6.
+        assert combined.num_vertices() == 6
+        assert combined.num_edges() == 4  # 2 edges per web
+
+        # Inputs and outputs from both webs should be present.
+        assert len(combined.inputs()) == 2
+        assert len(combined.outputs()) == 2
+
+    def test_compose_parallel_2q(self) -> None:
+        """Parallel composition of a 1q and 2q web -> 3 total qubits."""
+        config = ComposeConfig(seed=42)
+        stitcher = Stitcher(config)
+
+        web_1q = _make_1q_web("web_1q")
+        web_2q = _make_2q_web("web_2q")
+
+        combined = stitcher.compose_parallel(web_1q, web_2q)
+        assert combined is not None
+
+        # 1q web has 3 verts, 2q web has 6 verts -> combined has 9
+        assert combined.num_vertices() == 9
+
+    def test_generate_candidates(self) -> None:
+        """Feed 3 webs, get candidates, verify count <= max_candidates."""
+        config = ComposeConfig(
+            max_candidates=50,
+            composition_modes=["sequential", "parallel"],
+            seed=42,
+        )
+        stitcher = Stitcher(config)
+
+        webs = [
+            _make_1q_web("web_0", phase=Fraction(0)),
+            _make_1q_web("web_1", phase=Fraction(1, 4)),
+            _make_1q_web("web_2", phase=Fraction(1, 2)),
+        ]
+
+        candidates = stitcher.generate_candidates(webs)
+
+        assert len(candidates) > 0
+        assert len(candidates) <= config.max_candidates
+
+        # Every candidate should have a valid composition type.
+        for cand in candidates:
+            assert cand.composition_type in ("sequential", "parallel", "hybrid")
+            assert len(cand.component_web_ids) >= 2
+            assert cand.candidate_id.startswith("cand_")
+
+    def test_generate_candidates_respects_max(self) -> None:
+        """Candidate generation should stop at max_candidates."""
+        config = ComposeConfig(
+            max_candidates=2,
+            composition_modes=["sequential", "parallel"],
+            seed=42,
+        )
+        stitcher = Stitcher(config)
+
+        webs = [
+            _make_1q_web(f"web_{i}", phase=Fraction(i, 4))
+            for i in range(5)
+        ]
+
+        candidates = stitcher.generate_candidates(webs)
+        assert len(candidates) <= 2
+
+
+# ---------------------------------------------------------------------------
+# End-to-end Stage 4 test
+# ---------------------------------------------------------------------------
+
+
+class TestRunStage4EndToEnd:
+    """End-to-end integration test for run_stage4."""
+
+    def test_run_stage4_creates_outputs(self, tmp_path: Path) -> None:
+        """Set up Stage 3 outputs, run Stage 4, verify candidates are created."""
+        # Set up a mock Stage 3 output directory.
+        webs_dir = tmp_path / "webs"
+        webs_subdir = webs_dir / "webs"
+        webs_subdir.mkdir(parents=True)
+
+        # Create a few ZXWeb files.
+        test_webs = [
+            _make_1q_web("web_0000", phase=Fraction(0)),
+            _make_1q_web("web_0001", phase=Fraction(1, 4)),
+            _make_1q_web("web_0002", phase=Fraction(1, 2)),
+        ]
+
+        manifest_entries = []
+        for web in test_webs:
+            web_path = webs_subdir / f"{web.web_id}.json"
+            save_json(web.to_dict(), web_path)
+            manifest_entries.append(
+                {
+                    "web_id": web.web_id,
+                    "web_path": str(web_path),
+                    "support": web.support,
+                    "n_spiders": web.n_spiders,
+                    "n_boundary_wires": len(web.boundary_wires),
+                    "n_inputs": web.n_inputs,
+                    "n_outputs": web.n_outputs,
+                }
+            )
+
+        save_manifest(manifest_entries, webs_dir)
+
+        # Run Stage 4.
+        output_dir = tmp_path / "compose_output"
+        config = ComposeConfig(
+            max_candidates=20,
+            composition_modes=["sequential", "parallel"],
+            seed=42,
+        )
+        candidates = run_stage4(webs_dir, output_dir, config)
+
+        # Verify outputs.
+        assert len(candidates) > 0
+
+        # Manifest should exist.
+        manifest_path = output_dir / "manifest.json"
+        assert manifest_path.exists()
+
+        # Each candidate should have a corresponding JSON file.
+        candidates_subdir = output_dir / "candidates"
+        assert candidates_subdir.exists()
+        for cand in candidates:
+            cand_path = candidates_subdir / f"{cand.candidate_id}.json"
+            assert cand_path.exists(), f"Candidate file missing: {cand_path}"
+
+    def test_run_stage4_empty_manifest(self, tmp_path: Path) -> None:
+        """run_stage4 on an empty manifest should return no candidates."""
+        webs_dir = tmp_path / "webs_empty"
+        webs_dir.mkdir()
+        save_manifest([], webs_dir)
+
+        output_dir = tmp_path / "compose_empty"
+        candidates = run_stage4(webs_dir, output_dir)
+        assert candidates == []

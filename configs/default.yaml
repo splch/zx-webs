@@ -1,0 +1,49 @@
+data_dir: data
+
+corpus:
+  families:
+    - oracular
+    - entanglement
+    - variational
+    - arithmetic
+    - error_correction
+  max_qubits: 10
+  qubit_counts: [3, 5, 7, 10]
+  seed: 42
+
+zx:
+  reduction: full_reduce
+  normalize: true
+
+mining:
+  min_support: 3
+  min_vertices: 2
+  max_vertices: 20
+  phase_discretization: 8
+  include_phase_in_label: true
+
+compose:
+  max_webs_per_candidate: 4
+  max_candidates: 10000
+  composition_modes: [sequential, parallel]
+  boundary_match_strategy: exact_type
+  seed: 42
+
+filter:
+  extract_timeout_seconds: 30.0
+  max_cnot_blowup_factor: 5.0
+  dedup_method: unitary
+
+bench:
+  tasks:
+    - grover_oracle
+    - maxcut
+    - qpe
+    - ghz
+    - arithmetic
+  qasmbench_path: data/qasmbench
+  fidelity_shots: 8192
+
+report:
+  output_format: [json, html]
+  figure_dpi: 150
