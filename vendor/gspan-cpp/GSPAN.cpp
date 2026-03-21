@@ -456,35 +456,41 @@ void GSPAN::gSpan()
 
 void GSPAN::output()
 {
-	auto tmp = freqPattern;
-	freqPattern.clear();
-	for (int i = 0;i < (int)tmp.size();i++)
+	// Dedup patterns while keeping support/sourceIds aligned.
+	vector<DFSCode> dedupPatterns;
+	vector<int> dedupSupport;
+	vector<vector<int>> dedupSourceIds;
+	for (int i = 0; i < (int)freqPattern.size(); i++)
 	{
-		bool flag = 1;
-		for (int j = 0;j < (int)freqPattern.size();j++)
+		bool dup = false;
+		for (int j = 0; j < (int)dedupPatterns.size(); j++)
 		{
-			if (tmp[i] == freqPattern[j])
+			if (freqPattern[i] == dedupPatterns[j])
 			{
-				flag = 0;
+				dup = true;
 				break;
 			}
 		}
-		if (flag) freqPattern.push_back(tmp[i]);
+		if (!dup)
+		{
+			dedupPatterns.push_back(freqPattern[i]);
+			dedupSupport.push_back(freqPatternSupport[i]);
+			dedupSourceIds.push_back(freqPatternSourceIds[i]);
+		}
 	}
 
-	for (int _ = 0;_ < (int)freqPattern.size();_++)
+	for (int idx = 0; idx < (int)dedupPatterns.size(); idx++)
 	{
-		DFSCode dfscode = freqPattern[_];
-		// Output: "t # <id> <support> <source_id1,source_id2,...>"
-		cout << "t # " << _ << " " << freqPatternSupport[_];
-		for (int s : freqPatternSourceIds[_])
+		DFSCode &dfscode = dedupPatterns[idx];
+		cout << "t # " << idx << " " << dedupSupport[idx];
+		for (int s : dedupSourceIds[idx])
 			cout << " " << s;
 		cout << endl;
-		for (int i = 0;i < (int)dfscode.dfsCodeList.size();i++)
+		for (int i = 0; i < (int)dfscode.dfsCodeList.size(); i++)
 		{
 			DFSCodeNode t = dfscode.dfsCodeList[i];
 			cout << t.a << " " << t.b << " " << t.la << " " << t.lab << " " << t.lb << endl;
 		}
 	}
-	cerr << "Frequent patterns: " << freqPattern.size() << endl;
+	cerr << "Frequent patterns: " << dedupPatterns.size() << endl;
 }

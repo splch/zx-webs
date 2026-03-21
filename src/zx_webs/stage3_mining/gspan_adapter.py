@@ -635,8 +635,7 @@ class GSpanAdapter:
             # Build reverse label maps from the input file.
             vertex_rev, edge_rev = _build_input_filter_reverse_maps(gspan_path)
 
-            # Parse input graphs for support computation.
-            input_graphs = _parse_gspan_input_file(gspan_path)
+
 
             # Run the C++ binary with ulimit -s unlimited.
             max_v = self.config.max_vertices
