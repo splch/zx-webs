@@ -20,6 +20,9 @@ class CorpusConfig(BaseModel):
         "variational",
         "simulation",
         "entanglement",
+        "error_correction",
+        "linear_algebra",
+        "communication",
     ]
     max_qubits: int = 10
     qubit_counts: list[int] = [3, 5, 7, 10]

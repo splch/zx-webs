@@ -2084,10 +2084,273 @@ def _generate_variants(
             qc = fn(**{first_param: n}, seed=seed_val)
             variants.append((f"_seed{seed_val}", qc))
 
+    elif name == "vqe_uccsd_ansatz":
+        # 2 different layer counts.
+        for layers in [1, 2]:
+            qc = fn(**{first_param: n}, layers=layers)
+            variants.append((f"_L{layers}", qc))
+
+    elif name == "qpe":
+        # Standard QPE plus variant with S-gate unitary
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+        # QPE with 2x angle (S-gate = phase pi/2 instead of T-gate pi/4)
+        total = n + 1
+        target = n
+        qc2 = QuantumCircuit(total)
+        qc2.x(target)
+        for q in range(n):
+            qc2.h(q)
+        for k in range(n):
+            angle = math.pi / 2 * (1 << k)  # S-gate eigenvalue
+            qc2.cp(angle, k, target)
+        for i in range(n // 2):
+            qc2.swap(i, n - 1 - i)
+        for i in range(n):
+            for j in range(i):
+                angle = -math.pi / (1 << (i - j))
+                qc2.cp(angle, j, i)
+            qc2.h(i)
+        variants.append(("_sgate", qc2))
+
     elif name == "superdense_coding":
         # 1 variant -- fixed protocol, no meaningful parameterization
         qc = fn(**{first_param: n})
         variants.append(("", qc))
+
+    # ----- Entanglement family variants (boost) -----
+    elif name == "ghz":
+        # GHZ with and without initial X on first qubit (different input states)
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+        # GHZ with inverted first qubit (|1>-seeded GHZ)
+        qc2 = fn(**{first_param: n})
+        # Prepend X gate by rebuilding
+        qc_inv = QuantumCircuit(qc2.num_qubits)
+        qc_inv.x(0)
+        qc_inv = qc_inv.compose(qc2)
+        variants.append(("_x0", qc_inv))
+
+    elif name == "w_state":
+        # Standard W state plus a variant with initial X rotation
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+        # W state seeded with Ry on first qubit
+        qc2 = fn(**{first_param: n})
+        qc_ry = QuantumCircuit(qc2.num_qubits)
+        qc_ry.ry(math.pi / 3, 0)
+        qc_ry = qc_ry.compose(qc2)
+        variants.append(("_ry0", qc_ry))
+
+    elif name == "cluster_state":
+        # Linear cluster plus 2D grid cluster for larger sizes
+        qc = fn(**{first_param: n})
+        variants.append(("_linear", qc))
+        # Cluster with additional diagonal CZ bonds (richer entanglement)
+        if n >= 4:
+            qc2 = QuantumCircuit(n)
+            for q in range(n):
+                qc2.h(q)
+            for q in range(n - 1):
+                qc2.cz(q, q + 1)
+            # Add skip-one bonds
+            for q in range(n - 2):
+                qc2.cz(q, q + 2)
+            variants.append(("_ladder", qc2))
+
+    elif name == "graph_state":
+        # Ring graph state (default) plus complete graph state
+        qc = fn(**{first_param: n})
+        variants.append(("_ring", qc))
+        # Complete graph state (all-to-all CZ)
+        qc2 = QuantumCircuit(n)
+        for q in range(n):
+            qc2.h(q)
+        for q1 in range(n):
+            for q2 in range(q1 + 1, n):
+                qc2.cz(q1, q2)
+        variants.append(("_complete", qc2))
+
+    # ----- Arithmetic family variants (boost) -----
+    elif name == "qft":
+        # QFT with different input state preparations
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+        # QFT applied to |1> state (X on qubit 0)
+        qc2 = QuantumCircuit(n)
+        qc2.x(0)
+        qc2 = qc2.compose(fn(**{first_param: n}))
+        variants.append(("_x0", qc2))
+
+    elif name == "inverse_qft":
+        # Inverse QFT with different input preparations
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+        # IQFT applied to Hadamard state
+        qc2 = QuantumCircuit(n)
+        for q in range(n):
+            qc2.h(q)
+        qc2 = qc2.compose(fn(**{first_param: n}))
+        variants.append(("_hadamard_input", qc2))
+
+    elif name == "draper_adder":
+        # Already n_bits param; just generate the default variant
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+
+    elif name == "quantum_multiplier":
+        # Default only; these get large quickly
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+
+    elif name == "quantum_comparator":
+        # Default only
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+
+    # ----- Error correction family variants -----
+    elif name == "repetition_code":
+        # Different code distances (the n_qubits parameter IS the distance)
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+
+    elif name == "bit_flip_code":
+        # Fixed at 3 qubits; generate one variant with initial superposition
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+        # Encode a |+> state instead of |0>
+        qc2 = QuantumCircuit(3)
+        qc2.h(0)
+        qc2 = qc2.compose(fn(**{first_param: n}))
+        variants.append(("_plus", qc2))
+
+    elif name == "phase_flip_code":
+        # Fixed at 3 qubits; generate variant with |+> input
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+        qc2 = QuantumCircuit(3)
+        qc2.h(0)
+        qc2 = qc2.compose(fn(**{first_param: n}))
+        variants.append(("_plus", qc2))
+
+    elif name == "steane_code":
+        # Fixed at 7 qubits; generate variant with |+> input
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+        qc2 = QuantumCircuit(7)
+        qc2.h(0)
+        qc2 = qc2.compose(fn(**{first_param: n}))
+        variants.append(("_plus", qc2))
+
+    elif name == "surface_code_plaquette":
+        # Fixed at 5 qubits; generate variant with data qubits in |+>
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+        qc2 = QuantumCircuit(5)
+        for q in range(4):  # data qubits only
+            qc2.h(q)
+        qc2 = qc2.compose(fn(**{first_param: n}))
+        variants.append(("_plus_data", qc2))
+
+    # ----- Linear algebra family variants -----
+    elif name == "quantum_walk":
+        # 2 different step counts
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+
+    elif name == "hadamard_test":
+        # Standard plus variant with different controlled unitary
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+        # Variant: add Ry rotation on targets before the test
+        qc2 = QuantumCircuit(n)
+        for t in range(1, n):
+            qc2.ry(math.pi / 3, t)
+        qc2 = qc2.compose(fn(**{first_param: n}))
+        variants.append(("_ry_input", qc2))
+
+    elif name == "swap_test":
+        # Standard plus variant with different input states
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+        # Variant: prepare register A in |+> states
+        total = qc.num_qubits
+        reg_size = (total - 1) // 2
+        qc2 = QuantumCircuit(total)
+        for q in range(1, 1 + reg_size):
+            qc2.h(q)
+        qc2 = qc2.compose(fn(**{first_param: n}))
+        variants.append(("_plus_a", qc2))
+
+    elif name == "inner_product":
+        # Standard inner product
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+
+    elif name == "hhl_rotation":
+        # Standard HHL rotation
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+
+    # ----- Communication family variants -----
+    elif name == "teleportation":
+        # Fixed 3-qubit protocol; standard plus |+> teleportation
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+        # Teleport |+> state instead of |0>
+        qc2 = QuantumCircuit(3)
+        qc2.h(0)
+        qc2 = qc2.compose(fn(**{first_param: n}))
+        variants.append(("_plus", qc2))
+        # Teleport |1> state
+        qc3 = QuantumCircuit(3)
+        qc3.x(0)
+        qc3 = qc3.compose(fn(**{first_param: n}))
+        variants.append(("_one", qc3))
+
+    elif name == "entanglement_swapping":
+        # Fixed 4-qubit protocol; standard plus variant
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+        # Variant with initial state preparation
+        qc2 = QuantumCircuit(4)
+        qc2.ry(math.pi / 4, 0)
+        qc2 = qc2.compose(fn(**{first_param: n}))
+        variants.append(("_ry0", qc2))
+
+    elif name == "ghz_distribution":
+        # GHZ distribution with default params
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+
+    elif name == "quantum_secret_sharing":
+        # Secret sharing with different secret angles
+        for angle_mult, label in [(1, "a1"), (2, "a2"), (3, "a3")]:
+            # Build circuit then modify the secret angle
+            qc = QuantumCircuit(max(n, 3))
+            nq = max(n, 3)
+            # Prepare GHZ state
+            qc.h(0)
+            for q in range(nq - 1):
+                qc.cx(q, q + 1)
+            # Encode secret with different angles
+            secret_angle = math.pi * angle_mult / 5
+            qc.rz(secret_angle, 0)
+            for q in range(1, nq):
+                qc.rz(secret_angle / (nq - 1), q)
+            variants.append((f"_{label}", qc))
+
+    elif name == "bb84_encoding":
+        # BB84 with different basis/bit choice patterns
+        qc = fn(**{first_param: n})
+        variants.append(("_pattern0", qc))
+        # Variant: all X-basis encoding
+        qc2 = QuantumCircuit(n)
+        for q in range(n):
+            if q % 2:
+                qc2.x(q)
+            qc2.h(q)
+        variants.append(("_all_x", qc2))
 
     else:
         # No multi-instance generation for this algorithm.

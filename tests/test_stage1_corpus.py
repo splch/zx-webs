@@ -141,6 +141,60 @@ class TestBuildCorpus:
         ids2 = [e["algorithm_id"] for e in entries2]
         assert ids1 == ids2, "Multi-instance generation should be deterministic"
 
+    def test_new_families_produce_circuits(self) -> None:
+        """error_correction, linear_algebra, communication should produce circuits."""
+        from collections import Counter
+
+        config = CorpusConfig(
+            families=["error_correction", "linear_algebra", "communication"],
+            max_qubits=7,
+            qubit_counts=[3, 4, 5, 7],
+        )
+        entries = build_corpus(config)
+        fam_counts = Counter(e["family"] for e in entries)
+
+        assert fam_counts["error_correction"] >= 10, (
+            f"Expected >= 10 error_correction circuits, got {fam_counts['error_correction']}"
+        )
+        assert fam_counts["linear_algebra"] >= 10, (
+            f"Expected >= 10 linear_algebra circuits, got {fam_counts['linear_algebra']}"
+        )
+        assert fam_counts["communication"] >= 10, (
+            f"Expected >= 10 communication circuits, got {fam_counts['communication']}"
+        )
+
+    def test_all_eight_families_in_default_config(self) -> None:
+        """Default CorpusConfig should include all 8 algorithm families."""
+        config = CorpusConfig()
+        assert len(config.families) == 8, (
+            f"Expected 8 families in default config, got {len(config.families)}"
+        )
+        for fam in [
+            "oracular", "arithmetic", "variational", "simulation",
+            "entanglement", "error_correction", "linear_algebra", "communication",
+        ]:
+            assert fam in config.families, f"Missing family '{fam}' in default config"
+
+    def test_corpus_balance(self) -> None:
+        """Corpus should be reasonably balanced with 300-400 total circuits."""
+        from collections import Counter
+
+        config = CorpusConfig(
+            max_qubits=7,
+            qubit_counts=[3, 4, 5, 7],
+        )
+        entries = build_corpus(config)
+        total = len(entries)
+
+        assert 280 <= total <= 450, (
+            f"Expected 280-450 total circuits, got {total}"
+        )
+
+        fam_counts = Counter(e["family"] for e in entries)
+        # No family should have fewer than 10 circuits
+        for fam, cnt in fam_counts.items():
+            assert cnt >= 10, f"Family '{fam}' has only {cnt} circuits (expected >= 10)"
+
 
 # ---------------------------------------------------------------------------
 # QASM bridge tests
