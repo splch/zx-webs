@@ -11,7 +11,7 @@ corpus:
     - linear_algebra
     - communication
   max_qubits: 5
-  qubit_counts: [3, 5]
+  qubit_counts: [3, 4, 5]
   seed: 42
 
 zx:
@@ -28,7 +28,7 @@ mining:
 
 compose:
   max_webs_per_candidate: 3
-  max_candidates: 2000
+  max_candidates: 10000
   composition_modes: [sequential, parallel]
   min_compose_qubits: 2
   max_compose_qubits: 20
