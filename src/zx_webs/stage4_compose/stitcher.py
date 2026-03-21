@@ -1115,7 +1115,6 @@ def run_stage4(
         )
 
         # Apply FPS cap on the in-memory list if needed.
-        # Cap at 50K webs to keep pair generation tractable.
         max_webs_to_load = min(len(all_webs), config.max_candidates * 10, config.max_webs_loaded)
         if len(all_webs) > max_webs_to_load:
             rng = random.Random(config.seed)
