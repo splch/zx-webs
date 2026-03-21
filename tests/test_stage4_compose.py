@@ -1036,3 +1036,143 @@ class TestRunStage4EndToEnd:
         first_entry = output_manifest[0]
         assert "source_families" in first_entry
         assert "is_cross_family" in first_entry
+
+
+# ---------------------------------------------------------------------------
+# FPS (farthest-point sampling) tests
+# ---------------------------------------------------------------------------
+
+
+class TestFarthestPointSample:
+    """Tests for the _farthest_point_sample deduplication optimisation."""
+
+    def test_small_no_duplicates(self) -> None:
+        """FPS on a small set with all unique features returns k indices."""
+        import random
+        from zx_webs.stage4_compose.stitcher import (
+            _farthest_point_sample,
+            _standardise_features,
+        )
+
+        features = [
+            [1.0, 0.0, 3.0, 1.0, 1.0],
+            [2.0, 1.0, 5.0, 2.0, 2.0],
+            [0.0, 2.0, 1.0, 3.0, 1.0],
+            [3.0, 3.0, 10.0, 5.0, 3.0],
+            [1.0, 1.0, 2.0, 1.0, 1.0],
+        ]
+        _standardise_features(features)
+        rng = random.Random(42)
+        selected = _farthest_point_sample(features, 3, rng)
+        assert len(selected) == 3
+        assert len(set(selected)) == 3  # all unique indices
+        assert all(0 <= idx < 5 for idx in selected)
+
+    def test_all_identical_features(self) -> None:
+        """When all features are identical, FPS returns up to k indices."""
+        import random
+        from zx_webs.stage4_compose.stitcher import _farthest_point_sample
+
+        features = [[1.0, 2.0, 3.0, 4.0, 5.0]] * 100
+        rng = random.Random(42)
+        selected = _farthest_point_sample(features, 10, rng)
+        # Only 1 unique feature, so all are at distance 0 from the seed.
+        # Should still return indices (from the single unique group).
+        assert len(selected) <= 10
+        assert len(selected) >= 1
+        assert all(0 <= idx < 100 for idx in selected)
+
+    def test_n_less_than_k(self) -> None:
+        """When n < k, all indices are returned."""
+        import random
+        from zx_webs.stage4_compose.stitcher import _farthest_point_sample
+
+        features = [[1.0, 2.0, 3.0, 4.0, 5.0], [6.0, 7.0, 8.0, 9.0, 10.0]]
+        rng = random.Random(42)
+        selected = _farthest_point_sample(features, 100, rng)
+        assert set(selected) == {0, 1}
+
+    def test_with_heavy_duplication(self) -> None:
+        """FPS with heavy duplication selects diverse representatives.
+
+        Creates 10000 webs from 5 distinct feature clusters.
+        FPS should select representatives from all clusters.
+        """
+        import random
+        from zx_webs.stage4_compose.stitcher import (
+            _farthest_point_sample,
+            _standardise_features,
+        )
+
+        # 5 distinct feature vectors, 2000 copies each = 10000 total.
+        clusters = [
+            [1.0, 0.0, 3.0, 1.0, 1.0],
+            [2.0, 2.0, 10.0, 5.0, 3.0],
+            [0.0, 1.0, 1.0, 1.0, 1.0],
+            [3.0, 3.0, 20.0, 10.0, 2.0],
+            [1.0, 1.0, 5.0, 2.0, 2.0],
+        ]
+        features = []
+        for cluster in clusters:
+            features.extend([list(cluster) for _ in range(2000)])
+
+        _standardise_features(features)
+        rng = random.Random(42)
+        selected = _farthest_point_sample(features, 50, rng)
+        assert len(selected) == 50
+        assert len(set(selected)) == 50  # all unique indices
+
+        # Check that all 5 clusters are represented.
+        cluster_hit = set()
+        for idx in selected:
+            cluster_hit.add(idx // 2000)
+        assert len(cluster_hit) == 5, f"Expected all 5 clusters, got {cluster_hit}"
+
+    def test_deterministic_same_seed(self) -> None:
+        """Same seed produces same selection."""
+        import random
+        from zx_webs.stage4_compose.stitcher import (
+            _farthest_point_sample,
+            _standardise_features,
+        )
+
+        features_base = [
+            [float(i % 5), float(i % 3), float(i), float(i * 2), float(i % 7)]
+            for i in range(200)
+        ]
+        f1 = [list(row) for row in features_base]
+        f2 = [list(row) for row in features_base]
+        _standardise_features(f1)
+        _standardise_features(f2)
+
+        sel1 = _farthest_point_sample(f1, 20, random.Random(99))
+        sel2 = _farthest_point_sample(f2, 20, random.Random(99))
+        assert sel1 == sel2
+
+    def test_performance_with_duplicates(self) -> None:
+        """FPS on 100K points with 50 unique features runs in < 2 seconds."""
+        import random
+        import time
+        from zx_webs.stage4_compose.stitcher import (
+            _farthest_point_sample,
+            _standardise_features,
+        )
+
+        # 50 unique feature vectors, 2000 copies each = 100K total.
+        unique_feats = [
+            [float(i), float(i % 3), float(i * 2), float(i % 7), float(i % 4)]
+            for i in range(50)
+        ]
+        features = []
+        for uf in unique_feats:
+            features.extend([list(uf) for _ in range(2000)])
+
+        _standardise_features(features)
+        rng = random.Random(42)
+
+        start = time.monotonic()
+        selected = _farthest_point_sample(features, 1000, rng)
+        elapsed = time.monotonic() - start
+
+        assert len(selected) == 1000
+        assert elapsed < 2.0, f"FPS on 100K points took {elapsed:.2f}s (should be < 2s)"

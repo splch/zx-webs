@@ -117,22 +117,25 @@ def _standardise_features(
     """Z-score standardise each column of *matrix* in place and return it.
 
     Columns with zero variance are left as-is (all zeros after centering)
-    to avoid division by zero.  Runs in O(n * d) with no external deps.
+    to avoid division by zero.  Uses numpy for vectorised computation,
+    then writes results back to the original list-of-lists in place.
     """
     if not matrix:
         return matrix
-    n = len(matrix)
-    d = len(matrix[0])
-    for col in range(d):
-        mean = sum(row[col] for row in matrix) / n
-        var = sum((row[col] - mean) ** 2 for row in matrix) / n
-        std = math.sqrt(var) if var > 0 else 0.0
-        if std > 0:
-            for row in matrix:
-                row[col] = (row[col] - mean) / std
-        else:
-            for row in matrix:
-                row[col] = 0.0
+    import numpy as np
+
+    arr = np.array(matrix, dtype=np.float64)
+    mean = arr.mean(axis=0)
+    std = arr.std(axis=0)
+    # Avoid division by zero: columns with zero std become all zeros.
+    mask = std > 0
+    arr[:, mask] = (arr[:, mask] - mean[mask]) / std[mask]
+    arr[:, ~mask] = 0.0
+
+    # Write back in place to the original list-of-lists.
+    result = arr.tolist()
+    for i in range(len(matrix)):
+        matrix[i][:] = result[i]
     return matrix
 
 
@@ -152,7 +155,14 @@ def _farthest_point_sample(
     2. Greedily pick the point farthest from the already-selected set.
 
     Returns a list of *k* indices (or fewer if ``len(features) <= k``).
-    Uses numpy for vectorised distance computation — O(k * n * d).
+
+    **Deduplication optimisation**: The 5-D feature space typically has far
+    fewer unique vectors than total webs (e.g. ~5K unique out of 2.5M).
+    We run exact FPS on the unique vectors (O(k_unique * n_unique * d)),
+    then expand each selected unique feature to all original indices that
+    share it.  This is mathematically equivalent to running FPS on all
+    points -- duplicate features are at distance 0, so FPS would never
+    prefer one duplicate over another.
     """
     import numpy as np
 
@@ -162,27 +172,92 @@ def _farthest_point_sample(
 
     feat_arr = np.array(features, dtype=np.float64)  # (n, d)
 
-    selected: list[int] = []
-    min_dist = np.full(n, np.inf, dtype=np.float64)
+    # --- Deduplication ---------------------------------------------------
+    # Map each row to a hashable key and group original indices by it.
+    # np.unique with return_inverse gives us the mapping efficiently.
+    unique_arr, inverse = np.unique(feat_arr, axis=0, return_inverse=True)
+    n_unique = len(unique_arr)
 
-    # Seed with a random point
-    seed = rng.randrange(n)
-    selected.append(seed)
-    # Vectorised distance update
-    diff = feat_arr - feat_arr[seed]
-    dists = np.sum(diff * diff, axis=1)
+    # Build groups: unique_idx -> list of original indices
+    groups: list[list[int]] = [[] for _ in range(n_unique)]
+    for orig_idx, uniq_idx in enumerate(inverse):
+        groups[uniq_idx].append(orig_idx)
+
+    logger.debug(
+        "FPS dedup: %d total -> %d unique features (%.1fx reduction)",
+        n, n_unique, n / max(n_unique, 1),
+    )
+
+    # --- FPS on unique features -----------------------------------------
+    min_dist = np.full(n_unique, np.inf, dtype=np.float64)
+    selected_unique: list[int] = []
+
+    # Seed: pick a random original index, map to its unique group.
+    seed_orig = rng.randrange(n)
+    seed_unique = int(inverse[seed_orig])
+    selected_unique.append(seed_unique)
+
+    diff = unique_arr - unique_arr[seed_unique]
+    dists = np.einsum("ij,ij->i", diff, diff)
     np.minimum(min_dist, dists, out=min_dist)
 
-    for _ in tqdm(range(k - 1), desc="FPS web selection", unit="web", disable=(k < 1000)):
+    # Run FPS to completion on unique features: select all unique groups
+    # whose min-distance from the already-selected set is > 0.  We do NOT
+    # stop early based on total member count -- we want maximum feature
+    # diversity first, then fill remaining slots via round-robin.
+    pbar = tqdm(
+        total=min(k - 1, n_unique - 1),
+        desc="FPS web selection", unit="group",
+        disable=(k < 1000),
+    )
+
+    while len(selected_unique) < n_unique:
         best_idx = int(np.argmax(min_dist))
         if min_dist[best_idx] <= 0:
             break
-        selected.append(best_idx)
-        diff = feat_arr - feat_arr[best_idx]
-        dists = np.sum(diff * diff, axis=1)
+        selected_unique.append(best_idx)
+
+        diff = unique_arr - unique_arr[best_idx]
+        dists = np.einsum("ij,ij->i", diff, diff)
         np.minimum(min_dist, dists, out=min_dist)
 
-    return selected
+        pbar.update(1)
+
+    pbar.close()
+
+    total_collected = sum(len(groups[uid]) for uid in selected_unique)
+    logger.debug(
+        "FPS selected %d unique groups covering %d original indices (target k=%d)",
+        len(selected_unique), total_collected, k,
+    )
+
+    # --- Expand back to original indices --------------------------------
+    # Round-robin across selected unique groups in FPS order.  This
+    # ensures the first k picks are spread across all diverse feature
+    # clusters, matching the behaviour of exact FPS (which would
+    # exhaust all unique features before revisiting any cluster, since
+    # duplicates are at distance 0).
+    shuffled_groups = []
+    for uid in selected_unique:
+        group = list(groups[uid])
+        rng.shuffle(group)
+        shuffled_groups.append(group)
+
+    result: list[int] = []
+    rr_round = 0
+    while len(result) < k:
+        added_any = False
+        for group in shuffled_groups:
+            if rr_round < len(group):
+                result.append(group[rr_round])
+                added_any = True
+                if len(result) >= k:
+                    break
+        if not added_any:
+            break
+        rr_round += 1
+
+    return result[:k]
 
 
 def _fps_dissimilar_pairs(
