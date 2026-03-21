@@ -23,7 +23,7 @@ from typing import Any
 import pyzx as zx
 
 from zx_webs.config import MiningConfig
-from zx_webs.persistence import load_manifest, save_json, save_manifest, save_webs_bulk
+from zx_webs.persistence import load_manifest, save_manifest, save_webs_bulk
 from zx_webs.stage2_zx.simplifier import simplify_graph
 from zx_webs.stage3_mining.gspan_adapter import GSpanAdapter, GSpanResult
 from zx_webs.stage3_mining.graph_encoder import ZXLabelEncoder
@@ -639,26 +639,19 @@ def run_stage3(
     # -- 4. Persist results ---------------------------------------------------
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Write all webs to a single bulk JSON file (eliminates 224K individual
-    # file writes which was the #1 I/O bottleneck).
+    # Write all webs to a single bulk JSON file.
     webs_data = [web.to_dict() for web in webs]
     save_webs_bulk(webs_data, output_dir)
 
-    # Also write individual files for backward compatibility when stages
-    # are run independently (e.g. ``--stage compose`` reading from disk).
-    webs_dir = output_dir / "webs"
-    webs_dir.mkdir(parents=True, exist_ok=True)
-
+    # Build the manifest (no individual web files -- Stage 4 reads webs
+    # in-memory during sequential pipeline runs, and the bulk file covers
+    # the standalone / disk-based case).
     manifest_entries: list[dict[str, Any]] = []
 
     for web in webs:
-        web_path = webs_dir / f"{web.web_id}.json"
-        save_json(web.to_dict(), web_path)
-
         manifest_entries.append(
             {
                 "web_id": web.web_id,
-                "web_path": str(web_path),
                 "support": web.support,
                 "source_graph_ids": web.source_graph_ids,
                 "source_families": web.source_families,

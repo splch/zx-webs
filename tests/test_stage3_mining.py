@@ -549,12 +549,9 @@ class TestRunStage3EndToEnd:
         manifest_path = output_dir / "manifest.json"
         assert manifest_path.exists()
 
-        # Each web should have a corresponding JSON file.
-        webs_dir = output_dir / "webs"
-        assert webs_dir.exists()
-        for web in webs:
-            web_path = webs_dir / f"{web.web_id}.json"
-            assert web_path.exists(), f"Web file missing: {web_path}"
+        # Bulk file should exist (individual web files are no longer written).
+        bulk_path = output_dir / "webs_bulk.json"
+        assert bulk_path.exists()
 
         # At least one web should have support == 3.
         max_support = max(w.support for w in webs)

@@ -10,7 +10,7 @@ requires-python = ">=3.10"
 dependencies = [
     "qiskit>=1.0",
     "pyzx>=0.8.0",
-    "gspan-mining>=0.2.1",
+    "submine>=0.1.4",
     "networkx>=3.0",
     "pydantic>=2.0",
     "pyyaml>=6.0",
