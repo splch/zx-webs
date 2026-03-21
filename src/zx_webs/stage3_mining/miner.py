@@ -295,6 +295,18 @@ def _identify_boundary_wires(
 # ---------------------------------------------------------------------------
 
 
+def _build_graph_json(adapter: GSpanAdapter, result: GSpanResult) -> str:
+    """Build the full graph_json for a mining result (expensive).
+
+    This is the deferred builder called lazily when ``graph_json`` is first
+    needed on a ZXWeb.  It constructs the full PyZX graph, ensures proper
+    boundary vertices, and serializes to JSON.
+    """
+    pyzx_graph = adapter.result_to_pyzx(result)
+    pyzx_graph = _ensure_proper_boundaries(pyzx_graph)
+    return pyzx_graph.to_json()
+
+
 def _result_to_zx_web(
     result: GSpanResult,
     web_id: str,
@@ -303,9 +315,15 @@ def _result_to_zx_web(
 ) -> ZXWeb:
     """Convert a :class:`GSpanResult` to a :class:`ZXWeb`.
 
-    Ensures the resulting graph has proper boundary vertices with
-    inputs/outputs set, so it can be used with PyZX's native ``compose()``
-    and ``tensor()`` methods.
+    Uses **lazy evaluation**: only lightweight metadata (n_spiders,
+    n_inputs, n_outputs, boundary_wires) is computed eagerly from the
+    raw mining result.  The expensive PyZX graph construction and JSON
+    serialization are deferred until ``to_pyzx_graph()`` or ``to_dict()``
+    is called.
+
+    This is critical for performance: with 1.5M mining results, eager
+    construction would take 5+ minutes building PyZX graphs that are
+    mostly discarded (Stage 4 FPS selects only ~50K webs).
 
     Parameters
     ----------
@@ -323,23 +341,24 @@ def _result_to_zx_web(
     -------
     ZXWeb
     """
-    pyzx_graph = adapter.result_to_pyzx(result)
+    # Extract lightweight metadata without constructing a PyZX graph.
+    meta = adapter.extract_metadata(result)
 
-    # Ensure proper boundary vertices.
-    pyzx_graph = _ensure_proper_boundaries(pyzx_graph)
+    n_spiders = meta["n_spiders"]
+    n_inputs = meta["n_inputs"]
+    n_outputs = meta["n_outputs"]
 
-    # Count spiders (non-boundary vertices).
-    n_spiders = sum(
-        1 for v in pyzx_graph.vertices() if pyzx_graph.type(v) != _VT_BOUNDARY
-    )
-
-    graph_json = pyzx_graph.to_json()
-
-    # Identify boundary wires.
-    boundary_wires = _identify_boundary_wires(pyzx_graph)
-
-    n_inputs = len(pyzx_graph.inputs()) if pyzx_graph.inputs() else 0
-    n_outputs = len(pyzx_graph.outputs()) if pyzx_graph.outputs() else 0
+    # Convert boundary wire dicts to BoundaryWire objects.
+    boundary_wires = [
+        BoundaryWire(
+            internal_vertex=bw["internal_vertex"],
+            spider_type=bw["spider_type"],
+            spider_phase=bw["spider_phase"],
+            edge_type=bw["edge_type"],
+            direction=bw["direction"],
+        )
+        for bw in meta["boundary_wires"]
+    ]
 
     # Derive source families from the family lookup.
     source_families: list[str] = []
@@ -351,9 +370,14 @@ def _result_to_zx_web(
                 source_families.append(fam)
                 seen.add(fam)
 
+    # Create a deferred builder that captures the adapter and result.
+    # The lambda captures by reference -- result and adapter must remain
+    # alive as long as any un-materialized ZXWeb exists.
+    graph_builder = lambda: _build_graph_json(adapter, result)
+
     return ZXWeb(
         web_id=web_id,
-        graph_json=graph_json,
+        graph_json="",  # deferred -- will be built lazily
         boundary_wires=boundary_wires,
         support=result.support,
         source_graph_ids=result.source_graph_ids,
@@ -361,6 +385,7 @@ def _result_to_zx_web(
         n_spiders=n_spiders,
         n_inputs=n_inputs,
         n_outputs=n_outputs,
+        _graph_builder=graph_builder,
     )
 
 
@@ -369,8 +394,28 @@ def _result_to_zx_web(
 # ---------------------------------------------------------------------------
 
 
+def _build_reversed_graph_json(original_web: ZXWeb) -> str:
+    """Build graph_json for a reversed web (deferred builder).
+
+    Materializes the original web's graph, swaps inputs/outputs, and
+    serializes to JSON.
+    """
+    g = original_web.to_pyzx_graph()
+    if not g.inputs() or not g.outputs():
+        return original_web.get_graph_json()  # fallback: return unchanged
+    original_inputs = tuple(g.inputs())
+    original_outputs = tuple(g.outputs())
+    g.set_inputs(original_outputs)
+    g.set_outputs(original_inputs)
+    return g.to_json()
+
+
 def _make_reversed_web(web: ZXWeb, new_web_id: str) -> ZXWeb | None:
     """Create a reversed version of a web (inputs and outputs swapped).
+
+    Uses **lazy evaluation**: the reversed graph_json is not built until
+    actually needed.  Only metadata (boundary wires, n_inputs/n_outputs)
+    is computed eagerly by swapping directions.
 
     This ensures no valid composition is missed due to arbitrary boundary
     orientation.
@@ -391,21 +436,7 @@ def _make_reversed_web(web: ZXWeb, new_web_id: str) -> ZXWeb | None:
     if web.n_inputs == 0 or web.n_outputs == 0:
         return None
 
-    try:
-        g = web.to_pyzx_graph()
-    except Exception:
-        return None
-
-    if not g.inputs() or not g.outputs():
-        return None
-
-    # Swap inputs and outputs on the graph.
-    original_inputs = tuple(g.inputs())
-    original_outputs = tuple(g.outputs())
-    g.set_inputs(original_outputs)
-    g.set_outputs(original_inputs)
-
-    # Reverse the boundary wires.
+    # Reverse the boundary wires (metadata only -- no graph construction).
     reversed_wires: list[BoundaryWire] = []
     for bw in web.boundary_wires:
         new_direction = bw.direction
@@ -423,9 +454,12 @@ def _make_reversed_web(web: ZXWeb, new_web_id: str) -> ZXWeb | None:
             )
         )
 
+    # Deferred builder that will materialize the reversed graph on demand.
+    graph_builder = lambda: _build_reversed_graph_json(web)
+
     return ZXWeb(
         web_id=new_web_id,
-        graph_json=g.to_json(),
+        graph_json="",  # deferred
         boundary_wires=reversed_wires,
         support=web.support,
         source_graph_ids=web.source_graph_ids,
@@ -433,6 +467,7 @@ def _make_reversed_web(web: ZXWeb, new_web_id: str) -> ZXWeb | None:
         n_spiders=web.n_spiders,
         n_inputs=web.n_outputs,  # swapped
         n_outputs=web.n_inputs,  # swapped
+        _graph_builder=graph_builder,
     )
 
 
@@ -446,6 +481,7 @@ def run_stage3(
     output_dir: Path,
     config: MiningConfig | None = None,
     corpus_dir: Path | None = None,
+    skip_bulk_write: bool = False,
 ) -> list[ZXWeb]:
     """Run Stage 3: mine frequent sub-diagrams from ZX-diagram corpus.
 
@@ -465,6 +501,11 @@ def run_stage3(
         ``graphs/*.zxg.json``).
     output_dir:
         Where Stage 3 artefacts will be written.
+    skip_bulk_write:
+        When ``True``, skip writing the bulk JSON file (``webs_bulk.json``).
+        Set this when webs will be passed in-memory to Stage 4, avoiding
+        the expensive materialization of graph_json for all webs.  The
+        manifest (lightweight metadata) is always written.
     config:
         Mining parameters.  Falls back to ``MiningConfig()`` defaults when
         *None*.
@@ -617,7 +658,8 @@ def run_stage3(
         time.time() - t0, len(results),
     )
 
-    # -- 3. Convert to ZXWeb objects ------------------------------------------
+    # -- 3. Convert to ZXWeb objects (lazy -- no PyZX graph construction) -----
+    t_convert = time.time()
     webs: list[ZXWeb] = []
     web_counter = 0
     for idx, result in enumerate(results):
@@ -636,16 +678,30 @@ def run_stage3(
             webs.append(reversed_web)
             web_counter += 1
 
+    logger.info(
+        "Created %d ZXWeb objects (lazy) in %.1fs from %d mining results.",
+        len(webs), time.time() - t_convert, len(results),
+    )
+
     # -- 4. Persist results ---------------------------------------------------
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Write all webs to a single bulk JSON file.
-    webs_data = [web.to_dict() for web in webs]
-    save_webs_bulk(webs_data, output_dir)
+    t_persist = time.time()
 
-    # Build the manifest (no individual web files -- Stage 4 reads webs
-    # in-memory during sequential pipeline runs, and the bulk file covers
-    # the standalone / disk-based case).
+    if skip_bulk_write:
+        logger.info(
+            "Skipping bulk JSON write (webs will be passed in-memory to Stage 4)."
+        )
+    else:
+        # Write all webs to a single bulk JSON file.
+        # NOTE: this triggers lazy materialization of graph_json for ALL webs,
+        # which is expensive (O(minutes) for 1M+ webs).  Use skip_bulk_write=True
+        # in sequential pipelines where webs are passed in-memory.
+        webs_data = [web.to_dict() for web in webs]
+        save_webs_bulk(webs_data, output_dir)
+
+    # Build the manifest (lightweight metadata only -- no graph_json needed).
+    # This is always written as it's cheap and useful for diagnostics.
     manifest_entries: list[dict[str, Any]] = []
 
     for web in webs:
@@ -665,7 +721,11 @@ def run_stage3(
     save_manifest(manifest_entries, output_dir)
 
     logger.info(
-        "Stage 3 complete -- %d webs written to %s", len(webs), output_dir
+        "Stage 3 complete -- %d webs (%s bulk write) persisted in %.1fs to %s",
+        len(webs),
+        "with" if not skip_bulk_write else "without",
+        time.time() - t_persist,
+        output_dir,
     )
 
     return webs

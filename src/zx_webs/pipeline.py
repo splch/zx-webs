@@ -165,6 +165,11 @@ class Pipeline:
                 self.data_dir / "mined_webs",
                 self.config.mining,
                 corpus_dir=self.data_dir / "corpus",
+                # Skip the expensive bulk JSON write when webs will be
+                # passed in-memory to Stage 4.  This avoids materializing
+                # graph_json for all ~3M webs (the #1 post-mining bottleneck).
+                # The lightweight manifest is still written for diagnostics.
+                skip_bulk_write=True,
             )
             # Cache webs for the next stage (compose) to consume in-memory.
             self._stage_cache["mining_webs"] = webs
