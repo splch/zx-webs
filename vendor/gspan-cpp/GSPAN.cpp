@@ -269,8 +269,10 @@ bool GSPAN::isFreqPattern(const DFSCode &dfscode) // OK, No bugs
 
 void GSPAN::BuildPattern(DFSCode &dfscode, int loc, int backloc, int maxseq)
 {
-	// Early pruning: stop extending if we've reached the max vertex count.
-	if (maxVertices > 0 && maxseq + 1 >= maxVertices) return;
+	// Early pruning: stop extending forward if at max vertex count.
+	// Only block forward extensions (backloc == -1 adds new vertices).
+	// Backward extensions reuse existing vertices and are always allowed.
+	if (maxVertices > 0 && backloc == -1 && maxseq + 1 >= maxVertices) return;
 
 	//dfscode.output();
 	if (backloc == -1) // Generate forward edge
