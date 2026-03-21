@@ -173,13 +173,11 @@ def _farthest_point_sample(
     dists = np.sum(diff * diff, axis=1)
     np.minimum(min_dist, dists, out=min_dist)
 
-    for _ in range(k - 1):
+    for _ in tqdm(range(k - 1), desc="FPS web selection", unit="web", disable=(k < 1000)):
         best_idx = int(np.argmax(min_dist))
         if min_dist[best_idx] <= 0:
             break
         selected.append(best_idx)
-        # Update min distances
-        new_feat = features[best_idx]
         diff = feat_arr - feat_arr[best_idx]
         dists = np.sum(diff * diff, axis=1)
         np.minimum(min_dist, dists, out=min_dist)
