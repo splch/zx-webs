@@ -33,4 +33,16 @@ FAMILIES: dict[str, AlgorithmFamily] = {
         "entanglement",
         "Entanglement preparation circuits",
     ),
+    "error_correction": AlgorithmFamily(
+        "error_correction",
+        "Quantum error correction encoding and syndrome circuits",
+    ),
+    "linear_algebra": AlgorithmFamily(
+        "linear_algebra",
+        "Linear algebra primitives (Hadamard test, swap test, HHL-style)",
+    ),
+    "communication": AlgorithmFamily(
+        "communication",
+        "Quantum communication protocols (teleportation, superdense coding, QKD)",
+    ),
 }

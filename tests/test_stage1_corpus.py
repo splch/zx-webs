@@ -19,9 +19,9 @@ class TestAlgorithmRegistry:
     """Tests for the algorithm registry itself."""
 
     def test_registry_not_empty(self) -> None:
-        """ALGORITHM_REGISTRY should contain at least 13 algorithm builders."""
-        assert len(ALGORITHM_REGISTRY) >= 13, (
-            f"Expected >= 13 algorithms in registry, got {len(ALGORITHM_REGISTRY)}: "
+        """ALGORITHM_REGISTRY should contain at least 47 algorithm builders."""
+        assert len(ALGORITHM_REGISTRY) >= 47, (
+            f"Expected >= 47 algorithms in registry, got {len(ALGORITHM_REGISTRY)}: "
             f"{sorted(ALGORITHM_REGISTRY.keys())}"
         )
 

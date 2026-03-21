@@ -7,6 +7,9 @@ corpus:
     - variational
     - simulation
     - entanglement
+    - error_correction
+    - linear_algebra
+    - communication
   max_qubits: 5
   qubit_counts: [3, 5]
   seed: 42
