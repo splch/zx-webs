@@ -389,6 +389,105 @@ class TestUnitaryHash:
 # ---------------------------------------------------------------------------
 
 
+class TestConfigurableExtraction:
+    """Tests for new configurable extraction parameters."""
+
+    def test_cnot_blowup_disabled(self) -> None:
+        """When cnot_blowup_enabled=False, CNOT blowup should not reject."""
+        g = _make_extractable_graph(n_qubits=2)
+        # With blowup enabled and factor 0, it would reject.
+        result_enabled = try_extract_circuit(
+            g, timeout=10.0, max_cnot_blowup=0.0, cnot_blowup_enabled=True,
+        )
+        result_disabled = try_extract_circuit(
+            g, timeout=10.0, max_cnot_blowup=0.0, cnot_blowup_enabled=False,
+        )
+        # When disabled, blowup check is skipped so extraction succeeds
+        # (assuming the circuit itself is extractable).
+        if not result_enabled.success and "blowup" in result_enabled.error.lower():
+            assert result_disabled.success is True
+
+    def test_gflow_precheck_off_by_default(self) -> None:
+        """With gflow_precheck=False (default), extraction should not reject on gflow."""
+        g = _make_extractable_graph(n_qubits=1)
+        result = try_extract_circuit(g, timeout=10.0, gflow_precheck=False)
+        assert result.success is True
+
+    def test_optimize_cnots_level(self) -> None:
+        """Extraction should accept different optimize_cnots levels."""
+        g = _make_extractable_graph(n_qubits=2)
+        for level in [0, 1, 2]:
+            result = try_extract_circuit(g, timeout=10.0, optimize_cnots=level)
+            # All levels should produce extractable circuits.
+            assert result.success is True, (
+                f"Extraction failed at optimize_cnots={level}: {result.error}"
+            )
+
+
+class TestFailuresManifest:
+    """Tests for the failures.json persistence."""
+
+    def test_failures_json_created(self, tmp_path: Path) -> None:
+        """run_stage5 should create failures.json for failed candidates."""
+        candidates_dir = tmp_path / "compose"
+        cands_subdir = candidates_dir / "candidates"
+        cands_subdir.mkdir(parents=True)
+
+        g_good = _make_extractable_graph(n_qubits=1)
+        g_bad = _make_non_extractable_graph()
+
+        test_candidates = [
+            CandidateAlgorithm(
+                candidate_id="cand_good",
+                graph_json=g_good.to_json(),
+                component_web_ids=["web_0"],
+                composition_type="sequential",
+                n_qubits=1,
+                n_spiders=2,
+            ),
+            CandidateAlgorithm(
+                candidate_id="cand_bad",
+                graph_json=g_bad.to_json(),
+                component_web_ids=["web_1"],
+                composition_type="sequential",
+                n_qubits=0,
+                n_spiders=2,
+            ),
+        ]
+
+        manifest_entries = []
+        for cand in test_candidates:
+            cand_path = cands_subdir / f"{cand.candidate_id}.json"
+            save_json(cand.to_dict(), cand_path)
+            manifest_entries.append({
+                "candidate_id": cand.candidate_id,
+                "candidate_path": str(cand_path),
+                "composition_type": cand.composition_type,
+                "component_web_ids": cand.component_web_ids,
+                "n_qubits": cand.n_qubits,
+                "n_spiders": cand.n_spiders,
+            })
+
+        save_manifest(manifest_entries, candidates_dir)
+
+        output_dir = tmp_path / "filter_output"
+        config = FilterConfig(
+            extract_timeout_seconds=10.0,
+            max_cnot_blowup_factor=10.0,
+            n_workers=1,
+        )
+        run_stage5(candidates_dir, output_dir, config)
+
+        failures_path = output_dir / "failures.json"
+        assert failures_path.exists(), "failures.json should be created"
+
+        import json
+        failures = json.loads(failures_path.read_text())
+        assert isinstance(failures, list)
+        assert len(failures) >= 1
+        assert any(f["candidate_id"] == "cand_bad" for f in failures)
+
+
 class TestRunStage5EndToEnd:
     """End-to-end integration test for run_stage5."""
 

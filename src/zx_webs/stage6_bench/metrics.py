@@ -19,8 +19,9 @@ import pyzx as zx
 
 logger = logging.getLogger(__name__)
 
-# Maximum qubit count for which we compute full unitary matrices.
-_MAX_UNITARY_QUBITS = 10
+# Default maximum qubit count for which we compute full unitary matrices.
+# Overridable via function parameters.
+_DEFAULT_MAX_UNITARY_QUBITS = 10
 
 
 # ---------------------------------------------------------------------------
@@ -168,32 +169,39 @@ class SupermarQFeatures:
 # ---------------------------------------------------------------------------
 
 
-def compute_unitary(qasm_str: str) -> np.ndarray | None:
+def compute_unitary(
+    qasm_str: str, max_unitary_qubits: int | None = None
+) -> np.ndarray | None:
     """Compute the unitary matrix from a QASM string.
 
-    Returns ``None`` if the circuit has more than :data:`_MAX_UNITARY_QUBITS`
+    Returns ``None`` if the circuit has more than *max_unitary_qubits*
     qubits (the ``2^n x 2^n`` matrix would be too large) or if parsing fails.
 
     Parameters
     ----------
     qasm_str:
         An OPENQASM 2.0 string.
+    max_unitary_qubits:
+        Maximum qubit count.  Defaults to ``_DEFAULT_MAX_UNITARY_QUBITS``.
 
     Returns
     -------
     np.ndarray or None
         The unitary as a complex NumPy array, or ``None``.
     """
+    if max_unitary_qubits is None:
+        max_unitary_qubits = _DEFAULT_MAX_UNITARY_QUBITS
+
     try:
         c = zx.Circuit.from_qasm(qasm_str)
     except Exception:
         logger.debug("Failed to parse QASM for unitary computation.")
         return None
 
-    if c.qubits > _MAX_UNITARY_QUBITS:
+    if c.qubits > max_unitary_qubits:
         logger.debug(
             "Circuit has %d qubits (> %d); skipping unitary.",
-            c.qubits, _MAX_UNITARY_QUBITS,
+            c.qubits, max_unitary_qubits,
         )
         return None
 

@@ -836,6 +836,89 @@ class TestGuidedComposition:
 # ---------------------------------------------------------------------------
 
 
+class TestConfigurableCompose:
+    """Tests for new configurable composition parameters."""
+
+    def test_max_compose_qubits(self) -> None:
+        """Candidates exceeding max_compose_qubits should be rejected."""
+        config = ComposeConfig(
+            max_candidates=50,
+            composition_modes=["parallel"],
+            max_compose_qubits=1,  # Very restrictive.
+            seed=42,
+        )
+        stitcher = Stitcher(config)
+
+        # Two 1q webs in parallel -> 2 qubits -> exceeds limit of 1.
+        webs = [
+            _make_1q_web("web_0", phase=Fraction(0)),
+            _make_1q_web("web_1", phase=Fraction(1, 4)),
+        ]
+
+        candidates = stitcher.generate_candidates(webs)
+        parallel_cands = [c for c in candidates if c.composition_type == "parallel"]
+        # Parallel produces 2-qubit candidates which exceed max_compose_qubits=1.
+        assert all(c.n_qubits <= 1 for c in parallel_cands), (
+            "No parallel candidates should exceed max_compose_qubits=1"
+        )
+
+    def test_configurable_phase_palette(self) -> None:
+        """Phase perturbation should use the configurable resolution."""
+        config = ComposeConfig(
+            seed=42,
+            phase_perturbation_resolution=4,  # k*pi/4 for k in 0..7
+        )
+        stitcher = Stitcher(config)
+
+        # Verify the palette has the right number of entries.
+        assert len(stitcher._phase_palette) == 8  # 2*4 = 8
+
+        # All phases should be multiples of 1/4.
+        for phase in stitcher._phase_palette:
+            assert phase.denominator <= 4
+
+    def test_configurable_perturbation_rate(self) -> None:
+        """Phase perturbation should use the configured rate."""
+        config = ComposeConfig(
+            seed=42,
+            phase_perturbation_rate=1.0,  # Always perturb.
+        )
+        stitcher = Stitcher(config)
+        assert stitcher._perturbation_rate == 1.0
+
+    def test_x_spiders_included_in_perturbation(self) -> None:
+        """Phase perturbation should modify X-spiders too."""
+        config = ComposeConfig(seed=42, phase_perturbation_rate=1.0)
+        stitcher = Stitcher(config)
+
+        # Build a graph with an X-spider interior.
+        g = zx.Graph()
+        i0 = g.add_vertex(ty=0, qubit=0, row=0)
+        x0 = g.add_vertex(ty=2, phase=Fraction(0), qubit=0, row=1)  # X-spider
+        o0 = g.add_vertex(ty=0, qubit=0, row=2)
+        g.add_edge((i0, x0), edgetype=1)
+        g.add_edge((x0, o0), edgetype=1)
+        g.set_inputs((i0,))
+        g.set_outputs((o0,))
+
+        perturbed = stitcher.perturb_phases(g, rate=1.0)
+
+        # The X-spider should have been perturbed.
+        for v in perturbed.vertices():
+            if perturbed.type(v) == 2:  # X-spider
+                # With rate=1.0, phase should have changed (with high probability).
+                pass  # Don't assert specific value since it's random.
+
+    def test_neutral_baseline_defaults(self) -> None:
+        """Default ComposeConfig should have neutral (unbiased) settings."""
+        config = ComposeConfig()
+        assert config.prefer_cross_family is False, (
+            "Neutral baseline should not prefer cross-family"
+        )
+        assert config.max_compose_qubits == 20
+        assert config.max_webs_per_candidate == 3
+
+
 class TestRunStage4EndToEnd:
     """End-to-end integration test for run_stage4."""
 

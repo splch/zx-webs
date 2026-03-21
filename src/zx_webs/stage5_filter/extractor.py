@@ -124,6 +124,9 @@ def try_extract_circuit(
     graph: zx.Graph,
     timeout: float = 30.0,
     max_cnot_blowup: float = 5.0,
+    cnot_blowup_enabled: bool = True,
+    optimize_cnots: int = 2,
+    gflow_precheck: bool = False,
 ) -> ExtractionResult:
     """Attempt to extract a quantum circuit from a ZX-diagram.
 
@@ -135,9 +138,9 @@ def try_extract_circuit(
     1. Copy the graph.
     2. Ensure graph-like form via ``to_graph_like()``.
     3. Run ``zx.full_reduce`` for simplification.
-    4. Check generalized flow (gflow) as a fast pre-filter.
+    4. Optionally check generalized flow (gflow) as a soft pre-filter.
     5. Call ``zx.extract_circuit`` inside a timeout guard.
-    6. Check for CNOT blowup (more than *max_cnot_blowup* x qubits).
+    6. Optionally check for CNOT blowup (more than *max_cnot_blowup* x qubits).
 
     Parameters
     ----------
@@ -148,6 +151,13 @@ def try_extract_circuit(
     max_cnot_blowup:
         If the two-qubit gate count exceeds ``max_cnot_blowup * n_qubits``,
         the result is marked as failed with a blowup warning.
+    cnot_blowup_enabled:
+        When False, skip the CNOT blowup check entirely.
+    optimize_cnots:
+        Level passed to ``zx.extract_circuit(optimize_cnots=...)``.
+    gflow_precheck:
+        When True, check gflow before extraction and log a warning (but do
+        not reject) if absent.  When False (default), skip the check.
 
     Returns
     -------
@@ -178,22 +188,22 @@ def try_extract_circuit(
             error=f"full_reduce failed: {exc}",
         )
 
-    # Step 3: Check gflow (fast pre-filter).
-    try:
-        from pyzx.gflow import gflow
-        gf = gflow(g)
-        if gf is None:
-            return ExtractionResult(
-                success=False,
-                error="No generalized flow (gflow) found",
-            )
-    except Exception:  # noqa: BLE001
-        pass  # gflow check failed; try extraction anyway.
+    # Step 3: Optionally check gflow (soft filter -- log only, never reject).
+    if gflow_precheck:
+        try:
+            from pyzx.gflow import gflow
+            gf = gflow(g)
+            if gf is None:
+                logger.warning(
+                    "No generalized flow (gflow) found; attempting extraction anyway."
+                )
+        except Exception:  # noqa: BLE001
+            pass  # gflow check failed; try extraction anyway.
 
     # Step 4: Extract circuit.
     try:
         with _Timeout(timeout):
-            circuit = zx.extract_circuit(g.copy(), optimize_cnots=2)
+            circuit = zx.extract_circuit(g.copy(), optimize_cnots=optimize_cnots)
     except TimeoutError:
         return ExtractionResult(success=False, error="Extraction timed out")
     except ValueError as exc:
@@ -207,10 +217,10 @@ def try_extract_circuit(
             error=f"extract_circuit failed: {exc}",
         )
 
-    # -- Check for CNOT blowup -----------------------------------------------
+    # -- Optionally check for CNOT blowup ------------------------------------
     n_qubits = circuit.qubits
     two_q = circuit.twoqubitcount()
-    if n_qubits > 0 and two_q > max_cnot_blowup * n_qubits:
+    if cnot_blowup_enabled and n_qubits > 0 and two_q > max_cnot_blowup * n_qubits:
         return ExtractionResult(
             success=False,
             error=(
@@ -238,6 +248,9 @@ def _evaluate_candidate_data(
     cand_data: dict[str, Any],
     timeout: float,
     max_cnot_blowup: float,
+    cnot_blowup_enabled: bool = True,
+    optimize_cnots: int = 2,
+    gflow_precheck: bool = False,
 ) -> dict[str, Any] | None:
     """Evaluate a single candidate (designed for process-pool execution).
 
@@ -249,6 +262,12 @@ def _evaluate_candidate_data(
         Extraction timeout in seconds.
     max_cnot_blowup:
         Maximum CNOT blowup factor.
+    cnot_blowup_enabled:
+        When False, skip the CNOT blowup check.
+    optimize_cnots:
+        Level passed to extract_circuit.
+    gflow_precheck:
+        When True, run gflow pre-check (soft, log-only).
 
     Returns
     -------
@@ -258,7 +277,12 @@ def _evaluate_candidate_data(
     try:
         g = zx.Graph.from_json(cand_data["graph_json"])
         result = try_extract_circuit(
-            g, timeout=timeout, max_cnot_blowup=max_cnot_blowup,
+            g,
+            timeout=timeout,
+            max_cnot_blowup=max_cnot_blowup,
+            cnot_blowup_enabled=cnot_blowup_enabled,
+            optimize_cnots=optimize_cnots,
+            gflow_precheck=gflow_precheck,
         )
         if result.success:
             return {
@@ -269,26 +293,34 @@ def _evaluate_candidate_data(
                 "component_web_ids": cand_data.get("component_web_ids", []),
                 "n_qubits": cand_data.get("n_qubits", 0),
             }
+        else:
+            return None
     except Exception:  # noqa: BLE001
         pass
     return None
 
 
-def _extract_worker(args: tuple[dict[str, Any], float, float]) -> dict[str, Any] | None:
+def _extract_worker(args: tuple[dict[str, Any], float, float, bool, int, bool]) -> dict[str, Any] | None:
     """Worker function for multiprocessing Pool-based parallel extraction.
 
     Parameters
     ----------
     args:
-        Tuple of ``(candidate_data, timeout, max_cnot_blowup)``.
+        Tuple of ``(candidate_data, timeout, max_cnot_blowup,
+        cnot_blowup_enabled, optimize_cnots, gflow_precheck)``.
 
     Returns
     -------
     dict | None
         Survivor dict on success, ``None`` on failure.
     """
-    cand_data, timeout, max_cnot_blowup = args
-    return _evaluate_candidate_data(cand_data, timeout, max_cnot_blowup)
+    cand_data, timeout, max_cnot_blowup, cnot_blowup_enabled, optimize_cnots, gflow_precheck = args
+    return _evaluate_candidate_data(
+        cand_data, timeout, max_cnot_blowup,
+        cnot_blowup_enabled=cnot_blowup_enabled,
+        optimize_cnots=optimize_cnots,
+        gflow_precheck=gflow_precheck,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -362,15 +394,19 @@ def run_stage5(
         n_workers = min(n_workers, len(candidates))
 
     survivors: list[dict[str, Any]] = []
+    failures: list[dict[str, Any]] = []
     n_success = 0
     n_fail = 0
 
     # Prepare worker arguments.
-    worker_args: list[tuple[dict[str, Any], float, float]] = [
+    worker_args: list[tuple[dict[str, Any], float, float, bool, int, bool]] = [
         (
             cand.to_dict(),
             config.extract_timeout_seconds,
             config.max_cnot_blowup_factor,
+            config.cnot_blowup_enabled,
+            config.optimize_cnots_level,
+            config.gflow_precheck,
         )
         for cand in candidates
     ]
@@ -384,12 +420,20 @@ def run_stage5(
         with Pool(processes=n_workers) as pool:
             results = pool.map(_extract_worker, worker_args)
 
-        for result in tqdm(results, desc="Stage 5: Collecting results", unit="cand"):
+        for idx, result in enumerate(tqdm(results, desc="Stage 5: Collecting results", unit="cand")):
             if result is not None:
                 n_success += 1
                 survivors.append(result)
             else:
                 n_fail += 1
+                cand = candidates[idx]
+                failures.append({
+                    "candidate_id": cand.candidate_id,
+                    "error": "extraction_failed",
+                    "composition_type": cand.composition_type,
+                    "component_web_ids": cand.component_web_ids,
+                    "n_qubits": cand.n_qubits,
+                })
     else:
         # Sequential fallback.
         for cand in tqdm(candidates, desc="Stage 5: Extracting circuits", unit="cand"):
@@ -398,6 +442,9 @@ def run_stage5(
                 g,
                 timeout=config.extract_timeout_seconds,
                 max_cnot_blowup=config.max_cnot_blowup_factor,
+                cnot_blowup_enabled=config.cnot_blowup_enabled,
+                optimize_cnots=config.optimize_cnots_level,
+                gflow_precheck=config.gflow_precheck,
             )
             if result.success:
                 n_success += 1
@@ -413,6 +460,13 @@ def run_stage5(
                 )
             else:
                 n_fail += 1
+                failures.append({
+                    "candidate_id": cand.candidate_id,
+                    "error": result.error,
+                    "composition_type": cand.composition_type,
+                    "component_web_ids": cand.component_web_ids,
+                    "n_qubits": cand.n_qubits,
+                })
                 logger.debug(
                     "Candidate %s failed extraction: %s",
                     cand.candidate_id,
@@ -427,7 +481,11 @@ def run_stage5(
     )
 
     # -- 3. Deduplicate -------------------------------------------------------
-    survivors = deduplicate_circuits(survivors, method=config.dedup_method)
+    survivors = deduplicate_circuits(
+        survivors,
+        method=config.dedup_method,
+        max_unitary_qubits=config.max_unitary_qubits,
+    )
 
     logger.info("%d unique circuits after deduplication.", len(survivors))
 
@@ -456,6 +514,16 @@ def run_stage5(
         )
 
     save_manifest(manifest_entries, output_dir)
+
+    # Persist a failures manifest so rejected candidates are not lost.
+    if failures:
+        from zx_webs.persistence import save_json as _save_json
+        _save_json(failures, output_dir / "failures.json")
+        logger.info(
+            "%d failed candidates recorded in %s",
+            len(failures),
+            output_dir / "failures.json",
+        )
 
     logger.info(
         "Stage 5 complete -- %d survivors written to %s",

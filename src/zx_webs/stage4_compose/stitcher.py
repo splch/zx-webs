@@ -12,11 +12,12 @@ Undirected strategies (preserved from the original implementation):
 
 2. **Parallel tensor + Hadamard stitching** -- place two webs in parallel
    via PyZX's ``tensor()`` and add Hadamard edges between interior
-   Z-spiders from different webs.  Creates novel entanglement patterns.
-   ~93% extraction rate.
+   spiders (Z and X) from different webs.  Creates novel entanglement
+   patterns.  ~93% extraction rate.
 
 3. **Phase perturbation** -- take a composed (or original) diagram and
-   randomly modify phases of interior Z-spiders with Clifford+T values.
+   randomly modify phases of interior spiders (Z and X) with values from
+   a configurable phase palette (default: k*pi/N for k in 0..2N-1).
    Creates novel unitaries while preserving graph structure.
    ~98% extraction rate.
 
@@ -64,12 +65,7 @@ logger = logging.getLogger(__name__)
 # PyZX vertex-type constant for boundary vertices.
 _VT_BOUNDARY = 0
 _VT_Z = 1
-
-# Maximum qubit count for generated candidates.
-_MAX_QUBITS = 10
-
-# Clifford+T phase values: k*pi/4 for k in 0..7 (as fractions of pi).
-_CLIFFORD_T_PHASES = [Fraction(k, 4) for k in range(8)]
+_VT_X = 2
 
 
 # ---------------------------------------------------------------------------
@@ -152,6 +148,11 @@ class Stitcher:
     def __init__(self, config: ComposeConfig) -> None:
         self.config = config
         self.rng = random.Random(config.seed)
+        self._max_qubits = config.max_compose_qubits
+        # Build phase palette: k*pi/N for k in 0..2N-1 (as fractions of pi).
+        N = config.phase_perturbation_resolution
+        self._phase_palette = [Fraction(k, N) for k in range(2 * N)]
+        self._perturbation_rate = config.phase_perturbation_rate
 
     # ------------------------------------------------------------------
     # Strategy 1: Sequential compose via PyZX native compose()
@@ -245,7 +246,7 @@ class Stitcher:
         # Use PyZX tensor product (g_a @ g_b).
         combined = g_a.tensor(g_b)
 
-        # Identify interior Z-spiders from each original graph.
+        # Identify interior spiders (Z and X) from each original graph.
         input_set = set(combined.inputs())
         output_set = set(combined.outputs())
         boundary_set = input_set | output_set
@@ -256,13 +257,13 @@ class Stitcher:
 
         a_interiors = [
             v for v in all_verts
-            if combined.type(v) == _VT_Z
+            if combined.type(v) in (_VT_Z, _VT_X)
             and v not in boundary_set
             and v in a_verts
         ]
         b_interiors = [
             v for v in all_verts
-            if combined.type(v) == _VT_Z
+            if combined.type(v) in (_VT_Z, _VT_X)
             and v not in boundary_set
             and v not in a_verts
         ]
@@ -317,13 +318,13 @@ class Stitcher:
     # ------------------------------------------------------------------
 
     def perturb_phases(
-        self, graph: zx.Graph, rate: float = 0.2
+        self, graph: zx.Graph, rate: float | None = None
     ) -> zx.Graph:
         """Create a novel unitary by perturbing interior spider phases.
 
         1. Copy the graph.
-        2. For each interior Z-spider, with probability ``rate``,
-           replace its phase with a random Clifford+T phase (k*pi/4).
+        2. For each interior Z or X spider, with probability ``rate``,
+           replace its phase with a random phase from the configured palette.
         3. Return the modified graph.
 
         Parameters
@@ -331,13 +332,17 @@ class Stitcher:
         graph:
             A PyZX graph (will not be mutated).
         rate:
-            Probability of perturbing each spider's phase.
+            Probability of perturbing each spider's phase.  Defaults to
+            ``self._perturbation_rate`` from config.
 
         Returns
         -------
         zx.Graph
             The perturbed graph.
         """
+        if rate is None:
+            rate = self._perturbation_rate
+
         g = graph.copy()
 
         input_set = set(g.inputs()) if g.inputs() else set()
@@ -345,12 +350,12 @@ class Stitcher:
         boundary_set = input_set | output_set
 
         for v in g.vertices():
-            if g.type(v) != _VT_Z:
+            if g.type(v) not in (_VT_Z, _VT_X):
                 continue
             if v in boundary_set:
                 continue
             if self.rng.random() < rate:
-                new_phase = self.rng.choice(_CLIFFORD_T_PHASES)
+                new_phase = self.rng.choice(self._phase_palette)
                 g.set_phase(v, new_phase)
 
         return g
@@ -371,7 +376,7 @@ class Stitcher:
         """Build a CandidateAlgorithm from a composed graph, or None."""
         n_qubits = len(graph.inputs()) if graph.inputs() else 0
         n_outputs = len(graph.outputs()) if graph.outputs() else 0
-        if n_qubits > _MAX_QUBITS or n_qubits == 0:
+        if n_qubits > self._max_qubits or n_qubits == 0:
             return None
         if n_qubits < min_qubits:
             return None
@@ -422,7 +427,7 @@ class Stitcher:
            *target_tasks* are provided) -- compose webs whose qubit
            counts match the target tasks.
 
-        Candidates with more than :data:`_MAX_QUBITS` qubits are dropped.
+        Candidates with more than ``config.max_compose_qubits`` are dropped.
         The total number of candidates is capped by
         ``config.max_candidates``.
 
@@ -530,11 +535,11 @@ class Stitcher:
                 break
 
             base_g = zx.Graph.from_json(base_cand.graph_json)
-            perturbed_g = self.perturb_phases(base_g, rate=0.3)
+            perturbed_g = self.perturb_phases(base_g)
 
             n_qubits = len(perturbed_g.inputs()) if perturbed_g.inputs() else 0
             n_outputs = len(perturbed_g.outputs()) if perturbed_g.outputs() else 0
-            if n_qubits > _MAX_QUBITS or n_qubits == 0 or n_qubits != n_outputs:
+            if n_qubits > self._max_qubits or n_qubits == 0 or n_qubits != n_outputs:
                 continue
             if n_qubits < min_qubits:
                 continue
@@ -750,7 +755,7 @@ class Stitcher:
         """Compose a batch of web pairs and return valid candidates.
 
         This method is designed to be called within a process pool worker.
-        Each pair is tried and valid candidates (those under ``_MAX_QUBITS``)
+        Each pair is tried and valid candidates (those under ``max_compose_qubits``)
         are returned.
 
         Parameters
@@ -776,7 +781,7 @@ class Stitcher:
                     if g is not None:
                         n_qubits = len(g.inputs()) if g.inputs() else 0
                         n_outputs = len(g.outputs()) if g.outputs() else 0
-                        if 0 < n_qubits <= _MAX_QUBITS and n_qubits == n_outputs:
+                        if 0 < n_qubits <= self._max_qubits and n_qubits == n_outputs:
                             n_spiders = sum(
                                 1 for v in g.vertices()
                                 if g.type(v) != _VT_BOUNDARY
@@ -801,7 +806,7 @@ class Stitcher:
                 if g is not None:
                     n_qubits = len(g.inputs()) if g.inputs() else 0
                     n_outputs = len(g.outputs()) if g.outputs() else 0
-                    if 0 < n_qubits <= _MAX_QUBITS and n_qubits == n_outputs:
+                    if 0 < n_qubits <= self._max_qubits and n_qubits == n_outputs:
                         n_spiders = sum(
                             1 for v in g.vertices()
                             if g.type(v) != _VT_BOUNDARY
@@ -828,7 +833,7 @@ class Stitcher:
                 if g_stitch is not None:
                     n_qubits = len(g_stitch.inputs()) if g_stitch.inputs() else 0
                     n_outputs = len(g_stitch.outputs()) if g_stitch.outputs() else 0
-                    if 0 < n_qubits <= _MAX_QUBITS and n_qubits == n_outputs:
+                    if 0 < n_qubits <= self._max_qubits and n_qubits == n_outputs:
                         n_spiders = sum(
                             1 for v in g_stitch.vertices()
                             if g_stitch.type(v) != _VT_BOUNDARY

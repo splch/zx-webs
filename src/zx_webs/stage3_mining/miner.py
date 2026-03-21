@@ -365,6 +365,78 @@ def _result_to_zx_web(
 
 
 # ---------------------------------------------------------------------------
+# Reversed boundary generation
+# ---------------------------------------------------------------------------
+
+
+def _make_reversed_web(web: ZXWeb, new_web_id: str) -> ZXWeb | None:
+    """Create a reversed version of a web (inputs and outputs swapped).
+
+    This ensures no valid composition is missed due to arbitrary boundary
+    orientation.
+
+    Parameters
+    ----------
+    web:
+        The original web.
+    new_web_id:
+        Identifier for the reversed web.
+
+    Returns
+    -------
+    ZXWeb or None
+        The reversed web, or None if the web cannot be reversed
+        (e.g. no inputs or outputs).
+    """
+    if web.n_inputs == 0 or web.n_outputs == 0:
+        return None
+
+    try:
+        g = web.to_pyzx_graph()
+    except Exception:
+        return None
+
+    if not g.inputs() or not g.outputs():
+        return None
+
+    # Swap inputs and outputs on the graph.
+    original_inputs = tuple(g.inputs())
+    original_outputs = tuple(g.outputs())
+    g.set_inputs(original_outputs)
+    g.set_outputs(original_inputs)
+
+    # Reverse the boundary wires.
+    reversed_wires: list[BoundaryWire] = []
+    for bw in web.boundary_wires:
+        new_direction = bw.direction
+        if bw.direction == "input":
+            new_direction = "output"
+        elif bw.direction == "output":
+            new_direction = "input"
+        reversed_wires.append(
+            BoundaryWire(
+                internal_vertex=bw.internal_vertex,
+                spider_type=bw.spider_type,
+                spider_phase=bw.spider_phase,
+                edge_type=bw.edge_type,
+                direction=new_direction,
+            )
+        )
+
+    return ZXWeb(
+        web_id=new_web_id,
+        graph_json=g.to_json(),
+        boundary_wires=reversed_wires,
+        support=web.support,
+        source_graph_ids=web.source_graph_ids,
+        source_families=web.source_families,
+        n_spiders=web.n_spiders,
+        n_inputs=web.n_outputs,  # swapped
+        n_outputs=web.n_inputs,  # swapped
+    )
+
+
+# ---------------------------------------------------------------------------
 # Stage 3 entry point
 # ---------------------------------------------------------------------------
 
@@ -547,13 +619,22 @@ def run_stage3(
 
     # -- 3. Convert to ZXWeb objects ------------------------------------------
     webs: list[ZXWeb] = []
+    web_counter = 0
     for idx, result in enumerate(results):
-        web_id = f"web_{idx:04d}"
+        web_id = f"web_{web_counter:04d}"
         web = _result_to_zx_web(
             result, web_id, adapter,
             family_lookup=small_family_lookup,
         )
         webs.append(web)
+        web_counter += 1
+
+        # Generate a reversed version (inputs and outputs swapped) to ensure
+        # no valid composition is missed due to arbitrary boundary orientation.
+        reversed_web = _make_reversed_web(web, f"web_{web_counter:04d}")
+        if reversed_web is not None:
+            webs.append(reversed_web)
+            web_counter += 1
 
     # -- 4. Persist results ---------------------------------------------------
     output_dir.mkdir(parents=True, exist_ok=True)

@@ -26,9 +26,9 @@ import pyzx as zx
 
 logger = logging.getLogger(__name__)
 
-# Maximum qubit count for unitary comparison.  Beyond this, the 2^n x 2^n
-# matrix becomes impractical.
-_MAX_UNITARY_QUBITS = 8
+# Default maximum qubit count for unitary comparison.  Beyond this, the
+# 2^n x 2^n matrix becomes impractical.  Overridable via function parameters.
+_DEFAULT_MAX_UNITARY_QUBITS = 10
 
 # ---------------------------------------------------------------------------
 # GPU detection
@@ -104,6 +104,7 @@ def circuits_equivalent(
     qasm1: str,
     qasm2: str,
     method: str = "unitary",
+    max_unitary_qubits: int | None = None,
 ) -> bool:
     """Check whether two QASM circuits implement the same unitary.
 
@@ -114,11 +115,17 @@ def circuits_equivalent(
     method:
         ``"unitary"`` -- full unitary comparison (exact up to global phase).
         ``"qasm"`` -- literal QASM string equality (fast but fragile).
+    max_unitary_qubits:
+        Maximum qubit count for unitary comparison.  Defaults to
+        ``_DEFAULT_MAX_UNITARY_QUBITS``.
 
     Returns
     -------
     bool
     """
+    if max_unitary_qubits is None:
+        max_unitary_qubits = _DEFAULT_MAX_UNITARY_QUBITS
+
     if method == "qasm":
         return qasm1.strip() == qasm2.strip()
 
@@ -133,7 +140,7 @@ def circuits_equivalent(
     if c1.qubits != c2.qubits:
         return False
 
-    if c1.qubits > _MAX_UNITARY_QUBITS:
+    if c1.qubits > max_unitary_qubits:
         # Too large for unitary comparison; fall back to QASM equality.
         return qasm1.strip() == qasm2.strip()
 
@@ -151,7 +158,9 @@ def circuits_equivalent(
 # ---------------------------------------------------------------------------
 
 
-def _unitary_hash(qasm_str: str, atol: float = 1e-8) -> str | None:
+def _unitary_hash(
+    qasm_str: str, atol: float = 1e-8, max_unitary_qubits: int | None = None
+) -> str | None:
     """Compute a hash of the phase-normalised unitary for fast dedup.
 
     The unitary matrix is normalised to remove global phase (first non-zero
@@ -163,6 +172,9 @@ def _unitary_hash(qasm_str: str, atol: float = 1e-8) -> str | None:
         An OPENQASM 2.0 string.
     atol:
         Tolerance used during global-phase normalisation.
+    max_unitary_qubits:
+        Maximum qubit count for unitary computation.  Defaults to
+        ``_DEFAULT_MAX_UNITARY_QUBITS``.
 
     Returns
     -------
@@ -170,12 +182,15 @@ def _unitary_hash(qasm_str: str, atol: float = 1e-8) -> str | None:
         A hex digest string, or ``None`` if the unitary cannot be computed
         (too many qubits, parse error, etc.).
     """
+    if max_unitary_qubits is None:
+        max_unitary_qubits = _DEFAULT_MAX_UNITARY_QUBITS
+
     try:
         c = zx.Circuit.from_qasm(qasm_str)
     except Exception:
         return None
 
-    if c.qubits > _MAX_UNITARY_QUBITS:
+    if c.qubits > max_unitary_qubits:
         return None
 
     try:
@@ -204,6 +219,7 @@ def _unitary_hash(qasm_str: str, atol: float = 1e-8) -> str | None:
 def deduplicate_circuits(
     circuits: list[dict[str, Any]],
     method: str = "unitary",
+    max_unitary_qubits: int | None = None,
 ) -> list[dict[str, Any]]:
     """Remove duplicate circuits from a list using hash-based O(n) dedup.
 
@@ -213,8 +229,8 @@ def deduplicate_circuits(
     The first occurrence of each unique circuit is kept; later duplicates
     are dropped.
 
-    For circuits small enough to compute unitaries (<= 8 qubits), a
-    phase-normalised unitary hash is used for O(1) lookup.  For larger
+    For circuits small enough to compute unitaries (<= max_unitary_qubits),
+    a phase-normalised unitary hash is used for O(1) lookup.  For larger
     circuits, QASM string equality is used as a fallback.
 
     Parameters
@@ -224,6 +240,9 @@ def deduplicate_circuits(
     method:
         Equivalence method: ``"unitary"`` (hash-based, default) or
         ``"qasm"`` (literal string equality).
+    max_unitary_qubits:
+        Maximum qubit count for unitary-based deduplication.  Defaults to
+        ``_DEFAULT_MAX_UNITARY_QUBITS``.
 
     Returns
     -------
@@ -241,7 +260,7 @@ def deduplicate_circuits(
         qasm = candidate.get("circuit_qasm", "")
 
         if method == "unitary":
-            h = _unitary_hash(qasm)
+            h = _unitary_hash(qasm, max_unitary_qubits=max_unitary_qubits)
             if h is not None:
                 if h in seen_hashes:
                     continue

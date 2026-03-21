@@ -401,6 +401,103 @@ class TestZXWebSerialization:
 # ---------------------------------------------------------------------------
 
 
+class TestReversedBoundaries:
+    """Tests for reversed boundary web generation."""
+
+    def test_reversed_web_swaps_io(self) -> None:
+        """A reversed web should swap inputs and outputs."""
+        from zx_webs.stage3_mining.miner import _make_reversed_web
+
+        g = zx.Graph()
+        i0 = g.add_vertex(ty=0, qubit=0, row=0)
+        z0 = g.add_vertex(ty=1, phase=Fraction(0), qubit=0, row=1)
+        o0 = g.add_vertex(ty=0, qubit=0, row=2)
+        g.add_edge((i0, z0), edgetype=1)
+        g.add_edge((z0, o0), edgetype=1)
+        g.set_inputs((i0,))
+        g.set_outputs((o0,))
+
+        web = ZXWeb(
+            web_id="web_0000",
+            graph_json=g.to_json(),
+            boundary_wires=[
+                BoundaryWire(
+                    internal_vertex=1,
+                    spider_type=1,
+                    spider_phase=0.0,
+                    edge_type=1,
+                    direction="input",
+                ),
+                BoundaryWire(
+                    internal_vertex=1,
+                    spider_type=1,
+                    spider_phase=0.0,
+                    edge_type=1,
+                    direction="output",
+                ),
+            ],
+            support=3,
+            n_spiders=1,
+            n_inputs=1,
+            n_outputs=1,
+        )
+
+        reversed_web = _make_reversed_web(web, "web_0001")
+        assert reversed_web is not None
+        assert reversed_web.n_inputs == web.n_outputs
+        assert reversed_web.n_outputs == web.n_inputs
+        assert reversed_web.web_id == "web_0001"
+        assert reversed_web.support == web.support
+
+        # Boundary wire directions should be swapped.
+        for bw in reversed_web.boundary_wires:
+            if bw.direction == "input":
+                assert any(
+                    obw.direction == "output"
+                    for obw in web.boundary_wires
+                    if obw.internal_vertex == bw.internal_vertex
+                )
+
+    def test_run_stage3_generates_reversed_webs(self, tmp_path: Path) -> None:
+        """Stage 3 should produce both original and reversed webs."""
+        from zx_webs.stage3_mining.miner import run_stage3
+
+        zx_dir = tmp_path / "zx_diagrams"
+        graphs_dir = zx_dir / "graphs"
+        graphs_dir.mkdir(parents=True)
+
+        test_graphs = [
+            _make_z_z_x_chain(),
+            _make_z_z_x_plus_extra(),
+            _make_z_z_x_plus_different_extra(),
+        ]
+
+        manifest_entries = []
+        for i, g in enumerate(test_graphs):
+            algo_id = f"test_algo_{i}"
+            graph_path = graphs_dir / f"{algo_id}.zxg.json"
+            graph_path.write_text(g.to_json(), encoding="utf-8")
+            manifest_entries.append({"algorithm_id": algo_id, "graph_path": str(graph_path)})
+
+        save_manifest(manifest_entries, zx_dir)
+
+        output_dir = tmp_path / "webs_output"
+        config = MiningConfig(
+            min_support=3,
+            min_vertices=2,
+            max_vertices=20,
+            phase_discretization=8,
+            include_phase_in_label=True,
+        )
+        webs = run_stage3(zx_dir, output_dir, config)
+
+        # Should have more webs than results (due to reversed webs).
+        # Each original web gets a reversed counterpart.
+        original_count = sum(1 for w in webs if not w.web_id.endswith("reversed"))
+        # The total should be roughly 2x the mined patterns.
+        assert len(webs) >= 2, "Should generate both original and reversed webs"
+
+
 class TestRunStage3EndToEnd:
     """End-to-end integration test for run_stage3."""
 

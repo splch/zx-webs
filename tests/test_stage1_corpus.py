@@ -86,6 +86,61 @@ class TestBuildCorpus:
             # which may be larger than the requested count (e.g. ancilla)
             assert entry["n_qubits"] >= 1
 
+    def test_multi_instance_generation(self) -> None:
+        """Parameterized algorithms should generate multiple instances."""
+        config = CorpusConfig(
+            families=["oracular", "variational", "simulation"],
+            max_qubits=5,
+            qubit_counts=[3],
+        )
+        entries = build_corpus(config)
+
+        # Count entries per algorithm name.
+        from collections import Counter
+        name_counts = Counter(e["name"] for e in entries)
+
+        # Bernstein-Vazirani, Grover, Simon should have multiple instances.
+        assert name_counts.get("bernstein_vazirani", 0) >= 2, (
+            f"Expected >= 2 BV instances, got {name_counts.get('bernstein_vazirani', 0)}"
+        )
+        assert name_counts.get("grover", 0) >= 2, (
+            f"Expected >= 2 Grover instances, got {name_counts.get('grover', 0)}"
+        )
+
+        # Different instances should have different algorithm_ids.
+        ids = [e["algorithm_id"] for e in entries if e["name"] == "bernstein_vazirani"]
+        assert len(ids) == len(set(ids)), "BV instances should have unique IDs"
+
+    def test_qaoa_topologies(self) -> None:
+        """QAOA should generate ring, star, and random topologies."""
+        config = CorpusConfig(
+            families=["variational"],
+            max_qubits=5,
+            qubit_counts=[4],
+        )
+        entries = build_corpus(config)
+
+        qaoa_ids = [e["algorithm_id"] for e in entries if e["name"] == "qaoa_maxcut"]
+        # Should have ring, star, and random.
+        assert any("ring" in aid for aid in qaoa_ids), "Missing QAOA ring topology"
+        assert any("star" in aid for aid in qaoa_ids), "Missing QAOA star topology"
+        assert any("random" in aid for aid in qaoa_ids), "Missing QAOA random topology"
+
+    def test_multi_instance_reproducible(self) -> None:
+        """Multi-instance generation should be deterministic with same seed."""
+        config = CorpusConfig(
+            families=["oracular"],
+            max_qubits=5,
+            qubit_counts=[3],
+            seed=42,
+        )
+        entries1 = build_corpus(config)
+        entries2 = build_corpus(config)
+
+        ids1 = [e["algorithm_id"] for e in entries1]
+        ids2 = [e["algorithm_id"] for e in entries2]
+        assert ids1 == ids2, "Multi-instance generation should be deterministic"
+
 
 # ---------------------------------------------------------------------------
 # QASM bridge tests

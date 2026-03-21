@@ -104,10 +104,21 @@ def run_stage6(
         config = BenchConfig()
 
     fidelity_threshold = getattr(config, "fidelity_threshold", 0.99)
+    max_unitary_qubits = getattr(config, "max_unitary_qubits", 10)
 
     # -- 1. Build benchmark tasks from the corpus ----------------------------
+    # Derive qubit counts from the survivor manifest so tasks match actual data.
+    filtered_manifest = load_manifest(filtered_dir)
+    survivor_qubit_counts: list[int] = sorted(set(
+        entry.get("n_qubits", 0) for entry in (filtered_manifest or [])
+        if entry.get("n_qubits", 0) > 0
+    ))
+
     try:
-        tasks = build_benchmark_tasks()
+        tasks = build_benchmark_tasks(
+            qubit_counts=survivor_qubit_counts if survivor_qubit_counts else None,
+            max_unitary_qubits=max_unitary_qubits,
+        )
     except Exception:
         logger.warning(
             "Failed to build benchmark tasks from corpus; "
@@ -124,7 +135,7 @@ def run_stage6(
     )
 
     # -- 2. Load Stage 5 survivors -------------------------------------------
-    filtered_manifest = load_manifest(filtered_dir)
+    # Re-use the manifest we already loaded above.
     if not filtered_manifest:
         logger.warning(
             "Stage 5 manifest at %s is empty -- nothing to benchmark.",
@@ -169,7 +180,7 @@ def run_stage6(
             features = SupermarQFeatures()
 
         # 3b. Compute unitary and classify.
-        unitary = compute_unitary(qasm_str)
+        unitary = compute_unitary(qasm_str, max_unitary_qubits=max_unitary_qubits)
         classification: dict[str, Any] = {}
         if unitary is not None:
             classification["is_clifford"] = is_clifford_unitary(unitary)
@@ -184,6 +195,7 @@ def run_stage6(
             candidate_qasm=qasm_str,
             tasks=tasks,
             fidelity_threshold=fidelity_threshold,
+            max_unitary_qubits=max_unitary_qubits,
         )
 
         # 3d. Identify real improvements.

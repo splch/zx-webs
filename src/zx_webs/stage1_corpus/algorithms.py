@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import logging
 import math
+import random
 from typing import Any, Callable
 
 from qiskit import QuantumCircuit
@@ -112,11 +113,19 @@ build_bernstein_vazirani.min_qubits = 2  # type: ignore[attr-defined]
 
 
 @register("oracular", "grover")
-def build_grover(n_qubits: int = 3, iterations: int = 1) -> QuantumCircuit:
-    """Grover's search marking the all-ones state |111...1>.
+def build_grover(
+    n_qubits: int = 3,
+    iterations: int = 1,
+    marked_state: int | None = None,
+) -> QuantumCircuit:
+    """Grover's search marking a target state.
 
     Uses *n_qubits* search qubits plus one ancilla qubit.
+    If *marked_state* is ``None``, defaults to the all-ones state.
     """
+    if marked_state is None:
+        marked_state = (1 << n_qubits) - 1  # all-ones
+
     total = n_qubits + 1
     qc = QuantumCircuit(total)
 
@@ -128,14 +137,23 @@ def build_grover(n_qubits: int = 3, iterations: int = 1) -> QuantumCircuit:
         qc.h(q)
 
     for _ in range(iterations):
-        # --- Oracle: flip phase of |11...1> via multi-controlled X on ancilla ---
-        # For the all-ones target, we simply use MCX (decomposes to Toffolis).
+        # --- Oracle: flip phase of |marked_state> via X gates + MCX ---
+        # Apply X to qubits where marked_state has a 0 bit.
+        for i in range(n_qubits):
+            if not ((marked_state >> i) & 1):
+                qc.x(i)
+
         if n_qubits == 1:
             qc.cx(0, n_qubits)
         elif n_qubits == 2:
             qc.ccx(0, 1, n_qubits)
         else:
             qc.mcx(list(range(n_qubits)), n_qubits)
+
+        # Undo the X gates.
+        for i in range(n_qubits):
+            if not ((marked_state >> i) & 1):
+                qc.x(i)
 
         # --- Diffusion operator ---
         for q in range(n_qubits):
@@ -165,16 +183,21 @@ build_grover.min_qubits = 2  # type: ignore[attr-defined]
 
 
 @register("oracular", "simon")
-def build_simon(n_qubits: int = 4) -> QuantumCircuit:
-    """Simon's algorithm for secret period s = 110...0 (MSB pattern).
+def build_simon(n_qubits: int = 4, period: int | None = None) -> QuantumCircuit:
+    """Simon's algorithm for a secret period *s*.
 
     Uses *n_qubits* input qubits and *n_qubits* output qubits.
     The oracle maps |x>|0> -> |x>|x XOR (s * f(x))> where f is chosen so
     that f(x) = f(x XOR s).  Here we use the simple oracle that copies x
-    to the output register and then XORs by s on the first two output bits.
+    to the output register and then XORs by s based on the period bits.
+
+    If *period* is ``None``, defaults to ``3`` (bits 0 and 1 set).
     """
     if n_qubits < 2:
         raise ValueError("Simon's algorithm requires at least 2 input qubits")
+
+    if period is None:
+        period = 3  # bits 0 and 1 set in little-endian
 
     total = 2 * n_qubits
     qc = QuantumCircuit(total)
@@ -188,9 +211,9 @@ def build_simon(n_qubits: int = 4) -> QuantumCircuit:
         qc.cx(i, n_qubits + i)
 
     # Oracle: XOR output by s when first bit of input is 1
-    # Secret s = 110...0 (bits 0 and 1 set in little-endian)
-    qc.cx(0, n_qubits + 0)
-    qc.cx(0, n_qubits + 1)
+    for i in range(n_qubits):
+        if (period >> i) & 1:
+            qc.cx(0, n_qubits + i)
 
     # Hadamard on input register
     for q in range(n_qubits):
@@ -356,14 +379,19 @@ build_ripple_adder.min_qubits = 2  # type: ignore[attr-defined]
 def build_qaoa_maxcut(
     n_qubits: int = 4,
     layers: int = 1,
+    edges: list[tuple[int, int]] | None = None,
 ) -> QuantumCircuit:
-    """QAOA ansatz for MaxCut on a ring graph.
+    """QAOA ansatz for MaxCut on a given graph.
 
     Uses fixed parameters gamma=pi/4 and beta=pi/8 for each layer.
-    Edges connect qubit i to qubit (i+1) mod n_qubits.
+    If *edges* is ``None``, defaults to a ring graph.
     """
     gamma = math.pi / 4
     beta = math.pi / 8
+
+    if edges is None:
+        # Default: ring graph
+        edges = [(i, (i + 1) % n_qubits) for i in range(n_qubits)]
 
     qc = QuantumCircuit(n_qubits)
 
@@ -373,8 +401,7 @@ def build_qaoa_maxcut(
 
     for _ in range(layers):
         # Cost unitary: exp(-i * gamma * Z_i Z_j) for each edge (i, j)
-        for i in range(n_qubits):
-            j = (i + 1) % n_qubits
+        for i, j in edges:
             qc.cx(i, j)
             qc.rz(2 * gamma, j)
             qc.cx(i, j)
@@ -393,16 +420,18 @@ build_qaoa_maxcut.min_qubits = 3  # type: ignore[attr-defined]
 def build_vqe_hardware_efficient(
     n_qubits: int = 4,
     layers: int = 1,
+    angle_offset: int = 0,
 ) -> QuantumCircuit:
     """Hardware-efficient variational ansatz for VQE.
 
     Each layer applies Ry rotations on all qubits followed by a linear
     chain of CNOT gates.  Uses fixed parameter values (multiples of pi/7)
-    for reproducibility.
+    for reproducibility.  *angle_offset* shifts the parameter counter
+    to produce different angle sets.
     """
     qc = QuantumCircuit(n_qubits)
 
-    param_counter = 0
+    param_counter = angle_offset
     for layer in range(layers):
         # Ry rotation layer
         for q in range(n_qubits):
@@ -432,14 +461,17 @@ build_vqe_hardware_efficient.min_qubits = 2  # type: ignore[attr-defined]
 
 
 @register("simulation", "trotter_ising")
-def build_trotter_ising(n_qubits: int = 4, steps: int = 1) -> QuantumCircuit:
+def build_trotter_ising(
+    n_qubits: int = 4,
+    steps: int = 1,
+    j_coupling: float = 1.0,
+    h_field: float = 1.0,
+) -> QuantumCircuit:
     """First-order Trotter decomposition for the transverse-field Ising model.
 
     H = -J sum_i Z_i Z_{i+1} - h sum_i X_i
 
-    with J=1, h=1, and total time t=1.  The evolution e^{-iHt} is split
-    into *steps* Trotter steps, each applying:
-        prod_i exp(i*dt*Z_i Z_{i+1})  *  prod_i exp(i*dt*X_i)
+    The evolution e^{-iHt} (t=1) is split into *steps* Trotter steps.
     """
     dt = 1.0 / steps  # time per step
 
@@ -449,12 +481,12 @@ def build_trotter_ising(n_qubits: int = 4, steps: int = 1) -> QuantumCircuit:
         # ZZ interaction terms: exp(i * dt * J * Z_i Z_{i+1})
         for i in range(n_qubits - 1):
             qc.cx(i, i + 1)
-            qc.rz(2 * dt, i + 1)
+            qc.rz(2 * j_coupling * dt, i + 1)
             qc.cx(i, i + 1)
 
         # Transverse field terms: exp(i * dt * h * X_i)
         for i in range(n_qubits):
-            qc.rx(2 * dt, i)
+            qc.rx(2 * h_field * dt, i)
 
     return qc
 
@@ -463,16 +495,18 @@ build_trotter_ising.min_qubits = 2  # type: ignore[attr-defined]
 
 
 @register("simulation", "hamiltonian_sim")
-def build_hamiltonian_sim(n_qubits: int = 4) -> QuantumCircuit:
+def build_hamiltonian_sim(
+    n_qubits: int = 4,
+    j_coupling: float = 0.5,
+    h_field: float = 0.3,
+) -> QuantumCircuit:
     """Simple Hamiltonian simulation with ZZ coupling and X field terms.
 
-    H = sum_{i} 0.5 * Z_i Z_{i+1} + 0.3 * X_i
+    H = sum_{i} j * Z_i Z_{i+1} + h * X_i
 
     Single Trotter step with t=1.
     """
     t = 1.0
-    j_coupling = 0.5
-    h_field = 0.3
 
     qc = QuantumCircuit(n_qubits)
 
@@ -561,6 +595,119 @@ build_w_state.min_qubits = 2  # type: ignore[attr-defined]
 # ===================================================================
 
 
+def _generate_variants(
+    key: str,
+    fn: Callable[..., QuantumCircuit],
+    name: str,
+    n: int,
+    first_param: str,
+    rng: random.Random,
+) -> list[tuple[str, QuantumCircuit]]:
+    """Generate multiple variant instances for parameterized algorithms.
+
+    Returns a list of ``(variant_suffix, circuit)`` pairs.
+    """
+    variants: list[tuple[str, QuantumCircuit]] = []
+
+    if name == "bernstein_vazirani":
+        # 3 random secrets per qubit count.
+        max_secret = (1 << n) - 1
+        secrets = set()
+        secrets.add(max_secret)  # all-ones (original)
+        while len(secrets) < min(3, max_secret + 1):
+            secrets.add(rng.randint(1, max_secret))
+        for idx, secret in enumerate(sorted(secrets)):
+            qc = fn(**{first_param: n}, secret=secret)
+            variants.append((f"_s{secret}", qc))
+
+    elif name == "grover":
+        # 3 different marked states (not just all-ones).
+        max_state = (1 << n) - 1
+        states = set()
+        states.add(max_state)  # all-ones (original)
+        while len(states) < min(3, max_state + 1):
+            states.add(rng.randint(0, max_state))
+        for idx, ms in enumerate(sorted(states)):
+            qc = fn(**{first_param: n}, marked_state=ms)
+            variants.append((f"_m{ms}", qc))
+
+    elif name == "simon":
+        # 3 different periods.
+        periods = set()
+        periods.add(3)  # original
+        max_period = (1 << n) - 1
+        while len(periods) < min(3, max_period):
+            p = rng.randint(1, max_period)
+            if p != 0:
+                periods.add(p)
+        for idx, period in enumerate(sorted(periods)):
+            qc = fn(**{first_param: n}, period=period)
+            variants.append((f"_p{period}", qc))
+
+    elif name == "qaoa_maxcut":
+        # Ring + star + random graph topologies.
+        topologies: list[tuple[str, list[tuple[int, int]]]] = []
+
+        # Ring graph (original default).
+        ring_edges = [(i, (i + 1) % n) for i in range(n)]
+        topologies.append(("ring", ring_edges))
+
+        # Star graph (vertex 0 connected to all others).
+        if n >= 3:
+            star_edges = [(0, i) for i in range(1, n)]
+            topologies.append(("star", star_edges))
+
+        # Random graph (Erdos-Renyi p=0.5).
+        if n >= 3:
+            rand_edges = []
+            for i in range(n):
+                for j in range(i + 1, n):
+                    if rng.random() < 0.5:
+                        rand_edges.append((i, j))
+            if not rand_edges:
+                rand_edges = [(0, 1)]  # ensure at least one edge
+            topologies.append(("random", rand_edges))
+
+        for topo_name, edges in topologies:
+            qc = fn(**{first_param: n}, edges=edges)
+            variants.append((f"_{topo_name}", qc))
+
+    elif name == "vqe_hardware_efficient":
+        # 3 different angle sets (offset by 0, 5, 11).
+        for offset in [0, 5, 11]:
+            qc = fn(**{first_param: n}, angle_offset=offset)
+            variants.append((f"_ao{offset}", qc))
+
+    elif name == "trotter_ising":
+        # 3 different coupling strengths.
+        params_list = [
+            (1.0, 1.0, "J1h1"),
+            (0.5, 1.5, "J05h15"),
+            (2.0, 0.5, "J2h05"),
+        ]
+        for j, h, label in params_list:
+            qc = fn(**{first_param: n}, j_coupling=j, h_field=h)
+            variants.append((f"_{label}", qc))
+
+    elif name == "hamiltonian_sim":
+        # 3 different coupling strengths.
+        params_list = [
+            (0.5, 0.3, "J05h03"),
+            (1.0, 0.5, "J1h05"),
+            (0.3, 1.0, "J03h1"),
+        ]
+        for j, h, label in params_list:
+            qc = fn(**{first_param: n}, j_coupling=j, h_field=h)
+            variants.append((f"_{label}", qc))
+
+    else:
+        # No multi-instance generation for this algorithm.
+        qc = fn(**{first_param: n})
+        variants.append(("", qc))
+
+    return variants
+
+
 def build_corpus(config: CorpusConfig) -> list[dict[str, Any]]:
     """Build corpus entries from the algorithm registry.
 
@@ -570,10 +717,13 @@ def build_corpus(config: CorpusConfig) -> list[dict[str, Any]]:
 
     Instantiates each algorithm at each qubit count in
     ``config.qubit_counts`` that is <= ``config.max_qubits``.
+    For parameterized algorithms, generates multiple instances with
+    different parameter values for better coverage.
     Skips algorithms whose minimum qubit count exceeds the target or
     whose family is not in the config's family list.
     """
     corpus: list[dict[str, Any]] = []
+    rng = random.Random(config.seed)
 
     for key, fn in sorted(ALGORITHM_REGISTRY.items()):
         family: str = fn.family  # type: ignore[attr-defined]
@@ -600,17 +750,19 @@ def build_corpus(config: CorpusConfig) -> list[dict[str, Any]]:
                 params = list(sig.parameters.keys())
                 first_param = params[0] if params else "n_qubits"
 
-                qc = fn(**{first_param: n})
-                corpus.append(
-                    {
-                        "algorithm_id": f"{key}_q{n}",
-                        "family": family,
-                        "name": name,
-                        "n_qubits": qc.num_qubits,
-                        "circuit": qc,
-                    }
-                )
-                logger.debug("Built %s with %d qubits", key, qc.num_qubits)
+                variants = _generate_variants(key, fn, name, n, first_param, rng)
+
+                for suffix, qc in variants:
+                    corpus.append(
+                        {
+                            "algorithm_id": f"{key}_q{n}{suffix}",
+                            "family": family,
+                            "name": name,
+                            "n_qubits": qc.num_qubits,
+                            "circuit": qc,
+                        }
+                    )
+                    logger.debug("Built %s%s with %d qubits", key, suffix, qc.num_qubits)
             except Exception:
                 logger.warning("Failed to build %s at n=%d", key, n, exc_info=True)
 

@@ -124,6 +124,7 @@ def match_candidate_to_tasks(
     candidate_qasm: str,
     tasks: list[BenchmarkTask],
     fidelity_threshold: float = 0.99,
+    max_unitary_qubits: int = 10,
 ) -> list[TaskMatch]:
     """Match a candidate against all benchmark tasks of the same qubit count.
 
@@ -132,8 +133,8 @@ def match_candidate_to_tasks(
     1. Compute the candidate's unitary matrix.
     2. Evaluate process fidelity against the task's target unitary.
     3. Compute gate-count improvements (meaningful only when fidelity is high).
-    4. Mark as an improvement if fidelity >= threshold **and** total gates
-       are strictly fewer.
+    4. Mark as an improvement if fidelity >= threshold **and** the candidate
+       Pareto-dominates the baseline on (t_count, cnot_count, depth).
 
     Parameters
     ----------
@@ -145,6 +146,8 @@ def match_candidate_to_tasks(
         List of benchmark tasks to match against.
     fidelity_threshold:
         Minimum fidelity to consider a candidate as functionally equivalent.
+    max_unitary_qubits:
+        Maximum qubit count for unitary matrix computation.
 
     Returns
     -------
@@ -175,7 +178,7 @@ def match_candidate_to_tasks(
 
     # Compute candidate unitary (may fail for very large circuits).
     cand_unitary: np.ndarray | None = None
-    if cand_qubits <= 10:
+    if cand_qubits <= max_unitary_qubits:
         try:
             cand_unitary = np.array(cand_circuit.to_matrix())
         except Exception:
@@ -211,10 +214,11 @@ def match_candidate_to_tasks(
             bl_val = getattr(baseline_metrics, m)
             improvements[m] = _pct_improvement(cand_val, bl_val)
 
-        # Determine if this is a real improvement.
+        # Determine if this is a real improvement using Pareto dominance
+        # on (t_count, cnot_count, depth) rather than total_gates alone.
         is_improvement = (
             fidelity >= fidelity_threshold
-            and cand_metrics.total_gates < baseline_metrics.total_gates
+            and cand_metrics.dominates(baseline_metrics)
         )
 
         results.append(TaskMatch(

@@ -49,15 +49,17 @@ class MiningConfig(BaseModel):
 class ComposeConfig(BaseModel):
     """Stage 4 -- candidate circuit composition."""
 
-    max_webs_per_candidate: int = 4
+    max_webs_per_candidate: int = 3
     max_candidates: int = 10000
     composition_modes: list[str] = ["sequential", "parallel"]
-    boundary_match_strategy: str = "exact_type"
     min_compose_qubits: int = 2
+    max_compose_qubits: int = 20  # upper bound on qubits for composed candidates
     seed: int = 42
-    prefer_cross_family: bool = True  # prioritise cross-family compositions
+    prefer_cross_family: bool = False  # neutral baseline: no cross-family bias
     guided: bool = False  # enable target-guided composition
     target_qubit_counts: list[int] = [3, 5, 7]  # qubit counts to target when guided
+    phase_perturbation_resolution: int = 8  # k*pi/N for k in 0..2N-1
+    phase_perturbation_rate: float = 0.3  # probability of perturbing each spider
 
 
 class FilterConfig(BaseModel):
@@ -65,8 +67,12 @@ class FilterConfig(BaseModel):
 
     extract_timeout_seconds: float = 30.0
     max_cnot_blowup_factor: float = 5.0
+    cnot_blowup_enabled: bool = True  # when False, skip the CNOT blowup check
     dedup_method: str = "unitary"
     n_workers: int = 0  # 0 = auto (os.cpu_count()), 1 = sequential
+    optimize_cnots_level: int = 2  # passed to extract_circuit optimize_cnots
+    gflow_precheck: bool = False  # when False (default), skip gflow pre-filter
+    max_unitary_qubits: int = 10  # max qubits for unitary matrix computation
 
 
 class BackendConfig(BaseModel):
@@ -94,6 +100,7 @@ class BenchConfig(BaseModel):
     supermarq_qubits: list[int] = [3, 5, 8]
     fidelity_shots: int = 8192
     fidelity_threshold: float = 0.99
+    max_unitary_qubits: int = 10  # max qubits for unitary matrix computation
     backends: list[BackendConfig] = [
         BackendConfig(name="aer_ideal", type="simulator", provider="aer"),
     ]

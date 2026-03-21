@@ -142,7 +142,10 @@ def _baseline_metrics_from_qasm(qasm_str: str) -> dict[str, int]:
 # ---------------------------------------------------------------------------
 
 
-def build_benchmark_tasks(qubit_counts: list[int] | None = None) -> list[BenchmarkTask]:
+def build_benchmark_tasks(
+    qubit_counts: list[int] | None = None,
+    max_unitary_qubits: int = 10,
+) -> list[BenchmarkTask]:
     """Build benchmark tasks from the algorithm corpus.
 
     For each algorithm in the registry at each qubit count, creates a
@@ -153,7 +156,11 @@ def build_benchmark_tasks(qubit_counts: list[int] | None = None) -> list[Benchma
     Parameters
     ----------
     qubit_counts:
-        Qubit counts to generate tasks for.  Defaults to ``[3, 4, 5]``.
+        Qubit counts to generate tasks for.  When *None*, uses
+        ``[3, 4, 5]`` as a fallback.  In production, callers should
+        derive these from the actual corpus/survivor qubit counts.
+    max_unitary_qubits:
+        Maximum qubit count for unitary matrix computation.
 
     Returns
     -------
@@ -188,7 +195,7 @@ def build_benchmark_tasks(qubit_counts: list[int] | None = None) -> list[Benchma
                 # Only build unitaries for circuits we can actually compute.
                 pyzx_circ = zx.Circuit.from_qasm(qasm)
                 actual_qubits = pyzx_circ.qubits
-                if actual_qubits > 10:
+                if actual_qubits > max_unitary_qubits:
                     logger.debug(
                         "Skipping %s/%s at %d qubits (too large for unitary).",
                         family, name, actual_qubits,

@@ -25,20 +25,26 @@ mining:
   mining_reduction: teleport_reduce  # "full_reduce", "teleport_reduce", or "none"
 
 compose:
-  max_webs_per_candidate: 4
+  max_webs_per_candidate: 3
   max_candidates: 5000
   composition_modes: [sequential, parallel]
-  boundary_match_strategy: exact_type
   min_compose_qubits: 2
+  max_compose_qubits: 20
   seed: 42
-  prefer_cross_family: true   # prioritise cross-family compositions
-  guided: false               # enable target-guided composition
+  prefer_cross_family: false   # neutral baseline: no cross-family bias
+  guided: false                # enable target-guided composition
   target_qubit_counts: [3, 5, 7]  # qubit counts to target when guided
+  phase_perturbation_resolution: 8  # k*pi/N for k in 0..2N-1
+  phase_perturbation_rate: 0.3
 
 filter:
   extract_timeout_seconds: 60.0
   max_cnot_blowup_factor: 5.0
+  cnot_blowup_enabled: true
   dedup_method: unitary
+  optimize_cnots_level: 2
+  gflow_precheck: false
+  max_unitary_qubits: 10
 
 bench:
   tasks:
@@ -49,6 +55,8 @@ bench:
     - arithmetic
   qasmbench_path: data/qasmbench
   fidelity_shots: 8192
+  fidelity_threshold: 0.99
+  max_unitary_qubits: 10
 
 report:
   output_format: [json, html]
