@@ -1115,7 +1115,8 @@ def run_stage4(
         )
 
         # Apply FPS cap on the in-memory list if needed.
-        max_webs_to_load = min(len(all_webs), config.max_candidates * 10)
+        # Cap at 50K webs to keep pair generation tractable.
+        max_webs_to_load = min(len(all_webs), config.max_candidates * 10, config.max_webs_loaded)
         if len(all_webs) > max_webs_to_load:
             rng = random.Random(config.seed)
             feat_matrix = [_web_feature_vector(w) for w in all_webs]
@@ -1141,7 +1142,7 @@ def run_stage4(
             )
 
             # Apply FPS cap.
-            max_webs_to_load = min(len(all_webs_from_bulk), config.max_candidates * 10)
+            max_webs_to_load = min(len(all_webs_from_bulk), config.max_candidates * 10, config.max_webs_loaded)
             if len(all_webs_from_bulk) > max_webs_to_load:
                 rng = random.Random(config.seed)
                 feat_matrix = [_web_feature_vector(w) for w in all_webs_from_bulk]
@@ -1166,7 +1167,7 @@ def run_stage4(
                 return []
 
             # Cap the number of webs loaded to avoid OOM on large mining runs.
-            max_webs_to_load = min(len(manifest), config.max_candidates * 10)
+            max_webs_to_load = min(len(manifest), config.max_candidates * 10, config.max_webs_loaded)
             if len(manifest) > max_webs_to_load:
                 rng = random.Random(config.seed)
                 feat_matrix = [_manifest_feature_vector(e) for e in manifest]

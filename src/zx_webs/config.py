@@ -51,6 +51,7 @@ class ComposeConfig(BaseModel):
 
     max_webs_per_candidate: int = 3
     max_candidates: int = 10000
+    max_webs_loaded: int = 50000  # cap on webs loaded for composition (FPS + pair gen)
     composition_modes: list[str] = ["sequential", "parallel"]
     min_compose_qubits: int = 2
     max_compose_qubits: int = 20  # upper bound on qubits for composed candidates
