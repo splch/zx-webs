@@ -21,7 +21,7 @@ zx:
 mining:
   min_support: 2
   min_vertices: 4
-  max_vertices: 10
+  max_vertices: 12
   max_input_vertices: 75
   phase_discretization: 8
   include_phase_in_label: true
