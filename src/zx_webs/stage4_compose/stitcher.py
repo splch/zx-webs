@@ -467,31 +467,20 @@ class Stitcher:
                 return True
             return False
 
-        # -- Build pair scoring for prioritisation ----------------------------
-        all_pair_indices = list(combinations(range(len(webs)), 2))
+        # -- Build random pairs without materialising all combinations ----------
+        n_webs = len(webs)
+        n_pairs_needed = max_cand * 10
 
-        if self.config.prefer_cross_family:
-            # Sort pairs by compatibility score (descending) to try
-            # cross-family compositions first.
-            scored_pairs = [
-                (
-                    i, j,
-                    _pair_compatibility_score(
-                        webs[i], webs[j],
-                        prefer_cross_family=True,
-                    ),
-                )
-                for i, j in all_pair_indices
-            ]
-            scored_pairs.sort(key=lambda t: -t[2])
-            ordered_pairs = [(i, j) for i, j, _ in scored_pairs]
-        else:
-            ordered_pairs = list(all_pair_indices)
-            self.rng.shuffle(ordered_pairs)
+        # Sample random pairs directly — O(n_pairs_needed), not O(n_webs^2).
+        pair_set: set[tuple[int, int]] = set()
+        while len(pair_set) < n_pairs_needed and len(pair_set) < n_webs * (n_webs - 1) // 2:
+            i = self.rng.randrange(n_webs)
+            j = self.rng.randrange(n_webs)
+            if i != j:
+                pair_set.add((min(i, j), max(i, j)))
 
-        # Limit number of pairs to avoid OOM.
-        if len(ordered_pairs) > max_cand * 10:
-            ordered_pairs = ordered_pairs[: max_cand * 10]
+        ordered_pairs = list(pair_set)
+        self.rng.shuffle(ordered_pairs)
 
         # Allocate budget per strategy so all strategies get representation.
         modes = self.config.composition_modes
