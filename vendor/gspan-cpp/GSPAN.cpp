@@ -10,6 +10,7 @@ void GSPAN::init()
 	unFreqEdge.clear();
 	//cntFreqPattern = 0;
 	freqPattern.clear();
+	maxVertices = 0;
 }
 
 void GSPAN::input(const InputFilter &inputFilter, double _minSup)
@@ -268,6 +269,9 @@ bool GSPAN::isFreqPattern(const DFSCode &dfscode) // OK, No bugs
 
 void GSPAN::BuildPattern(DFSCode &dfscode, int loc, int backloc, int maxseq)
 {
+	// Early pruning: stop extending if we've reached the max vertex count.
+	if (maxVertices > 0 && maxseq + 1 >= maxVertices) return;
+
 	//dfscode.output();
 	if (backloc == -1) // Generate forward edge
 	{

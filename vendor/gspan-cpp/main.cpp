@@ -12,9 +12,16 @@ int main(int argc, char *argv[])
 		minSup = stod(s);
 	}
 
+	int maxVertices = 0;
+	if (argc >= 4) {
+		string s(argv[3]);
+		maxVertices = stoi(s);
+	}
+
 	Solver solver;
 	solver.init(inputPath, minSup);
 	solver.input();
+	solver.gspan.maxVertices = maxVertices;
 	solver.solve();
 	solver.output();
 

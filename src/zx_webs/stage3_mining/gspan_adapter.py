@@ -631,9 +631,10 @@ class GSpanAdapter:
             input_graphs = _parse_gspan_input_file(gspan_path)
 
             # Run the C++ binary with ulimit -s unlimited.
+            max_v = self.config.max_vertices
             cmd = (
                 f"ulimit -s unlimited && "
-                f"{binary} {gspan_path} {min_support_frac}"
+                f"{binary} {gspan_path} {min_support_frac} {max_v}"
             )
             logger.info("Running C++ gSpan: %s", cmd)
             proc = subprocess.run(
