@@ -336,11 +336,28 @@ def run_stage3(
         logger.warning("No valid graphs loaded from %s.", zx_dir)
         return []
 
-    logger.info("Loaded %d ZX-diagrams for mining.", len(graphs))
+    # Split graphs into small (for gSpan mining) and all (for validation).
+    max_v = config.max_input_vertices
+    small_graphs = [g for g in graphs if g.num_vertices() <= max_v]
+    small_ids = [a for g, a in zip(graphs, algorithm_ids) if g.num_vertices() <= max_v]
+    n_skipped = len(graphs) - len(small_graphs)
 
-    # -- 2. Run gSpan mining --------------------------------------------------
+    if n_skipped:
+        logger.info(
+            "Mining from %d graphs with <=%d vertices (skipped %d large graphs; "
+            "patterns will still be validated across all %d).",
+            len(small_graphs), max_v, n_skipped, len(graphs),
+        )
+
+    if not small_graphs:
+        logger.warning("All graphs exceeded max_input_vertices=%d.", max_v)
+        return []
+
+    logger.info("Loaded %d ZX-diagrams for mining.", len(small_graphs))
+
+    # -- 2. Run gSpan mining on small graphs -----------------------------------
     adapter = GSpanAdapter(config)
-    results = adapter.mine(graphs)
+    results = adapter.mine(small_graphs)
 
     logger.info("gSpan found %d frequent sub-graphs.", len(results))
 

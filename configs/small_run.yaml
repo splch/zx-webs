@@ -19,6 +19,7 @@ mining:
   min_support: 2
   min_vertices: 2
   max_vertices: 8
+  max_input_vertices: 40
   phase_discretization: 8
   include_phase_in_label: true
 

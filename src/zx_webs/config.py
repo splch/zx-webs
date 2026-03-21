@@ -39,6 +39,7 @@ class MiningConfig(BaseModel):
     min_support: int = 3
     min_vertices: int = 2
     max_vertices: int = 20
+    max_input_vertices: int = 50  # skip graphs larger than this for gSpan
     phase_discretization: int = 8
     include_phase_in_label: bool = True
 
