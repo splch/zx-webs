@@ -389,7 +389,7 @@ def run_stage5(
     # Determine number of worker processes.
     n_workers = config.n_workers
     if n_workers <= 0:
-        n_workers = min(os.cpu_count() or 1, len(candidates), 16)
+        n_workers = min(os.cpu_count() or 1, len(candidates))
     else:
         n_workers = min(n_workers, len(candidates))
 

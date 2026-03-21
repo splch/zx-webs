@@ -23,7 +23,7 @@ from typing import Any
 import pyzx as zx
 
 from zx_webs.config import MiningConfig
-from zx_webs.persistence import load_manifest, save_json, save_manifest
+from zx_webs.persistence import load_manifest, save_json, save_manifest, save_webs_bulk
 from zx_webs.stage2_zx.simplifier import simplify_graph
 from zx_webs.stage3_mining.gspan_adapter import GSpanAdapter, GSpanResult
 from zx_webs.stage3_mining.graph_encoder import ZXLabelEncoder
@@ -638,6 +638,14 @@ def run_stage3(
 
     # -- 4. Persist results ---------------------------------------------------
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Write all webs to a single bulk JSON file (eliminates 224K individual
+    # file writes which was the #1 I/O bottleneck).
+    webs_data = [web.to_dict() for web in webs]
+    save_webs_bulk(webs_data, output_dir)
+
+    # Also write individual files for backward compatibility when stages
+    # are run independently (e.g. ``--stage compose`` reading from disk).
     webs_dir = output_dir / "webs"
     webs_dir.mkdir(parents=True, exist_ok=True)
 

@@ -109,9 +109,14 @@ class Pipeline:
         self.config = config
         self.data_dir = Path(config.data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
+        # In-memory cache for passing data between stages without disk I/O.
+        self._stage_cache: dict[str, object] = {}
 
     def run(self, start_stage: str = "corpus", end_stage: str = "report") -> None:
         """Run pipeline stages from *start_stage* through *end_stage* (inclusive).
+
+        When running consecutive stages (e.g. mining -> compose), intermediate
+        results are passed in-memory to avoid redundant disk I/O.
 
         Raises
         ------
@@ -134,6 +139,11 @@ class Pipeline:
     def run_stage(self, stage_name: str) -> None:
         """Run a single pipeline stage by name.
 
+        When stages are run sequentially via :meth:`run`, intermediate
+        results are cached in ``self._stage_cache`` and passed directly
+        to the next stage (e.g. Stage 3 webs -> Stage 4) to avoid the
+        I/O overhead of writing and reading thousands of individual files.
+
         Raises
         ------
         ValueError
@@ -150,17 +160,22 @@ class Pipeline:
                 self.config.zx,
             )
         elif stage_name == "mining":
-            run_stage3(
+            webs = run_stage3(
                 self.data_dir / "zx_diagrams",
                 self.data_dir / "mined_webs",
                 self.config.mining,
                 corpus_dir=self.data_dir / "corpus",
             )
+            # Cache webs for the next stage (compose) to consume in-memory.
+            self._stage_cache["mining_webs"] = webs
         elif stage_name == "compose":
+            # Use in-memory webs from Stage 3 if available (avoids 224K file reads).
+            webs_in_memory = self._stage_cache.pop("mining_webs", None)
             run_stage4(
                 self.data_dir / "mined_webs",
                 self.data_dir / "candidates",
                 self.config.compose,
+                webs_in_memory=webs_in_memory,
             )
         elif stage_name == "filter":
             run_stage5(

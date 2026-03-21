@@ -52,7 +52,7 @@ import pyzx as zx
 from tqdm import tqdm
 
 from zx_webs.config import ComposeConfig
-from zx_webs.persistence import load_json, load_manifest, save_json, save_manifest
+from zx_webs.persistence import load_json, load_manifest, load_webs_bulk, save_json, save_manifest
 from zx_webs.stage3_mining.zx_web import BoundaryWire, ZXWeb
 from zx_webs.stage4_compose.boundary import (
     count_boundary_wires,
@@ -1075,12 +1075,13 @@ def run_stage4(
     webs_dir: Path,
     output_dir: Path,
     config: ComposeConfig | None = None,
+    webs_in_memory: list[ZXWeb] | None = None,
 ) -> list[CandidateAlgorithm]:
     """Run Stage 4: compose ZX-Webs into candidate algorithms.
 
     Workflow
     -------
-    1. Load ZX-Webs from the Stage 3 output directory.
+    1. Load ZX-Webs from the Stage 3 output directory (or use *webs_in_memory*).
     2. Generate candidate algorithms via composition strategies.
     3. Persist the candidates and a manifest under *output_dir*.
 
@@ -1088,12 +1089,16 @@ def run_stage4(
     ----------
     webs_dir:
         Directory containing Stage 3 outputs (``manifest.json`` and
-        ``webs/*.json``).
+        ``webs/*.json``).  Ignored when *webs_in_memory* is provided.
     output_dir:
         Where Stage 4 artefacts will be written.
     config:
         Composition parameters.  Falls back to ``ComposeConfig()`` defaults
         when *None*.
+    webs_in_memory:
+        When provided, skip disk I/O entirely and use these webs directly.
+        This eliminates the 224K individual file reads that were the #1
+        wall-clock bottleneck when stages are run sequentially.
 
     Returns
     -------
@@ -1102,45 +1107,94 @@ def run_stage4(
     if config is None:
         config = ComposeConfig()
 
-    # -- 1. Load webs from Stage 3 manifest -----------------------------------
-    manifest = load_manifest(webs_dir)
-    if not manifest:
-        logger.warning(
-            "Stage 3 manifest at %s is empty -- nothing to compose.", webs_dir
-        )
-        return []
-
-    # Cap the number of webs loaded to avoid OOM on large mining runs.
-    # Use farthest-point sampling (FPS) over a structural feature vector
-    # to maximise diversity of the selected webs without biasing toward
-    # any particular boundary size or family.
-    max_webs_to_load = min(len(manifest), config.max_candidates * 10)
-    if len(manifest) > max_webs_to_load:
-        rng = random.Random(config.seed)
-        feat_matrix = [_manifest_feature_vector(e) for e in manifest]
-        _standardise_features(feat_matrix)
-        selected_indices = _farthest_point_sample(
-            feat_matrix, max_webs_to_load, rng,
-        )
-        manifest = [manifest[i] for i in selected_indices]
-
-        from collections import Counter
-        io_counts = Counter(
-            (e.get("n_inputs", 0), e.get("n_outputs", 0)) for e in manifest
-        )
+    # -- 1. Load webs ---------------------------------------------------------
+    if webs_in_memory is not None:
+        # In-memory path: skip all disk I/O.
+        all_webs = list(webs_in_memory)
         logger.info(
-            "FPS-sampled %d webs from %d total. Boundary distribution: %s",
-            len(manifest), len(feat_matrix),
-            {k: v for k, v in sorted(io_counts.items(), key=lambda x: -x[1])[:6]},
+            "Using %d webs passed in-memory (skipping disk I/O).",
+            len(all_webs),
         )
 
-    webs: list[ZXWeb] = []
-    for entry in manifest:
-        web_path = Path(entry["web_path"])
-        if not web_path.exists():
-            continue
-        web_data = load_json(web_path)
-        webs.append(ZXWeb.from_dict(web_data))
+        # Apply FPS cap on the in-memory list if needed.
+        max_webs_to_load = min(len(all_webs), config.max_candidates * 10)
+        if len(all_webs) > max_webs_to_load:
+            rng = random.Random(config.seed)
+            feat_matrix = [_web_feature_vector(w) for w in all_webs]
+            _standardise_features(feat_matrix)
+            selected_indices = _farthest_point_sample(
+                feat_matrix, max_webs_to_load, rng,
+            )
+            all_webs = [all_webs[i] for i in selected_indices]
+            logger.info(
+                "FPS-sampled %d webs from %d total (in-memory).",
+                len(all_webs), len(feat_matrix),
+            )
+
+        webs: list[ZXWeb] = all_webs
+    else:
+        # Disk-based path: try bulk file first, then fall back to individual files.
+        bulk_data = load_webs_bulk(webs_dir)
+        if bulk_data:
+            all_webs_from_bulk = [ZXWeb.from_dict(d) for d in bulk_data]
+            logger.info(
+                "Loaded %d webs from bulk file (fast path).",
+                len(all_webs_from_bulk),
+            )
+
+            # Apply FPS cap.
+            max_webs_to_load = min(len(all_webs_from_bulk), config.max_candidates * 10)
+            if len(all_webs_from_bulk) > max_webs_to_load:
+                rng = random.Random(config.seed)
+                feat_matrix = [_web_feature_vector(w) for w in all_webs_from_bulk]
+                _standardise_features(feat_matrix)
+                selected_indices = _farthest_point_sample(
+                    feat_matrix, max_webs_to_load, rng,
+                )
+                all_webs_from_bulk = [all_webs_from_bulk[i] for i in selected_indices]
+                logger.info(
+                    "FPS-sampled %d webs from %d total (bulk).",
+                    len(all_webs_from_bulk), len(feat_matrix),
+                )
+
+            webs = all_webs_from_bulk
+        else:
+            # Fall back to manifest + individual files.
+            manifest = load_manifest(webs_dir)
+            if not manifest:
+                logger.warning(
+                    "Stage 3 manifest at %s is empty -- nothing to compose.", webs_dir
+                )
+                return []
+
+            # Cap the number of webs loaded to avoid OOM on large mining runs.
+            max_webs_to_load = min(len(manifest), config.max_candidates * 10)
+            if len(manifest) > max_webs_to_load:
+                rng = random.Random(config.seed)
+                feat_matrix = [_manifest_feature_vector(e) for e in manifest]
+                _standardise_features(feat_matrix)
+                selected_indices = _farthest_point_sample(
+                    feat_matrix, max_webs_to_load, rng,
+                )
+                manifest = [manifest[i] for i in selected_indices]
+
+                from collections import Counter
+                io_counts = Counter(
+                    (e.get("n_inputs", 0), e.get("n_outputs", 0)) for e in manifest
+                )
+                logger.info(
+                    "FPS-sampled %d webs from %d total. Boundary distribution: %s",
+                    len(manifest), len(feat_matrix),
+                    {k: v for k, v in sorted(io_counts.items(), key=lambda x: -x[1])[:6]},
+                )
+
+            webs = []
+            for entry in manifest:
+                web_path = Path(entry["web_path"])
+                if not web_path.exists():
+                    continue
+                web_data = load_json(web_path)
+                webs.append(ZXWeb.from_dict(web_data))
 
     if not webs:
         logger.warning("No valid webs loaded from %s.", webs_dir)

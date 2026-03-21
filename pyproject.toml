@@ -18,6 +18,7 @@ dependencies = [
     "pandas>=2.0",
     "matplotlib>=3.7",
     "tqdm>=4.60",
+    "orjson>=3.9",
 ]
 
 [project.optional-dependencies]
