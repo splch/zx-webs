@@ -152,42 +152,37 @@ def _farthest_point_sample(
     2. Greedily pick the point farthest from the already-selected set.
 
     Returns a list of *k* indices (or fewer if ``len(features) <= k``).
-    Time complexity is O(k * n) which is fast for typical corpus sizes.
+    Uses numpy for vectorised distance computation — O(k * n * d).
     """
+    import numpy as np
+
     n = len(features)
     if n <= k:
         return list(range(n))
 
+    feat_arr = np.array(features, dtype=np.float64)  # (n, d)
+
     selected: list[int] = []
-    # min distance from each point to *any* selected point
-    min_dist = [float("inf")] * n
+    min_dist = np.full(n, np.inf, dtype=np.float64)
 
     # Seed with a random point
     seed = rng.randrange(n)
     selected.append(seed)
-    # Update distances from the seed
-    for i in range(n):
-        d = _euclidean_sq(features[i], features[seed])
-        if d < min_dist[i]:
-            min_dist[i] = d
+    # Vectorised distance update
+    diff = feat_arr - feat_arr[seed]
+    dists = np.sum(diff * diff, axis=1)
+    np.minimum(min_dist, dists, out=min_dist)
 
     for _ in range(k - 1):
-        # Pick the point with the largest min-distance to selected set
-        best_idx = -1
-        best_dist = -1.0
-        for i in range(n):
-            if min_dist[i] > best_dist:
-                best_dist = min_dist[i]
-                best_idx = i
-        if best_idx < 0:
+        best_idx = int(np.argmax(min_dist))
+        if min_dist[best_idx] <= 0:
             break
         selected.append(best_idx)
         # Update min distances
         new_feat = features[best_idx]
-        for i in range(n):
-            d = _euclidean_sq(features[i], new_feat)
-            if d < min_dist[i]:
-                min_dist[i] = d
+        diff = feat_arr - feat_arr[best_idx]
+        dists = np.sum(diff * diff, axis=1)
+        np.minimum(min_dist, dists, out=min_dist)
 
     return selected
 
@@ -200,69 +195,54 @@ def _fps_dissimilar_pairs(
     """Generate pairs biased toward structural dissimilarity.
 
     For each web (in shuffled order), pair it with the most distant web
-    that hasn't been used as a primary partner yet.  Continue until we
-    have *n_pairs* unique pairs.  Falls back to random pairing if the
-    greedy pass is exhausted.
-
-    Time complexity: O(n^2) in the worst case for the distance lookups,
-    but with early stopping at *n_pairs* this is fast in practice.
+    using numpy-vectorised distance computation.  Falls back to random
+    pairing to fill the remaining budget.
     """
+    import numpy as np
+
     n = len(features)
     if n < 2:
         return []
 
+    feat_arr = np.array(features, dtype=np.float64)
     pairs: list[tuple[int, int]] = []
     pair_set: set[tuple[int, int]] = set()
 
-    # Pre-compute pairwise distances on the (already small) sampled set.
-    # For typical sizes (hundreds to low thousands), this is cheap.
-    # We only store upper-triangle to save memory.
-    dist_cache: dict[tuple[int, int], float] = {}
-
-    def _get_dist(i: int, j: int) -> float:
-        key = (min(i, j), max(i, j))
-        if key not in dist_cache:
-            dist_cache[key] = _euclidean_sq(features[i], features[j])
-        return dist_cache[key]
-
-    # Greedy pass: for each web, pair with most distant unused partner
+    # Greedy pass: for each web, pair with most distant partner
     order = list(range(n))
     rng.shuffle(order)
 
     for i in order:
         if len(pairs) >= n_pairs:
             break
-        # Find the most distant partner not yet paired with i
-        best_j = -1
-        best_d = -1.0
-        for j in range(n):
-            if i == j:
-                continue
-            key = (min(i, j), max(i, j))
-            if key in pair_set:
-                continue
-            d = _get_dist(i, j)
-            if d > best_d:
-                best_d = d
-                best_j = j
-        if best_j >= 0:
-            key = (min(i, best_j), max(i, best_j))
-            pair_set.add(key)
-            pairs.append(key)
+        # Vectorised distance from i to all others
+        diff = feat_arr - feat_arr[i]
+        dists = np.sum(diff * diff, axis=1)
+        dists[i] = -1.0  # exclude self
 
-    # If we still need more pairs, fill with random unique pairs
-    if len(pairs) < n_pairs:
-        attempts = 0
-        max_attempts = n_pairs * 10
-        while len(pairs) < n_pairs and attempts < max_attempts:
-            i = rng.randrange(n)
-            j = rng.randrange(n)
-            if i != j:
-                key = (min(i, j), max(i, j))
-                if key not in pair_set:
-                    pair_set.add(key)
-                    pairs.append(key)
-            attempts += 1
+        # Try candidates in order of decreasing distance
+        ranked = np.argsort(dists)[::-1]
+        for j_int in ranked[:20]:  # check top-20 most distant
+            j = int(j_int)
+            if dists[j] <= 0:
+                break
+            key = (min(i, j), max(i, j))
+            if key not in pair_set:
+                pair_set.add(key)
+                pairs.append(key)
+                break
+
+    # Fill remaining with random pairs
+    attempts = 0
+    while len(pairs) < n_pairs and attempts < n_pairs * 10:
+        i = rng.randrange(n)
+        j = rng.randrange(n)
+        if i != j:
+            key = (min(i, j), max(i, j))
+            if key not in pair_set:
+                pair_set.add(key)
+                pairs.append(key)
+        attempts += 1
 
     return pairs
 
