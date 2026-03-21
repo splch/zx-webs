@@ -10,6 +10,8 @@ void GSPAN::init()
 	unFreqEdge.clear();
 	//cntFreqPattern = 0;
 	freqPattern.clear();
+	freqPatternSupport.clear();
+	freqPatternSourceIds.clear();
 	maxVertices = 0;
 	minVertices = 0;
 }
@@ -239,7 +241,7 @@ bool GSPAN::isPatternInGraph(Graph graph, const DFSCode &dfscode)
 	return JudgePatternInGraph(graph, dfscode, 0, -1);
 }
 
-void GSPAN::SolveFreqPattern(const DFSCode &dfscode)
+void GSPAN::SolveFreqPattern(const DFSCode &dfscode, int support, const vector<int> &sourceIds)
 {
 	// Count unique vertices in this pattern.
 	if (minVertices > 0) {
@@ -251,6 +253,8 @@ void GSPAN::SolveFreqPattern(const DFSCode &dfscode)
 		if ((int)verts.size() < minVertices) return;
 	}
 	freqPattern.push_back(dfscode);
+	freqPatternSupport.push_back(support);
+	freqPatternSourceIds.push_back(sourceIds);
 	/*out << "Pattern #" << cntFreqPattern++ << ": " << endl;
 	for (int i = 0;i < (int)dfscode.dfsCodeList.size();i++)
 	{
@@ -261,17 +265,17 @@ void GSPAN::SolveFreqPattern(const DFSCode &dfscode)
 
 bool GSPAN::isFreqPattern(const DFSCode &dfscode) // OK, No bugs
 {
-	//puts("++isFreqPattern?++");
 	int cnt = 0;
-	for (int i = 0;i < cntGraph;i++)
-		if (isPatternInGraph(graph[i], dfscode)) cnt++;
-	DFSCode t = dfscode;
-	//t.output();
-	/*cout << "pattern cnt: " << cnt << endl;
-	puts("--isFreqPattern?--");*/
+	vector<int> sourceIds;
+	for (int i = 0;i < cntGraph;i++) {
+		if (isPatternInGraph(graph[i], dfscode)) {
+			cnt++;
+			sourceIds.push_back(i);
+		}
+	}
 	if (cnt >= minSupDeg)
 	{
-		SolveFreqPattern(dfscode);
+		SolveFreqPattern(dfscode, cnt, sourceIds);
 		return 1;
 	}
 	return 0;
@@ -394,7 +398,13 @@ void GSPAN::SubMining(const Edge &base)
 {
 	tmpDFSCode.init();
 	tmpDFSCode.dfsCodeList.push_back(DFSCodeNode(0, 1, base.u, base.label, base.v));
-	SolveFreqPattern(tmpDFSCode);
+	{
+		int cnt = 0;
+		vector<int> sids;
+		for (int i = 0; i < cntGraph; i++)
+			if (isPatternInGraph(graph[i], tmpDFSCode)) { cnt++; sids.push_back(i); }
+		SolveFreqPattern(tmpDFSCode, cnt, sids);
+	}
 	//tmpDFSCode.output();
 	tmpDFSCode.rightPath.push_back(make_pair(0, base.u));
 	tmpDFSCode.rightPath.push_back(make_pair(1, base.v));
@@ -465,7 +475,11 @@ void GSPAN::output()
 	for (int _ = 0;_ < (int)freqPattern.size();_++)
 	{
 		DFSCode dfscode = freqPattern[_];
-		cout << "t # " << _ << endl;
+		// Output: "t # <id> <support> <source_id1,source_id2,...>"
+		cout << "t # " << _ << " " << freqPatternSupport[_];
+		for (int s : freqPatternSourceIds[_])
+			cout << " " << s;
+		cout << endl;
 		for (int i = 0;i < (int)dfscode.dfsCodeList.size();i++)
 		{
 			DFSCodeNode t = dfscode.dfsCodeList[i];

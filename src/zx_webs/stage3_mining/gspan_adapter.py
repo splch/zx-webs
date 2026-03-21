@@ -221,20 +221,24 @@ def _build_input_filter_reverse_maps(
     return vertex_rev, edge_rev
 
 
-def _parse_cpp_dfscode_output(
-    stdout: str,
-) -> list[list[tuple[int, int, int, int, int]]]:
+@dataclass
+class _CppPattern:
+    """Parsed pattern from C++ gSpan output."""
+    edges: list[tuple[int, int, int, int, int]]
+    support: int
+    source_graph_ids: list[int]
+
+
+def _parse_cpp_dfscode_output(stdout: str) -> list[_CppPattern]:
     """Parse the C++ gSpan DFSCode output from stdout.
 
-    Each pattern starts with ``t # N`` and is followed by lines of
-    ``a b la lab lb``.  A trailing ``Running Time: ...`` line is ignored.
+    Each pattern starts with ``t # N support src1 src2 ...`` and is
+    followed by lines of ``a b la lab lb``.
 
-    Returns
-    -------
-    list of patterns, where each pattern is a list of (a, b, la, lab, lb) tuples.
+    Returns a list of parsed patterns with support and source IDs.
     """
-    patterns: list[list[tuple[int, int, int, int, int]]] = []
-    current: list[tuple[int, int, int, int, int]] | None = None
+    patterns: list[_CppPattern] = []
+    current: _CppPattern | None = None
 
     for line in stdout.splitlines():
         line = line.strip()
@@ -243,7 +247,11 @@ def _parse_cpp_dfscode_output(
         if line.startswith("Running Time:"):
             continue
         if line.startswith("t # "):
-            current = []
+            parts = line.split()
+            # Format: "t # <id> <support> <src1> <src2> ..."
+            support = int(parts[3]) if len(parts) > 3 else 0
+            source_ids = [int(x) for x in parts[4:]]
+            current = _CppPattern(edges=[], support=support, source_graph_ids=source_ids)
             patterns.append(current)
             continue
         if current is None:
@@ -251,7 +259,7 @@ def _parse_cpp_dfscode_output(
         parts = line.split()
         if len(parts) == 5:
             a, b, la, lab, lb = int(parts[0]), int(parts[1]), int(parts[2]), int(parts[3]), int(parts[4])
-            current.append((a, b, la, lab, lb))
+            current.edges.append((a, b, la, lab, lb))
 
     return patterns
 
@@ -655,40 +663,33 @@ class GSpanAdapter:
 
         # Convert each pattern to a GSpanResult.
         results: list[GSpanResult] = []
-        for pattern_edges_remapped in raw_patterns:
-            if not pattern_edges_remapped:
+        for pattern in raw_patterns:
+            if not pattern.edges:
                 continue
 
             # Reverse the label remapping.
             edges_original: list[tuple[int, int, int, int, int]] = []
-            for a, b, la_r, lab_r, lb_r in pattern_edges_remapped:
+            for a, b, la_r, lab_r, lb_r in pattern.edges:
                 la = vertex_rev.get(la_r, la_r)
                 lab = edge_rev.get(lab_r, lab_r)
                 lb = vertex_rev.get(lb_r, lb_r)
                 edges_original.append((a, b, la, lab, lb))
 
-            # Collect vertex labels and edges for this pattern.
-            pattern_vlabels: dict[int, int] = {}
-            pattern_edge_list: list[tuple[int, int, int]] = []
-            for a, b, la, lab, lb in edges_original:
-                if a not in pattern_vlabels:
-                    pattern_vlabels[a] = la
-                if b not in pattern_vlabels:
-                    pattern_vlabels[b] = lb
-                pattern_edge_list.append((a, b, lab))
+            # Count unique vertices for filtering.
+            verts: set[int] = set()
+            for a, b, *_ in edges_original:
+                verts.add(a)
+                verts.add(b)
+            n_verts = len(verts)
 
-            n_verts = len(pattern_vlabels)
-
-            # Apply vertex count filters.
             if n_verts < self.config.min_vertices:
                 continue
             if n_verts > self.config.max_vertices:
                 continue
 
-            # Compute support via subgraph isomorphism.
-            support, source_ids = _compute_support(
-                pattern_vlabels, pattern_edge_list, input_graphs,
-            )
+            # Use support from C++ output directly (no Python recomputation).
+            support = pattern.support
+            source_ids = pattern.source_graph_ids
 
             # Build a PyZX graph for this pattern.
             pyzx_g = _dfscode_edges_to_pyzx(edges_original, self.encoder)

@@ -48,7 +48,7 @@ public:
 	void RebuildGraph(int id); // Rebuild graph with id
 	bool JudgePatternInGraph(Graph &graph, const DFSCode &dfscode, int ith, int now); // DFS, ith = dfscode.dfsCodeList[ith], now = now vertex
 	bool isPatternInGraph(Graph graph, const DFSCode &dfscode); // Is this pattern in this graph?
-	void SolveFreqPattern(const DFSCode &dfscode); // Work when dfscode is freq pattern
+	void SolveFreqPattern(const DFSCode &dfscode, int support, const vector<int> &sourceIds); // Work when dfscode is freq pattern
 	bool isFreqPattern(const DFSCode &dfscode); // Is dfscode a freq pattern?
 	void BuildPattern(DFSCode &dfscode, int loc, int backloc, int maxseq); // DFS build pattern and test, loc = now extend location in rightpath, backloc = -1(forward) or backward location in rightpath, maxseq = max sequence id
 	void SubMining(const Edge &base); // Sub-Mining Procedure
@@ -77,6 +77,8 @@ public:
 	vector<Edge> unFreqEdge; // Unfreq edge set
 
 	vector<DFSCode> freqPattern; // Freq pattern, the answer
+	vector<int> freqPatternSupport; // Support count per pattern
+	vector<vector<int>> freqPatternSourceIds; // Source graph IDs per pattern
 };
 
 #endif
