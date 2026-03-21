@@ -16,10 +16,10 @@ class CorpusConfig(BaseModel):
 
     families: list[str] = [
         "oracular",
-        "entanglement",
-        "variational",
         "arithmetic",
-        "error_correction",
+        "variational",
+        "simulation",
+        "entanglement",
     ]
     max_qubits: int = 10
     qubit_counts: list[int] = [3, 5, 7, 10]
@@ -30,6 +30,7 @@ class ZXConfig(BaseModel):
     """Stage 2 -- ZX-diagram extraction / simplification."""
 
     reduction: str = "full_reduce"
+    mining_reduction: str = "teleport_reduce"  # reduction used for Stage 3 input
     normalize: bool = True
 
 
@@ -42,6 +43,7 @@ class MiningConfig(BaseModel):
     max_input_vertices: int = 50  # skip graphs larger than this for gSpan
     phase_discretization: int = 8
     include_phase_in_label: bool = True
+    mining_reduction: str = "teleport_reduce"  # "full_reduce", "teleport_reduce", or "none"
 
 
 class ComposeConfig(BaseModel):
@@ -53,6 +55,9 @@ class ComposeConfig(BaseModel):
     boundary_match_strategy: str = "exact_type"
     min_compose_qubits: int = 2
     seed: int = 42
+    prefer_cross_family: bool = True  # prioritise cross-family compositions
+    guided: bool = False  # enable target-guided composition
+    target_qubit_counts: list[int] = [3, 5, 7]  # qubit counts to target when guided
 
 
 class FilterConfig(BaseModel):
@@ -88,6 +93,7 @@ class BenchConfig(BaseModel):
     qasmbench_path: Path = Path("data/qasmbench")
     supermarq_qubits: list[int] = [3, 5, 8]
     fidelity_shots: int = 8192
+    fidelity_threshold: float = 0.99
     backends: list[BackendConfig] = [
         BackendConfig(name="aer_ideal", type="simulator", provider="aer"),
     ]

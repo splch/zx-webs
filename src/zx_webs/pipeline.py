@@ -154,6 +154,7 @@ class Pipeline:
                 self.data_dir / "zx_diagrams",
                 self.data_dir / "mined_webs",
                 self.config.mining,
+                corpus_dir=self.data_dir / "corpus",
             )
         elif stage_name == "compose":
             run_stage4(

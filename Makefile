@@ -17,7 +17,7 @@ run-small:
 	python scripts/run_pipeline.py --config configs/small_run.yaml
 
 run-full:
-	python scripts/run_pipeline.py --config configs/full_run.yaml
+	python scripts/run_pipeline.py --config configs/default.yaml
 
 clean:
 	rm -rf data/ dist/ build/ *.egg-info .mypy_cache .pytest_cache .ruff_cache

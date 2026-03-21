@@ -22,8 +22,8 @@ class VertexType(IntEnum):
 class EdgeType(IntEnum):
     """ZX-diagram edge types, mirroring ``pyzx.utils.EdgeType``."""
 
-    SIMPLE = 0
-    HADAMARD = 1
+    SIMPLE = 1
+    HADAMARD = 2
 
 
 # ---------------------------------------------------------------------------

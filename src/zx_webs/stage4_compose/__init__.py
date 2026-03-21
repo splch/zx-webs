@@ -4,6 +4,7 @@ from __future__ import annotations
 from zx_webs.stage4_compose.boundary import (
     count_boundary_wires,
     junction_edge_type,
+    wire_compatibility_score,
     wires_compatible,
 )
 from zx_webs.stage4_compose.candidate import CandidateAlgorithm
@@ -15,5 +16,6 @@ __all__ = [
     "count_boundary_wires",
     "junction_edge_type",
     "run_stage4",
+    "wire_compatibility_score",
     "wires_compatible",
 ]

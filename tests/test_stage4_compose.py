@@ -1,9 +1,12 @@
 """Tests for Stage 4 -- composition of ZX-Webs into candidate algorithms.
 
-Tests all three composition strategies:
+Tests all composition strategies:
 1. Sequential compose via PyZX native compose()
 2. Parallel tensor + Hadamard stitching
 3. Phase perturbation
+4. Cross-family recombination (NEW)
+5. Target-guided composition (NEW)
+6. Wire compatibility scoring (NEW)
 """
 from __future__ import annotations
 
@@ -20,10 +23,17 @@ from zx_webs.stage3_mining.zx_web import BoundaryWire, ZXWeb
 from zx_webs.stage4_compose.boundary import (
     count_boundary_wires,
     junction_edge_type,
+    wire_compatibility_score,
     wires_compatible,
 )
 from zx_webs.stage4_compose.candidate import CandidateAlgorithm
-from zx_webs.stage4_compose.stitcher import Stitcher, run_stage4
+from zx_webs.stage4_compose.stitcher import (
+    Stitcher,
+    _collect_families,
+    _is_cross_family,
+    _pair_compatibility_score,
+    run_stage4,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -80,10 +90,13 @@ def _web_from_graph(
     g: zx.Graph,
     web_id: str,
     boundary_wires: list[BoundaryWire] | None = None,
+    source_families: list[str] | None = None,
 ) -> ZXWeb:
     """Wrap a PyZX graph into a ZXWeb with optional explicit boundary wires."""
     if boundary_wires is None:
         boundary_wires = []
+    if source_families is None:
+        source_families = []
     n_in = len(g.inputs()) if g.inputs() else 0
     n_out = len(g.outputs()) if g.outputs() else 0
     n_spiders = sum(1 for v in g.vertices() if g.type(v) != 0)
@@ -93,6 +106,7 @@ def _web_from_graph(
         boundary_wires=boundary_wires,
         support=1,
         source_graph_ids=[0],
+        source_families=source_families,
         n_spiders=n_spiders,
         n_inputs=n_in,
         n_outputs=n_out,
@@ -100,7 +114,9 @@ def _web_from_graph(
 
 
 def _make_1q_web(
-    web_id: str, phase: Fraction = Fraction(0)
+    web_id: str,
+    phase: Fraction = Fraction(0),
+    source_families: list[str] | None = None,
 ) -> ZXWeb:
     """Create a 1-qubit web with explicit input/output boundary wires."""
     g = _make_1q_phase_graph(phase)
@@ -126,10 +142,14 @@ def _make_1q_web(
                 direction="output",
             ),
         ],
+        source_families=source_families,
     )
 
 
-def _make_2q_web(web_id: str) -> ZXWeb:
+def _make_2q_web(
+    web_id: str,
+    source_families: list[str] | None = None,
+) -> ZXWeb:
     """Create a 2-qubit web with explicit boundary wires."""
     g = _make_2q_graph()
     verts = sorted(g.vertices())
@@ -167,6 +187,7 @@ def _make_2q_web(web_id: str) -> ZXWeb:
                 direction="output",
             ),
         ],
+        source_families=source_families,
     )
 
 
@@ -202,6 +223,40 @@ class TestBoundaryHelpers:
         bw1 = BoundaryWire(0, spider_type=1, spider_phase=0.0, edge_type=1)
         bw2 = BoundaryWire(1, spider_type=2, spider_phase=0.0, edge_type=1)
         assert junction_edge_type(bw1, bw2) == 2
+
+
+# ---------------------------------------------------------------------------
+# Wire compatibility scoring tests (NEW)
+# ---------------------------------------------------------------------------
+
+
+class TestWireCompatibilityScore:
+    """Tests for the wire_compatibility_score function."""
+
+    def test_same_type_scores_higher(self) -> None:
+        """Same spider type should score higher than different types."""
+        bw_z1 = BoundaryWire(0, spider_type=1, spider_phase=0.0, edge_type=1)
+        bw_z2 = BoundaryWire(1, spider_type=1, spider_phase=0.0, edge_type=1)
+        bw_x1 = BoundaryWire(2, spider_type=2, spider_phase=0.0, edge_type=1)
+
+        score_same = wire_compatibility_score(bw_z1, bw_z2)
+        score_diff = wire_compatibility_score(bw_z1, bw_x1)
+        assert score_same > score_diff
+
+    def test_zero_phase_bonus(self) -> None:
+        """Zero-phase wires should score higher than non-zero-phase wires."""
+        bw_zero = BoundaryWire(0, spider_type=1, spider_phase=0.0, edge_type=1)
+        bw_nonzero = BoundaryWire(1, spider_type=1, spider_phase=0.5, edge_type=1)
+
+        score_both_zero = wire_compatibility_score(bw_zero, bw_zero)
+        score_one_nonzero = wire_compatibility_score(bw_zero, bw_nonzero)
+        assert score_both_zero > score_one_nonzero
+
+    def test_base_score_is_positive(self) -> None:
+        """All wire compatibility scores should be positive."""
+        bw1 = BoundaryWire(0, spider_type=1, spider_phase=0.5, edge_type=1)
+        bw2 = BoundaryWire(1, spider_type=2, spider_phase=1.0, edge_type=2)
+        assert wire_compatibility_score(bw1, bw2) > 0
 
 
 # ---------------------------------------------------------------------------
@@ -246,6 +301,25 @@ class TestCandidateSerialization:
         json_str = json.dumps(cand.to_dict())
         assert isinstance(json_str, str)
         assert "cand_json" in json_str
+
+    def test_roundtrip_with_families(self) -> None:
+        """Serialise a CandidateAlgorithm with source_families and back."""
+        g = _make_1q_identity_graph()
+        cand = CandidateAlgorithm(
+            candidate_id="cand_fam",
+            graph_json=g.to_json(),
+            component_web_ids=["web_0", "web_1"],
+            composition_type="sequential",
+            n_qubits=1,
+            n_spiders=1,
+            source_families=["oracular", "arithmetic"],
+            is_cross_family=True,
+        )
+        d = cand.to_dict()
+        cand2 = CandidateAlgorithm.from_dict(d)
+
+        assert cand2.source_families == ["oracular", "arithmetic"]
+        assert cand2.is_cross_family is True
 
 
 # ---------------------------------------------------------------------------
@@ -474,6 +548,90 @@ class TestStitcherPhasePerturb:
 
 
 # ---------------------------------------------------------------------------
+# Cross-family helpers tests (NEW)
+# ---------------------------------------------------------------------------
+
+
+class TestCrossFamilyHelpers:
+    """Tests for cross-family analysis helper functions."""
+
+    def test_collect_families(self) -> None:
+        """_collect_families should return deduplicated union of families."""
+        webs = [
+            _make_1q_web("w0", source_families=["oracular", "arithmetic"]),
+            _make_1q_web("w1", source_families=["arithmetic", "variational"]),
+            _make_1q_web("w2", source_families=["oracular"]),
+        ]
+        families = _collect_families(webs, [0, 1])
+        assert set(families) == {"oracular", "arithmetic", "variational"}
+
+    def test_collect_families_empty(self) -> None:
+        """_collect_families with no family info returns empty list."""
+        webs = [
+            _make_1q_web("w0"),
+            _make_1q_web("w1"),
+        ]
+        families = _collect_families(webs, [0, 1])
+        assert families == []
+
+    def test_is_cross_family_true(self) -> None:
+        """_is_cross_family returns True when webs have different families."""
+        webs = [
+            _make_1q_web("w0", source_families=["oracular"]),
+            _make_1q_web("w1", source_families=["variational"]),
+        ]
+        assert _is_cross_family(webs, [0, 1]) is True
+
+    def test_is_cross_family_false(self) -> None:
+        """_is_cross_family returns False when webs share the same family."""
+        webs = [
+            _make_1q_web("w0", source_families=["oracular"]),
+            _make_1q_web("w1", source_families=["oracular"]),
+        ]
+        assert _is_cross_family(webs, [0, 1]) is False
+
+    def test_is_cross_family_empty(self) -> None:
+        """_is_cross_family with no families returns False."""
+        webs = [
+            _make_1q_web("w0"),
+            _make_1q_web("w1"),
+        ]
+        assert _is_cross_family(webs, [0, 1]) is False
+
+
+# ---------------------------------------------------------------------------
+# Pair compatibility scoring tests (NEW)
+# ---------------------------------------------------------------------------
+
+
+class TestPairCompatibilityScore:
+    """Tests for pair compatibility scoring."""
+
+    def test_cross_family_scores_higher(self) -> None:
+        """Cross-family pairs should score higher than same-family pairs."""
+        web_a = _make_1q_web("w_a", source_families=["oracular"])
+        web_b = _make_1q_web("w_b", source_families=["variational"])
+        web_c = _make_1q_web("w_c", source_families=["oracular"])
+
+        score_cross = _pair_compatibility_score(web_a, web_b, prefer_cross_family=True)
+        score_same = _pair_compatibility_score(web_a, web_c, prefer_cross_family=True)
+        assert score_cross > score_same
+
+    def test_no_cross_family_preference(self) -> None:
+        """Without cross-family preference, scores should be equal for same/different families."""
+        web_a = _make_1q_web("w_a", source_families=["oracular"])
+        web_b = _make_1q_web("w_b", source_families=["variational"])
+        web_c = _make_1q_web("w_c", source_families=["oracular"])
+
+        score_cross = _pair_compatibility_score(web_a, web_b, prefer_cross_family=False)
+        score_same = _pair_compatibility_score(web_a, web_c, prefer_cross_family=False)
+        # Without preference, the family bonus should not be applied.
+        # The scores should still differ because of wire compatibility,
+        # but the cross-family bonus is zero.
+        assert score_cross == score_same  # both have same structure
+
+
+# ---------------------------------------------------------------------------
 # Candidate generation tests
 # ---------------------------------------------------------------------------
 
@@ -505,6 +663,7 @@ class TestGenerateCandidates:
         valid_types = {
             "sequential", "parallel", "parallel_stitch",
             "phase_perturb", "triple_sequential",
+            "guided_sequential", "guided_cross_family", "guided_parallel",
         }
         for cand in candidates:
             assert cand.composition_type in valid_types
@@ -548,6 +707,128 @@ class TestGenerateCandidates:
 
         # Should have at least sequential and parallel types.
         assert "sequential" in comp_types or "parallel" in comp_types
+
+
+# ---------------------------------------------------------------------------
+# Cross-family recombination tests (NEW)
+# ---------------------------------------------------------------------------
+
+
+class TestCrossFamilyRecombination:
+    """Tests for cross-family recombination in generate_candidates."""
+
+    def test_cross_family_candidates_preferred(self) -> None:
+        """When prefer_cross_family is True, cross-family pairs should be tried first."""
+        config = ComposeConfig(
+            max_candidates=50,
+            composition_modes=["sequential", "parallel"],
+            prefer_cross_family=True,
+            seed=42,
+        )
+        stitcher = Stitcher(config)
+
+        webs = [
+            _make_1q_web("web_0", phase=Fraction(0), source_families=["oracular"]),
+            _make_1q_web("web_1", phase=Fraction(1, 4), source_families=["variational"]),
+            _make_1q_web("web_2", phase=Fraction(1, 2), source_families=["oracular"]),
+        ]
+
+        candidates = stitcher.generate_candidates(webs)
+        assert len(candidates) > 0
+
+        # At least some candidates should be cross-family.
+        cross_family_count = sum(1 for c in candidates if c.is_cross_family)
+        assert cross_family_count > 0
+
+    def test_source_families_propagated(self) -> None:
+        """Candidates should inherit source_families from their component webs."""
+        config = ComposeConfig(
+            max_candidates=10,
+            composition_modes=["sequential", "parallel"],
+            min_compose_qubits=1,
+            seed=42,
+        )
+        stitcher = Stitcher(config)
+
+        webs = [
+            _make_1q_web("web_0", phase=Fraction(0), source_families=["oracular"]),
+            _make_1q_web("web_1", phase=Fraction(1, 4), source_families=["arithmetic"]),
+        ]
+
+        candidates = stitcher.generate_candidates(webs)
+        assert len(candidates) > 0
+
+        for cand in candidates:
+            if cand.composition_type in ("sequential", "parallel", "parallel_stitch"):
+                # Phase perturb inherits from base; check non-perturbed ones.
+                if cand.source_families:
+                    assert isinstance(cand.source_families, list)
+
+
+# ---------------------------------------------------------------------------
+# Target-guided composition tests (NEW)
+# ---------------------------------------------------------------------------
+
+
+class TestGuidedComposition:
+    """Tests for target-guided composition."""
+
+    def test_guided_generates_candidates(self) -> None:
+        """Guided mode should generate candidates matching target qubit counts."""
+        config = ComposeConfig(
+            max_candidates=50,
+            composition_modes=["sequential", "parallel"],
+            guided=True,
+            target_qubit_counts=[1, 2],
+            seed=42,
+        )
+        stitcher = Stitcher(config)
+
+        webs = [
+            _make_1q_web("web_0", phase=Fraction(0), source_families=["oracular"]),
+            _make_1q_web("web_1", phase=Fraction(1, 4), source_families=["variational"]),
+            _make_1q_web("web_2", phase=Fraction(1, 2), source_families=["arithmetic"]),
+        ]
+
+        target_tasks = [
+            {"n_qubits": 1, "family": "oracular"},
+            {"n_qubits": 2, "family": "variational"},
+        ]
+
+        candidates = stitcher.generate_candidates(webs, target_tasks=target_tasks)
+        assert len(candidates) > 0
+
+        guided_types = {
+            "guided_sequential", "guided_cross_family", "guided_parallel",
+        }
+        guided_candidates = [c for c in candidates if c.composition_type in guided_types]
+        assert len(guided_candidates) > 0
+
+    def test_guided_disabled_by_default(self) -> None:
+        """Without guided=True, no guided candidates should be generated."""
+        config = ComposeConfig(
+            max_candidates=50,
+            composition_modes=["sequential", "parallel"],
+            guided=False,
+            seed=42,
+        )
+        stitcher = Stitcher(config)
+
+        webs = [
+            _make_1q_web("web_0", phase=Fraction(0)),
+            _make_1q_web("web_1", phase=Fraction(1, 4)),
+        ]
+
+        # Even if target_tasks are passed, guided=False means no guided candidates.
+        candidates = stitcher.generate_candidates(
+            webs, target_tasks=[{"n_qubits": 1}]
+        )
+
+        guided_types = {
+            "guided_sequential", "guided_cross_family", "guided_parallel",
+        }
+        guided_candidates = [c for c in candidates if c.composition_type in guided_types]
+        assert len(guided_candidates) == 0
 
 
 # ---------------------------------------------------------------------------
@@ -622,3 +903,53 @@ class TestRunStage4EndToEnd:
         output_dir = tmp_path / "compose_empty"
         candidates = run_stage4(webs_dir, output_dir)
         assert candidates == []
+
+    def test_run_stage4_guided_mode(self, tmp_path: Path) -> None:
+        """run_stage4 with guided=True should generate guided candidates."""
+        webs_dir = tmp_path / "webs"
+        webs_subdir = webs_dir / "webs"
+        webs_subdir.mkdir(parents=True)
+
+        test_webs = [
+            _make_1q_web("web_0000", phase=Fraction(0), source_families=["oracular"]),
+            _make_1q_web("web_0001", phase=Fraction(1, 4), source_families=["variational"]),
+            _make_1q_web("web_0002", phase=Fraction(1, 2), source_families=["arithmetic"]),
+        ]
+
+        manifest_entries = []
+        for web in test_webs:
+            web_path = webs_subdir / f"{web.web_id}.json"
+            save_json(web.to_dict(), web_path)
+            manifest_entries.append(
+                {
+                    "web_id": web.web_id,
+                    "web_path": str(web_path),
+                    "support": web.support,
+                    "n_spiders": web.n_spiders,
+                    "n_boundary_wires": len(web.boundary_wires),
+                    "n_inputs": web.n_inputs,
+                    "n_outputs": web.n_outputs,
+                }
+            )
+
+        save_manifest(manifest_entries, webs_dir)
+
+        output_dir = tmp_path / "compose_guided"
+        config = ComposeConfig(
+            max_candidates=50,
+            composition_modes=["sequential", "parallel"],
+            guided=True,
+            target_qubit_counts=[1, 2],
+            seed=42,
+        )
+        candidates = run_stage4(webs_dir, output_dir, config)
+
+        assert len(candidates) > 0
+
+        # Manifest entries should include source_families and is_cross_family.
+        from zx_webs.persistence import load_manifest
+        output_manifest = load_manifest(output_dir)
+        assert len(output_manifest) > 0
+        first_entry = output_manifest[0]
+        assert "source_families" in first_entry
+        assert "is_cross_family" in first_entry

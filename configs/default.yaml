@@ -13,6 +13,7 @@ corpus:
 
 zx:
   reduction: full_reduce
+  mining_reduction: teleport_reduce  # structure-preserving reduction for Stage 3
   normalize: true
 
 mining:
@@ -21,6 +22,7 @@ mining:
   max_vertices: 12
   phase_discretization: 8
   include_phase_in_label: true
+  mining_reduction: teleport_reduce  # "full_reduce", "teleport_reduce", or "none"
 
 compose:
   max_webs_per_candidate: 4
@@ -29,6 +31,9 @@ compose:
   boundary_match_strategy: exact_type
   min_compose_qubits: 2
   seed: 42
+  prefer_cross_family: true   # prioritise cross-family compositions
+  guided: false               # enable target-guided composition
+  target_qubit_counts: [3, 5, 7]  # qubit counts to target when guided
 
 filter:
   extract_timeout_seconds: 60.0

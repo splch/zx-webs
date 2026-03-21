@@ -12,6 +12,7 @@ Usage::
 """
 from __future__ import annotations
 
+import copy
 import json
 import logging
 import time
@@ -23,6 +24,7 @@ import pyzx as zx
 
 from zx_webs.config import MiningConfig
 from zx_webs.persistence import load_manifest, save_json, save_manifest
+from zx_webs.stage2_zx.simplifier import simplify_graph
 from zx_webs.stage3_mining.gspan_adapter import GSpanAdapter, GSpanResult
 from zx_webs.stage3_mining.graph_encoder import ZXLabelEncoder
 from zx_webs.stage3_mining.zx_web import BoundaryWire, ZXWeb
@@ -297,6 +299,7 @@ def _result_to_zx_web(
     result: GSpanResult,
     web_id: str,
     adapter: GSpanAdapter,
+    family_lookup: dict[int, str] | None = None,
 ) -> ZXWeb:
     """Convert a :class:`GSpanResult` to a :class:`ZXWeb`.
 
@@ -312,6 +315,9 @@ def _result_to_zx_web(
         Unique identifier for the web.
     adapter:
         The adapter used for mining (carries the label encoder).
+    family_lookup:
+        Optional mapping from source graph index to algorithm family name.
+        When provided, the web's ``source_families`` field is populated.
 
     Returns
     -------
@@ -335,12 +341,23 @@ def _result_to_zx_web(
     n_inputs = len(pyzx_graph.inputs()) if pyzx_graph.inputs() else 0
     n_outputs = len(pyzx_graph.outputs()) if pyzx_graph.outputs() else 0
 
+    # Derive source families from the family lookup.
+    source_families: list[str] = []
+    if family_lookup:
+        seen: set[str] = set()
+        for gid in result.source_graph_ids:
+            fam = family_lookup.get(gid, "")
+            if fam and fam not in seen:
+                source_families.append(fam)
+                seen.add(fam)
+
     return ZXWeb(
         web_id=web_id,
         graph_json=graph_json,
         boundary_wires=boundary_wires,
         support=result.support,
         source_graph_ids=result.source_graph_ids,
+        source_families=source_families,
         n_spiders=n_spiders,
         n_inputs=n_inputs,
         n_outputs=n_outputs,
@@ -356,15 +373,18 @@ def run_stage3(
     zx_dir: Path,
     output_dir: Path,
     config: MiningConfig | None = None,
+    corpus_dir: Path | None = None,
 ) -> list[ZXWeb]:
     """Run Stage 3: mine frequent sub-diagrams from ZX-diagram corpus.
 
     Workflow
     --------
     1. Load ZX-diagrams from the Stage 2 output directory.
-    2. Run gSpan mining to discover frequent sub-graphs.
-    3. Convert results to :class:`ZXWeb` objects with boundary info.
-    4. Persist the webs and a manifest under *output_dir*.
+    2. Optionally re-reduce graphs with a structure-preserving method
+       (e.g. ``teleport_reduce``) before mining.
+    3. Run gSpan mining to discover frequent sub-graphs.
+    4. Convert results to :class:`ZXWeb` objects with boundary info.
+    5. Persist the webs and a manifest under *output_dir*.
 
     Parameters
     ----------
@@ -376,6 +396,10 @@ def run_stage3(
     config:
         Mining parameters.  Falls back to ``MiningConfig()`` defaults when
         *None*.
+    corpus_dir:
+        Optional path to the Stage 1 corpus directory.  When provided, the
+        corpus manifest is used to map graph indices to algorithm families
+        so that each :class:`ZXWeb` records which families it came from.
 
     Returns
     -------
@@ -393,6 +417,7 @@ def run_stage3(
 
     graphs: list[zx.Graph] = []
     algorithm_ids: list[str] = []
+    families: list[str] = []
 
     for entry in manifest:
         graph_path = Path(entry["graph_path"])
@@ -404,15 +429,89 @@ def run_stage3(
         g = zx.Graph.from_json(graph_json_str)
         graphs.append(g)
         algorithm_ids.append(entry.get("algorithm_id", ""))
+        families.append(entry.get("family", ""))
 
     if not graphs:
         logger.warning("No valid graphs loaded from %s.", zx_dir)
         return []
 
+    # -- 1b. Optionally re-reduce for structure-preserving mining -------------
+    stage2_reduction = manifest[0].get("reduction_method", "full_reduce") if manifest else "full_reduce"
+    mining_reduction = config.mining_reduction
+
+    if mining_reduction != "full_reduce" and mining_reduction != stage2_reduction:
+        # Re-reduce from the original QASM files if we have corpus_dir,
+        # otherwise apply the mining reduction on top of what we have.
+        if corpus_dir is not None:
+            corpus_manifest = load_manifest(corpus_dir)
+            if corpus_manifest:
+                qasm_lookup: dict[str, str] = {
+                    e.get("algorithm_id", ""): e.get("qasm_path", "")
+                    for e in corpus_manifest
+                }
+                re_reduced: list[zx.Graph] = []
+                re_ids: list[str] = []
+                re_families: list[str] = []
+                for aid, fam in zip(algorithm_ids, families):
+                    qasm_path_str = qasm_lookup.get(aid, "")
+                    if not qasm_path_str:
+                        continue
+                    qasm_path = Path(qasm_path_str)
+                    if not qasm_path.exists():
+                        continue
+                    try:
+                        qasm_str = qasm_path.read_text(encoding="utf-8")
+                        circuit = zx.Circuit.from_qasm(qasm_str)
+                        g_raw: zx.Graph = circuit.to_graph()
+                        g_reduced = simplify_graph(g_raw, method=mining_reduction)
+                        re_reduced.append(g_reduced)
+                        re_ids.append(aid)
+                        re_families.append(fam)
+                    except Exception as exc:
+                        logger.debug(
+                            "Failed to re-reduce %s with %s: %s",
+                            aid, mining_reduction, exc,
+                        )
+                if re_reduced:
+                    logger.info(
+                        "Re-reduced %d graphs with %s for mining (was %s).",
+                        len(re_reduced), mining_reduction, stage2_reduction,
+                    )
+                    graphs = re_reduced
+                    algorithm_ids = re_ids
+                    families = re_families
+        else:
+            logger.info(
+                "mining_reduction=%s requested but no corpus_dir provided; "
+                "using Stage 2 graphs as-is.",
+                mining_reduction,
+            )
+
+    # Build family lookup: graph index -> family name.
+    family_lookup: dict[int, str] = {}
+    for idx, fam in enumerate(families):
+        if fam:
+            family_lookup[idx] = fam
+
     # Split graphs into small (for gSpan mining) and all (for validation).
     max_v = config.max_input_vertices
     small_graphs = [g for g in graphs if g.num_vertices() <= max_v]
     small_ids = [a for g, a in zip(graphs, algorithm_ids) if g.num_vertices() <= max_v]
+
+    # Build a mapping from small_graphs index to original index for family lookup.
+    small_to_original: dict[int, int] = {}
+    si = 0
+    for oi, g in enumerate(graphs):
+        if g.num_vertices() <= max_v:
+            small_to_original[si] = oi
+            si += 1
+
+    # Remap family_lookup to use small graph indices.
+    small_family_lookup: dict[int, str] = {}
+    for small_idx, orig_idx in small_to_original.items():
+        if orig_idx in family_lookup:
+            small_family_lookup[small_idx] = family_lookup[orig_idx]
+
     n_skipped = len(graphs) - len(small_graphs)
 
     if n_skipped:
@@ -450,7 +549,10 @@ def run_stage3(
     webs: list[ZXWeb] = []
     for idx, result in enumerate(results):
         web_id = f"web_{idx:04d}"
-        web = _result_to_zx_web(result, web_id, adapter)
+        web = _result_to_zx_web(
+            result, web_id, adapter,
+            family_lookup=small_family_lookup,
+        )
         webs.append(web)
 
     # -- 4. Persist results ---------------------------------------------------
@@ -470,6 +572,7 @@ def run_stage3(
                 "web_path": str(web_path),
                 "support": web.support,
                 "source_graph_ids": web.source_graph_ids,
+                "source_families": web.source_families,
                 "n_spiders": web.n_spiders,
                 "n_boundary_wires": len(web.boundary_wires),
                 "n_inputs": web.n_inputs,

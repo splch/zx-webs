@@ -5,7 +5,8 @@ be compatible.  This module provides helpers that:
 
 1. Count input/output wires on a web.
 2. Decide whether two boundary wires can be connected.
-3. Choose the appropriate edge type for the junction.
+3. Score how well two boundary wires match for prioritisation.
+4. Choose the appropriate edge type for the junction.
 """
 from __future__ import annotations
 
@@ -47,6 +48,41 @@ def wires_compatible(out_wire: BoundaryWire, in_wire: BoundaryWire) -> bool:
     connections to same-type spiders only).
     """
     return True
+
+
+def wire_compatibility_score(
+    out_wire: BoundaryWire, in_wire: BoundaryWire
+) -> float:
+    """Score how well two boundary wires match for composition.
+
+    Higher scores indicate cleaner, more meaningful compositions.
+
+    Scoring heuristic:
+
+    * **Base score** = 1.0 (every connection is valid in ZX-calculus).
+    * **Same spider type bonus** (+1.0) -- same-type spiders connected by
+      a simple edge fuse cleanly under ZX-calculus spider fusion.
+    * **Zero-phase bonus** (+0.5) -- connecting zero-phase spiders produces
+      simpler compositions that are easier to reason about.
+
+    Parameters
+    ----------
+    out_wire:
+        The output boundary wire of the first web.
+    in_wire:
+        The input boundary wire of the second web.
+
+    Returns
+    -------
+    float
+        A non-negative compatibility score (higher is better).
+    """
+    score = 1.0
+    if out_wire.spider_type == in_wire.spider_type:
+        score += 1.0  # same type bonus (will fuse cleanly)
+    if abs(out_wire.spider_phase) < 0.01 and abs(in_wire.spider_phase) < 0.01:
+        score += 0.5  # zero-phase bonus (simpler composition)
+    return score
 
 
 # ---------------------------------------------------------------------------

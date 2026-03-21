@@ -1,15 +1,26 @@
-"""Circuit-level metrics and SupermarQ-style feature vectors.
+"""Circuit-level metrics, SupermarQ-style features, and unitary analysis.
 
 :class:`CircuitMetrics` captures standard gate-count and depth statistics
 for a quantum circuit.  :class:`SupermarQFeatures` computes normalised
 feature vectors inspired by the SupermarQ benchmark suite.
+
+The unitary analysis functions (:func:`compute_unitary`,
+:func:`is_clifford_unitary`, :func:`entanglement_capacity`) provide
+functional characterisation of circuits beyond gate counts.
 """
 from __future__ import annotations
 
+import logging
 from dataclasses import asdict, dataclass
 from typing import Any
 
+import numpy as np
 import pyzx as zx
+
+logger = logging.getLogger(__name__)
+
+# Maximum qubit count for which we compute full unitary matrices.
+_MAX_UNITARY_QUBITS = 10
 
 
 # ---------------------------------------------------------------------------
@@ -150,3 +161,251 @@ class SupermarQFeatures:
     def to_dict(self) -> dict[str, float]:
         """Serialise to a plain dict."""
         return asdict(self)
+
+
+# ---------------------------------------------------------------------------
+# Unitary analysis functions
+# ---------------------------------------------------------------------------
+
+
+def compute_unitary(qasm_str: str) -> np.ndarray | None:
+    """Compute the unitary matrix from a QASM string.
+
+    Returns ``None`` if the circuit has more than :data:`_MAX_UNITARY_QUBITS`
+    qubits (the ``2^n x 2^n`` matrix would be too large) or if parsing fails.
+
+    Parameters
+    ----------
+    qasm_str:
+        An OPENQASM 2.0 string.
+
+    Returns
+    -------
+    np.ndarray or None
+        The unitary as a complex NumPy array, or ``None``.
+    """
+    try:
+        c = zx.Circuit.from_qasm(qasm_str)
+    except Exception:
+        logger.debug("Failed to parse QASM for unitary computation.")
+        return None
+
+    if c.qubits > _MAX_UNITARY_QUBITS:
+        logger.debug(
+            "Circuit has %d qubits (> %d); skipping unitary.",
+            c.qubits, _MAX_UNITARY_QUBITS,
+        )
+        return None
+
+    try:
+        return np.array(c.to_matrix())
+    except Exception:
+        logger.debug("Failed to compute unitary matrix.", exc_info=True)
+        return None
+
+
+def is_clifford_unitary(unitary: np.ndarray, atol: float = 1e-8) -> bool:
+    """Check if a unitary is in the Clifford group (heuristic).
+
+    A unitary is Clifford if it maps every Pauli operator to another
+    Pauli operator under conjugation.  For efficiency, we only check the
+    single-qubit Pauli generators (X, Y, Z on each qubit) and verify
+    that the result is also a tensor product of Paulis (up to phase).
+
+    For single-qubit unitaries, this is exact.  For multi-qubit unitaries,
+    this is a necessary condition that is sufficient in practice for
+    circuits built from standard gate sets.
+
+    Parameters
+    ----------
+    unitary:
+        A ``2^n x 2^n`` unitary matrix.
+    atol:
+        Absolute tolerance for the Pauli check.
+
+    Returns
+    -------
+    bool
+    """
+    n = int(np.log2(unitary.shape[0]))
+    if 2**n != unitary.shape[0]:
+        return False
+
+    # Single-qubit Paulis.
+    pauli_x = np.array([[0, 1], [1, 0]], dtype=complex)
+    pauli_y = np.array([[0, -1j], [1j, 0]], dtype=complex)
+    pauli_z = np.array([[1, 0], [0, -1]], dtype=complex)
+    identity = np.eye(2, dtype=complex)
+    single_paulis = [pauli_x, pauli_y, pauli_z]
+
+    u_dag = unitary.conj().T
+
+    for qubit in range(n):
+        for pauli in single_paulis:
+            # Build the n-qubit Pauli: I x ... x P x ... x I
+            op = np.array([[1.0]], dtype=complex)
+            for q in range(n):
+                if q == qubit:
+                    op = np.kron(op, pauli)
+                else:
+                    op = np.kron(op, identity)
+
+            # Conjugate: U P U^dagger
+            conjugated = unitary @ op @ u_dag
+
+            # Check if the result is a Pauli (up to phase):
+            # A matrix is a Pauli (up to phase) if it is unitary and
+            # has exactly one non-zero element per row and column,
+            # with all non-zero elements having absolute value 1.
+            if not _is_n_qubit_pauli(conjugated, n, atol):
+                return False
+
+    return True
+
+
+def _is_n_qubit_pauli(mat: np.ndarray, n: int, atol: float = 1e-8) -> bool:
+    """Check if a matrix is an n-qubit Pauli operator (up to global phase).
+
+    Decomposes the matrix into a tensor product of single-qubit factors
+    and checks if each factor is one of {I, X, Y, Z} up to a phase.
+
+    For n=1, checks against the 4 single-qubit Paulis directly.
+    For n>1, uses a recursive decomposition.
+    """
+    d = 2**n
+
+    if mat.shape != (d, d):
+        return False
+
+    # Single-qubit case: check directly.
+    if n == 1:
+        paulis_1q = [
+            np.eye(2, dtype=complex),
+            np.array([[0, 1], [1, 0]], dtype=complex),
+            np.array([[0, -1j], [1j, 0]], dtype=complex),
+            np.array([[1, 0], [0, -1]], dtype=complex),
+        ]
+        for p in paulis_1q:
+            # Check if mat = alpha * p for some scalar alpha.
+            # Find alpha from the first nonzero of p.
+            for i in range(2):
+                for j in range(2):
+                    if abs(p[i, j]) > atol:
+                        alpha = mat[i, j] / p[i, j]
+                        if abs(abs(alpha) - 0.0) < atol:
+                            break  # mat has zero where p doesn't; try next p
+                        if np.allclose(mat, alpha * p, atol=atol):
+                            return True
+                        break
+                else:
+                    continue
+                break
+        return False
+
+    # Multi-qubit case: decompose as (A tensor B) where A is 2x2 and B is 2^{n-1} x 2^{n-1}.
+    # If mat = phase * (P_1 tensor P_rest), then the 2x2 blocks form the tensor product structure.
+    half = 2**(n - 1)
+    # Extract the four blocks:
+    blocks = [[mat[i * half:(i + 1) * half, j * half:(j + 1) * half] for j in range(2)] for i in range(2)]
+
+    # Find a nonzero block and use it to determine the first Pauli factor.
+    ref_block = None
+    ref_i, ref_j = 0, 0
+    for i in range(2):
+        for j in range(2):
+            if np.linalg.norm(blocks[i][j]) > atol:
+                ref_block = blocks[i][j]
+                ref_i, ref_j = i, j
+                break
+        if ref_block is not None:
+            break
+
+    if ref_block is None:
+        return False
+
+    # Every other block should be proportional to ref_block.
+    coeffs = np.zeros((2, 2), dtype=complex)
+    for i in range(2):
+        for j in range(2):
+            block = blocks[i][j]
+            norm_block = np.linalg.norm(block)
+            norm_ref = np.linalg.norm(ref_block)
+            if norm_block < atol:
+                coeffs[i, j] = 0.0
+            else:
+                # Find the ratio.
+                # block = coeffs[i,j] * ref_block
+                # Use least squares for robustness.
+                ref_flat = ref_block.ravel()
+                block_flat = block.ravel()
+                idx = np.argmax(np.abs(ref_flat))
+                if abs(ref_flat[idx]) < atol:
+                    return False
+                ratio = block_flat[idx] / ref_flat[idx]
+                if not np.allclose(block, ratio * ref_block, atol=atol * max(1, norm_ref)):
+                    return False
+                coeffs[i, j] = ratio
+
+    # coeffs should be a single-qubit Pauli (up to phase),
+    # and ref_block should be an (n-1)-qubit Pauli (up to phase).
+    return _is_n_qubit_pauli(coeffs, 1, atol) and _is_n_qubit_pauli(ref_block, n - 1, atol)
+
+
+def entanglement_capacity(unitary: np.ndarray) -> float:
+    """Estimate the entanglement-generating capacity of a unitary.
+
+    Uses the operator entanglement entropy: reshape the unitary as a
+    bipartite operator (splitting qubits into two halves), compute the
+    singular values, and return the normalised entropy of the squared
+    singular values.
+
+    For a product unitary (no entanglement), the capacity is 0.
+    For maximally entangling unitaries, it approaches 1.
+
+    Parameters
+    ----------
+    unitary:
+        A ``2^n x 2^n`` unitary matrix with ``n >= 2``.
+
+    Returns
+    -------
+    float
+        Normalised entanglement capacity in [0, 1].
+        Returns 0.0 for single-qubit unitaries or on error.
+    """
+    n = int(np.log2(unitary.shape[0]))
+    if n < 2:
+        return 0.0
+
+    # Split qubits into two halves.
+    n_a = n // 2
+    n_b = n - n_a
+    d_a = 2**n_a
+    d_b = 2**n_b
+    d = d_a * d_b
+
+    try:
+        # Reshape U as a d_a^2 x d_b^2 matrix for the operator Schmidt decomposition.
+        # U_{(i,j),(k,l)} -> M_{(i,k),(j,l)}
+        u_reshaped = unitary.reshape(d_a, d_b, d_a, d_b)
+        u_reshaped = u_reshaped.transpose(0, 2, 1, 3)
+        u_reshaped = u_reshaped.reshape(d_a * d_a, d_b * d_b)
+
+        svs = np.linalg.svd(u_reshaped, compute_uv=False)
+        # Normalise singular values squared to form a probability distribution.
+        probs = svs**2
+        probs = probs / probs.sum()
+
+        # Compute entropy.
+        nonzero = probs > 1e-15
+        entropy = -np.sum(probs[nonzero] * np.log2(probs[nonzero]))
+
+        # Normalise by maximum entropy.
+        max_entropy = 2 * n_a * np.log2(2)  # = 2 * n_a (in bits)
+        if max_entropy == 0:
+            return 0.0
+
+        return float(min(1.0, entropy / max_entropy))
+    except Exception:
+        logger.debug("Failed to compute entanglement capacity.", exc_info=True)
+        return 0.0

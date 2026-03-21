@@ -39,6 +39,8 @@ class CandidateAlgorithm:
     composition_type: str = ""
     n_qubits: int = 0
     n_spiders: int = 0
+    source_families: list[str] = field(default_factory=list)
+    is_cross_family: bool = False
 
     # ------------------------------------------------------------------
     # Serialisation
@@ -53,6 +55,8 @@ class CandidateAlgorithm:
             "composition_type": self.composition_type,
             "n_qubits": self.n_qubits,
             "n_spiders": self.n_spiders,
+            "source_families": self.source_families,
+            "is_cross_family": self.is_cross_family,
         }
 
     @classmethod
@@ -65,4 +69,6 @@ class CandidateAlgorithm:
             composition_type=d.get("composition_type", ""),
             n_qubits=d.get("n_qubits", 0),
             n_spiders=d.get("n_spiders", 0),
+            source_families=d.get("source_families", []),
+            is_cross_family=d.get("is_cross_family", False),
         )

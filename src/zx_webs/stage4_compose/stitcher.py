@@ -2,8 +2,9 @@
 
 The :class:`Stitcher` takes a collection of :class:`ZXWeb` objects and
 produces :class:`CandidateAlgorithm` instances by composing webs using
-three strategies that preserve gflow and enable high circuit extraction
-rates:
+both **undirected** and **goal-directed** strategies.
+
+Undirected strategies (preserved from the original implementation):
 
 1. **Sequential compose** -- use PyZX's native ``compose()`` to chain two
    webs end-to-end.  Requires matching output/input wire counts.
@@ -19,6 +20,17 @@ rates:
    Creates novel unitaries while preserving graph structure.
    ~98% extraction rate.
 
+Goal-directed strategies (new):
+
+4. **Cross-family recombination** -- prioritise compositions that combine
+   sub-patterns from different algorithm families (e.g. QFT + Grover),
+   as these are the most likely sources of genuinely novel algorithms.
+
+5. **Target-guided composition** -- when target tasks are provided,
+   prioritise compositions whose qubit count and family provenance
+   match the target, increasing the chance of discovering more
+   efficient implementations of known algorithms.
+
 The :func:`run_stage4` entry point loads webs from Stage 3 output, runs
 composition, and persists the results.
 """
@@ -27,6 +39,7 @@ from __future__ import annotations
 import logging
 import os
 import random
+from collections import defaultdict
 from fractions import Fraction
 from itertools import combinations
 from multiprocessing import Pool
@@ -42,6 +55,7 @@ from zx_webs.stage3_mining.zx_web import BoundaryWire, ZXWeb
 from zx_webs.stage4_compose.boundary import (
     count_boundary_wires,
     junction_edge_type,
+    wire_compatibility_score,
 )
 from zx_webs.stage4_compose.candidate import CandidateAlgorithm
 
@@ -56,6 +70,69 @@ _MAX_QUBITS = 10
 
 # Clifford+T phase values: k*pi/4 for k in 0..7 (as fractions of pi).
 _CLIFFORD_T_PHASES = [Fraction(k, 4) for k in range(8)]
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+
+def _collect_families(webs: list[ZXWeb], indices: list[int]) -> list[str]:
+    """Collect the union of source families from the given web indices."""
+    families: list[str] = []
+    seen: set[str] = set()
+    for idx in indices:
+        for fam in webs[idx].source_families:
+            if fam not in seen:
+                families.append(fam)
+                seen.add(fam)
+    return families
+
+
+def _is_cross_family(webs: list[ZXWeb], indices: list[int]) -> bool:
+    """Return True if the webs at the given indices come from >1 family."""
+    all_families: set[str] = set()
+    for idx in indices:
+        all_families.update(webs[idx].source_families)
+    return len(all_families) > 1
+
+
+def _pair_compatibility_score(
+    web_a: ZXWeb, web_b: ZXWeb, prefer_cross_family: bool = True
+) -> float:
+    """Score how promising a pair of webs is for composition.
+
+    Higher scores indicate more interesting potential compositions.
+    """
+    score = 0.0
+
+    # Cross-family bonus: combining patterns from different families
+    # is more likely to produce novel algorithms.
+    if prefer_cross_family:
+        families_a = set(web_a.source_families)
+        families_b = set(web_b.source_families)
+        if families_a and families_b and not families_a.intersection(families_b):
+            score += 5.0  # strong cross-family bonus
+        elif families_a and families_b and families_a != families_b:
+            score += 2.0  # partial overlap bonus
+
+    # Higher support webs are more likely to represent fundamental patterns.
+    score += min(web_a.support, 10) * 0.1
+    score += min(web_b.support, 10) * 0.1
+
+    # Boundary wire compatibility scoring.
+    out_wires = [bw for bw in web_a.boundary_wires if bw.direction == "output"]
+    in_wires = [bw for bw in web_b.boundary_wires if bw.direction == "input"]
+    if out_wires and in_wires:
+        # Average the best wire compatibility scores.
+        best_scores = []
+        for ow in out_wires:
+            wire_scores = [wire_compatibility_score(ow, iw) for iw in in_wires]
+            best_scores.append(max(wire_scores))
+        if best_scores:
+            score += sum(best_scores) / len(best_scores)
+
+    return score
 
 
 # ---------------------------------------------------------------------------
@@ -279,23 +356,71 @@ class Stitcher:
         return g
 
     # ------------------------------------------------------------------
-    # Candidate generation
+    # Candidate generation -- core builder
+    # ------------------------------------------------------------------
+
+    def _make_candidate(
+        self,
+        graph: zx.Graph,
+        webs: list[ZXWeb],
+        web_indices: list[int],
+        comp_type: str,
+        cand_idx: int,
+        min_qubits: int,
+    ) -> CandidateAlgorithm | None:
+        """Build a CandidateAlgorithm from a composed graph, or None."""
+        n_qubits = len(graph.inputs()) if graph.inputs() else 0
+        n_outputs = len(graph.outputs()) if graph.outputs() else 0
+        if n_qubits > _MAX_QUBITS or n_qubits == 0:
+            return None
+        if n_qubits < min_qubits:
+            return None
+        # A valid quantum circuit requires equal numbers of inputs
+        # and outputs.  Reject unbalanced compositions early.
+        if n_qubits != n_outputs:
+            return None
+        n_spiders = sum(
+            1 for v in graph.vertices() if graph.type(v) != _VT_BOUNDARY
+        )
+        web_ids = [webs[idx].web_id for idx in web_indices]
+        families = _collect_families(webs, web_indices)
+        cross_family = _is_cross_family(webs, web_indices)
+
+        return CandidateAlgorithm(
+            candidate_id=f"cand_{cand_idx:04d}",
+            graph_json=graph.to_json(),
+            component_web_ids=web_ids,
+            composition_type=comp_type,
+            n_qubits=n_qubits,
+            n_spiders=n_spiders,
+            source_families=families,
+            is_cross_family=cross_family,
+        )
+
+    # ------------------------------------------------------------------
+    # Candidate generation -- undirected (original strategies)
     # ------------------------------------------------------------------
 
     def generate_candidates(
-        self, webs: list[ZXWeb]
+        self,
+        webs: list[ZXWeb],
+        target_tasks: list[dict[str, Any]] | None = None,
     ) -> list[CandidateAlgorithm]:
         """Generate candidate algorithms from a list of ZX-Webs.
 
         Strategies employed:
 
-        1. **Sequential compose** -- try ordered pairs ``(A, B)`` where
-           A's output count matches B's input count.  Uses PyZX native
-           ``compose()``.
-        2. **Parallel tensor** -- tensor product of pairs, optionally with
+        1. **Cross-family recombination** (if ``prefer_cross_family`` is True)
+           -- prioritise pairs of webs from different algorithm families.
+        2. **Sequential compose** -- try ordered pairs ``(A, B)`` where
+           A's output count matches B's input count.
+        3. **Parallel tensor** -- tensor product of pairs, optionally with
            Hadamard stitching for novelty.
-        3. **Phase perturbation** -- take successful compositions and
+        4. **Phase perturbation** -- take successful compositions and
            create variants with perturbed phases.
+        5. **Target-guided composition** (if ``guided`` is True and
+           *target_tasks* are provided) -- compose webs whose qubit
+           counts match the target tasks.
 
         Candidates with more than :data:`_MAX_QUBITS` qubits are dropped.
         The total number of candidates is capped by
@@ -305,6 +430,10 @@ class Stitcher:
         ----------
         webs:
             The ZX-Webs to compose.
+        target_tasks:
+            Optional list of target task descriptions for guided
+            composition.  Each dict should have at least ``n_qubits``
+            and optionally ``family``.
 
         Returns
         -------
@@ -313,50 +442,55 @@ class Stitcher:
         candidates: list[CandidateAlgorithm] = []
         max_cand = self.config.max_candidates
         cand_idx = 0
-
         min_qubits = self.config.min_compose_qubits
 
-        # Helper to build a CandidateAlgorithm from a composed graph.
-        def _make_candidate(
-            graph: zx.Graph,
-            web_ids: list[str],
+        def _try_add(
+            graph: zx.Graph | None,
+            web_indices: list[int],
             comp_type: str,
-        ) -> CandidateAlgorithm | None:
-            n_qubits = len(graph.inputs()) if graph.inputs() else 0
-            n_outputs = len(graph.outputs()) if graph.outputs() else 0
-            if n_qubits > _MAX_QUBITS or n_qubits == 0:
-                return None
-            if n_qubits < min_qubits:
-                return None
-            # A valid quantum circuit requires equal numbers of inputs
-            # and outputs.  Reject unbalanced compositions early.
-            if n_qubits != n_outputs:
-                return None
-            n_spiders = sum(
-                1 for v in graph.vertices() if graph.type(v) != _VT_BOUNDARY
-            )
+        ) -> bool:
+            """Try to add a candidate; return True if added."""
             nonlocal cand_idx
-            cand = CandidateAlgorithm(
-                candidate_id=f"cand_{cand_idx:04d}",
-                graph_json=graph.to_json(),
-                component_web_ids=web_ids,
-                composition_type=comp_type,
-                n_qubits=n_qubits,
-                n_spiders=n_spiders,
+            if graph is None:
+                return False
+            cand = self._make_candidate(
+                graph, webs, web_indices, comp_type, cand_idx, min_qubits,
             )
-            cand_idx += 1
-            return cand
+            if cand is not None:
+                candidates.append(cand)
+                cand_idx += 1
+                return True
+            return False
+
+        # -- Build pair scoring for prioritisation ----------------------------
+        all_pair_indices = list(combinations(range(len(webs)), 2))
+
+        if self.config.prefer_cross_family:
+            # Sort pairs by compatibility score (descending) to try
+            # cross-family compositions first.
+            scored_pairs = [
+                (
+                    i, j,
+                    _pair_compatibility_score(
+                        webs[i], webs[j],
+                        prefer_cross_family=True,
+                    ),
+                )
+                for i, j in all_pair_indices
+            ]
+            scored_pairs.sort(key=lambda t: -t[2])
+            ordered_pairs = [(i, j) for i, j, _ in scored_pairs]
+        else:
+            ordered_pairs = list(all_pair_indices)
+            self.rng.shuffle(ordered_pairs)
+
+        # Limit number of pairs to avoid OOM.
+        if len(ordered_pairs) > max_cand * 10:
+            ordered_pairs = ordered_pairs[: max_cand * 10]
 
         # -- 1. Pairwise sequential -------------------------------------------
         if "sequential" in self.config.composition_modes:
-            all_pairs = list(combinations(range(len(webs)), 2))
-            # Sample to avoid OOM on large web sets
-            if len(all_pairs) > max_cand * 10:
-                pairs = self.rng.sample(all_pairs, min(len(all_pairs), max_cand * 10))
-            else:
-                pairs = list(all_pairs)
-                self.rng.shuffle(pairs)
-            for i, j in tqdm(pairs, desc="Stage 4: Sequential compose", unit="pair"):
+            for i, j in tqdm(ordered_pairs, desc="Stage 4: Sequential compose", unit="pair"):
                 if len(candidates) >= max_cand:
                     break
                 # Try both orderings.
@@ -364,37 +498,17 @@ class Stitcher:
                     if len(candidates) >= max_cand:
                         break
                     g = self.compose_sequential(webs[a_idx], webs[b_idx])
-                    if g is not None:
-                        cand = _make_candidate(
-                            g,
-                            [webs[a_idx].web_id, webs[b_idx].web_id],
-                            "sequential",
-                        )
-                        if cand is not None:
-                            candidates.append(cand)
+                    _try_add(g, [a_idx, b_idx], "sequential")
 
         # -- 2. Pairwise parallel (tensor + optional Hadamard stitch) ---------
         if "parallel" in self.config.composition_modes:
-            all_pairs = list(combinations(range(len(webs)), 2))
-            if len(all_pairs) > max_cand * 10:
-                pairs = self.rng.sample(all_pairs, min(len(all_pairs), max_cand * 10))
-            else:
-                pairs = list(all_pairs)
-                self.rng.shuffle(pairs)
-            for i, j in tqdm(pairs, desc="Stage 4: Parallel compose", unit="pair"):
+            for i, j in tqdm(ordered_pairs, desc="Stage 4: Parallel compose", unit="pair"):
                 if len(candidates) >= max_cand:
                     break
 
                 # Pure parallel (tensor).
                 g = self.compose_parallel(webs[i], webs[j])
-                if g is not None:
-                    cand = _make_candidate(
-                        g,
-                        [webs[i].web_id, webs[j].web_id],
-                        "parallel",
-                    )
-                    if cand is not None:
-                        candidates.append(cand)
+                _try_add(g, [i, j], "parallel")
 
                 if len(candidates) >= max_cand:
                     break
@@ -403,14 +517,7 @@ class Stitcher:
                 g_stitch = self.compose_parallel_stitch(
                     webs[i], webs[j], n_hadamard_edges=1
                 )
-                if g_stitch is not None:
-                    cand = _make_candidate(
-                        g_stitch,
-                        [webs[i].web_id, webs[j].web_id],
-                        "parallel_stitch",
-                    )
-                    if cand is not None:
-                        candidates.append(cand)
+                _try_add(g_stitch, [i, j], "parallel_stitch")
 
         # -- 3. Phase perturbation on successful compositions -----------------
         phase_perturb_count = 0
@@ -424,14 +531,30 @@ class Stitcher:
 
             base_g = zx.Graph.from_json(base_cand.graph_json)
             perturbed_g = self.perturb_phases(base_g, rate=0.3)
-            cand = _make_candidate(
-                perturbed_g,
-                base_cand.component_web_ids,
-                "phase_perturb",
+
+            n_qubits = len(perturbed_g.inputs()) if perturbed_g.inputs() else 0
+            n_outputs = len(perturbed_g.outputs()) if perturbed_g.outputs() else 0
+            if n_qubits > _MAX_QUBITS or n_qubits == 0 or n_qubits != n_outputs:
+                continue
+            if n_qubits < min_qubits:
+                continue
+            n_spiders = sum(
+                1 for v in perturbed_g.vertices()
+                if perturbed_g.type(v) != _VT_BOUNDARY
             )
-            if cand is not None:
-                candidates.append(cand)
-                phase_perturb_count += 1
+            cand = CandidateAlgorithm(
+                candidate_id=f"cand_{cand_idx:04d}",
+                graph_json=perturbed_g.to_json(),
+                component_web_ids=base_cand.component_web_ids,
+                composition_type="phase_perturb",
+                n_qubits=n_qubits,
+                n_spiders=n_spiders,
+                source_families=base_cand.source_families,
+                is_cross_family=base_cand.is_cross_family,
+            )
+            candidates.append(cand)
+            cand_idx += 1
+            phase_perturb_count += 1
 
         # -- 4. Triple sequential (A -> B -> C) -------------------------------
         if "sequential" in self.config.composition_modes and len(webs) >= 3:
@@ -457,19 +580,162 @@ class Stitcher:
                     n_outputs=len(g_ab.outputs()) if g_ab.outputs() else 0,
                 )
                 g_abc = self.compose_sequential(temp_web, webs[k])
-                if g_abc is not None:
-                    cand = _make_candidate(
-                        g_abc,
-                        [webs[i].web_id, webs[j].web_id, webs[k].web_id],
-                        "triple_sequential",
+                _try_add(g_abc, [i, j, k], "triple_sequential")
+
+        # -- 5. Target-guided composition -------------------------------------
+        if self.config.guided and target_tasks:
+            self._generate_guided_candidates(
+                webs, target_tasks, candidates, cand_idx, min_qubits,
+            )
+
+        logger.info(
+            "Generated %d candidates from %d webs "
+            "(%d cross-family).",
+            len(candidates),
+            len(webs),
+            sum(1 for c in candidates if c.is_cross_family),
+        )
+        return candidates
+
+    # ------------------------------------------------------------------
+    # Goal-directed composition
+    # ------------------------------------------------------------------
+
+    def _generate_guided_candidates(
+        self,
+        webs: list[ZXWeb],
+        target_tasks: list[dict[str, Any]],
+        candidates: list[CandidateAlgorithm],
+        cand_idx: int,
+        min_qubits: int,
+    ) -> None:
+        """Generate candidates guided by target task descriptions.
+
+        For each target task, find webs whose qubit count and family
+        provenance match the target, and try composing them together.
+        This focuses the search on compositions that are likely to
+        produce circuits similar to (but potentially more efficient
+        than) known algorithms.
+
+        Parameters
+        ----------
+        webs:
+            The ZX-Webs to compose.
+        target_tasks:
+            List of target descriptions with ``n_qubits`` and optionally
+            ``family``.
+        candidates:
+            Existing candidate list (mutated in place).
+        cand_idx:
+            Starting candidate index counter.
+        min_qubits:
+            Minimum qubit count for valid candidates.
+        """
+        max_cand = self.config.max_candidates
+
+        # Index webs by family for fast lookup.
+        family_index: dict[str, list[int]] = defaultdict(list)
+        for idx, web in enumerate(webs):
+            for fam in web.source_families:
+                family_index[fam].append(idx)
+
+        # Index webs by n_inputs for qubit-count matching.
+        qubit_index: dict[int, list[int]] = defaultdict(list)
+        for idx, web in enumerate(webs):
+            qubit_index[web.n_inputs].append(idx)
+
+        for task in target_tasks:
+            if len(candidates) >= max_cand:
+                break
+
+            target_qubits = task.get("n_qubits", 0)
+            target_family = task.get("family", "")
+
+            if target_qubits < min_qubits:
+                continue
+
+            # Find webs that could contribute to the target qubit count.
+            # For sequential: we need webs with matching I/O counts.
+            matching_webs = qubit_index.get(target_qubits, [])
+
+            # For the target's family, also consider webs from that family
+            # composed with webs from other families (cross-pollination).
+            family_webs = family_index.get(target_family, []) if target_family else []
+            other_family_webs = [
+                idx for idx, web in enumerate(webs)
+                if target_family not in web.source_families
+            ]
+
+            # Strategy A: Sequential compose of matching-qubit webs.
+            if "sequential" in self.config.composition_modes and len(matching_webs) >= 2:
+                pairs = list(combinations(matching_webs, 2))
+                self.rng.shuffle(pairs)
+                for i, j in pairs[:max_cand // 4]:
+                    if len(candidates) >= max_cand:
+                        break
+                    for a_idx, b_idx in [(i, j), (j, i)]:
+                        if len(candidates) >= max_cand:
+                            break
+                        g = self.compose_sequential(webs[a_idx], webs[b_idx])
+                        if g is None:
+                            continue
+                        cand = self._make_candidate(
+                            g, webs, [a_idx, b_idx],
+                            "guided_sequential", cand_idx, min_qubits,
+                        )
+                        if cand is not None:
+                            candidates.append(cand)
+                            cand_idx += 1
+
+            # Strategy B: Cross-family sequential (family webs + other webs).
+            if (
+                "sequential" in self.config.composition_modes
+                and family_webs
+                and other_family_webs
+            ):
+                cross_pairs = [
+                    (f_idx, o_idx)
+                    for f_idx in family_webs
+                    for o_idx in other_family_webs
+                    if webs[f_idx].n_outputs == webs[o_idx].n_inputs
+                ]
+                self.rng.shuffle(cross_pairs)
+                for f_idx, o_idx in cross_pairs[:max_cand // 4]:
+                    if len(candidates) >= max_cand:
+                        break
+                    g = self.compose_sequential(webs[f_idx], webs[o_idx])
+                    if g is None:
+                        continue
+                    cand = self._make_candidate(
+                        g, webs, [f_idx, o_idx],
+                        "guided_cross_family", cand_idx, min_qubits,
                     )
                     if cand is not None:
                         candidates.append(cand)
+                        cand_idx += 1
 
-        logger.info(
-            "Generated %d candidates from %d webs.", len(candidates), len(webs)
-        )
-        return candidates
+            # Strategy C: Parallel compose to reach the target qubit count.
+            if "parallel" in self.config.composition_modes:
+                # Find pairs of webs whose combined qubit count matches target.
+                target_parallel_pairs = [
+                    (i, j)
+                    for i, j in combinations(range(len(webs)), 2)
+                    if webs[i].n_inputs + webs[j].n_inputs == target_qubits
+                ]
+                self.rng.shuffle(target_parallel_pairs)
+                for i, j in target_parallel_pairs[:max_cand // 4]:
+                    if len(candidates) >= max_cand:
+                        break
+                    g = self.compose_parallel(webs[i], webs[j])
+                    if g is None:
+                        continue
+                    cand = self._make_candidate(
+                        g, webs, [i, j],
+                        "guided_parallel", cand_idx, min_qubits,
+                    )
+                    if cand is not None:
+                        candidates.append(cand)
+                        cand_idx += 1
 
     # ------------------------------------------------------------------
     # Parallel batch composition
@@ -515,6 +781,8 @@ class Stitcher:
                                 1 for v in g.vertices()
                                 if g.type(v) != _VT_BOUNDARY
                             )
+                            families = _collect_families(webs, [a_idx, b_idx])
+                            cross = _is_cross_family(webs, [a_idx, b_idx])
                             results.append(CandidateAlgorithm(
                                 candidate_id="",  # assigned later
                                 graph_json=g.to_json(),
@@ -524,6 +792,8 @@ class Stitcher:
                                 composition_type="sequential",
                                 n_qubits=n_qubits,
                                 n_spiders=n_spiders,
+                                source_families=families,
+                                is_cross_family=cross,
                             ))
             elif mode == "parallel":
                 # Pure parallel (tensor).
@@ -536,6 +806,8 @@ class Stitcher:
                             1 for v in g.vertices()
                             if g.type(v) != _VT_BOUNDARY
                         )
+                        families = _collect_families(webs, [i, j])
+                        cross = _is_cross_family(webs, [i, j])
                         results.append(CandidateAlgorithm(
                             candidate_id="",
                             graph_json=g.to_json(),
@@ -545,6 +817,8 @@ class Stitcher:
                             composition_type="parallel",
                             n_qubits=n_qubits,
                             n_spiders=n_spiders,
+                            source_families=families,
+                            is_cross_family=cross,
                         ))
 
                 # Parallel with Hadamard stitching.
@@ -559,6 +833,8 @@ class Stitcher:
                             1 for v in g_stitch.vertices()
                             if g_stitch.type(v) != _VT_BOUNDARY
                         )
+                        families = _collect_families(webs, [i, j])
+                        cross = _is_cross_family(webs, [i, j])
                         results.append(CandidateAlgorithm(
                             candidate_id="",
                             graph_json=g_stitch.to_json(),
@@ -568,6 +844,8 @@ class Stitcher:
                             composition_type="parallel_stitch",
                             n_qubits=n_qubits,
                             n_spiders=n_spiders,
+                            source_families=families,
+                            is_cross_family=cross,
                         ))
         return results
 
@@ -667,9 +945,16 @@ def run_stage4(
 
     logger.info("Loaded %d webs for composition.", len(webs))
 
+    # -- Build target tasks from config if guided mode is enabled. ------------
+    target_tasks: list[dict[str, Any]] | None = None
+    if config.guided and config.target_qubit_counts:
+        target_tasks = [
+            {"n_qubits": nq} for nq in config.target_qubit_counts
+        ]
+
     # -- 2. Generate candidates -----------------------------------------------
     stitcher = Stitcher(config)
-    candidates = stitcher.generate_candidates(webs)
+    candidates = stitcher.generate_candidates(webs, target_tasks=target_tasks)
 
     # -- 3. Persist results ---------------------------------------------------
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -690,6 +975,8 @@ def run_stage4(
                 "component_web_ids": cand.component_web_ids,
                 "n_qubits": cand.n_qubits,
                 "n_spiders": cand.n_spiders,
+                "source_families": cand.source_families,
+                "is_cross_family": cand.is_cross_family,
             }
         )
 

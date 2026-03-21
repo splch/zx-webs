@@ -16,7 +16,11 @@ import pytest
 from zx_webs.config import FilterConfig
 from zx_webs.persistence import save_json, save_manifest
 from zx_webs.stage4_compose.candidate import CandidateAlgorithm
-from zx_webs.stage5_filter.deduplicator import circuits_equivalent, deduplicate_circuits
+from zx_webs.stage5_filter.deduplicator import (
+    _unitary_hash,
+    circuits_equivalent,
+    deduplicate_circuits,
+)
 from zx_webs.stage5_filter.extractor import ExtractionResult, run_stage5, try_extract_circuit
 
 
@@ -305,6 +309,79 @@ class TestDeduplicateCircuits:
         circuits = [{"circuit_qasm": "OPENQASM 2.0;", "stats": {}}]
         result = deduplicate_circuits(circuits)
         assert len(result) == 1
+
+    def test_dedup_qasm_method(self) -> None:
+        """Dedup with method='qasm' uses literal string comparison."""
+        c = zx.Circuit(1)
+        c.add_gate("HAD", 0)
+        qasm = c.to_qasm()
+
+        circuits = [
+            {"circuit_qasm": qasm, "stats": {}, "candidate_id": "a"},
+            {"circuit_qasm": qasm, "stats": {}, "candidate_id": "b"},
+        ]
+
+        result = deduplicate_circuits(circuits, method="qasm")
+        assert len(result) == 1
+        assert result[0]["candidate_id"] == "a"
+
+
+# ---------------------------------------------------------------------------
+# Hash-based deduplication tests
+# ---------------------------------------------------------------------------
+
+
+class TestUnitaryHash:
+    """Tests for the _unitary_hash function used for O(n) dedup."""
+
+    def test_identical_circuits_same_hash(self) -> None:
+        """Two identical QASM strings should produce the same hash."""
+        c = zx.Circuit(1)
+        c.add_gate("HAD", 0)
+        qasm = c.to_qasm()
+        h1 = _unitary_hash(qasm)
+        h2 = _unitary_hash(qasm)
+        assert h1 is not None
+        assert h1 == h2
+
+    def test_different_circuits_different_hash(self) -> None:
+        """Two different circuits should produce different hashes."""
+        c1 = zx.Circuit(1)
+        c1.add_gate("HAD", 0)
+
+        c2 = zx.Circuit(1)
+        c2.add_gate("ZPhase", 0, phase=Fraction(1, 4))
+
+        h1 = _unitary_hash(c1.to_qasm())
+        h2 = _unitary_hash(c2.to_qasm())
+        assert h1 is not None
+        assert h2 is not None
+        assert h1 != h2
+
+    def test_same_circuit_different_qasm_same_hash(self) -> None:
+        """Two QASM representations of the same circuit should hash the same.
+
+        Build the same Hadamard circuit in two ways and verify they hash
+        identically.
+        """
+        c1 = zx.Circuit(1)
+        c1.add_gate("HAD", 0)
+
+        # Build the same circuit from QASM directly.
+        qasm1 = c1.to_qasm()
+        c2 = zx.Circuit.from_qasm(qasm1)
+        qasm2 = c2.to_qasm()
+
+        h1 = _unitary_hash(qasm1)
+        h2 = _unitary_hash(qasm2)
+        assert h1 is not None
+        assert h2 is not None
+        assert h1 == h2
+
+    def test_invalid_qasm_returns_none(self) -> None:
+        """Invalid QASM should return None."""
+        h = _unitary_hash("not valid qasm at all")
+        assert h is None
 
 
 # ---------------------------------------------------------------------------

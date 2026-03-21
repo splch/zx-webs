@@ -1,8 +1,13 @@
-"""Stage 6 orchestrator -- benchmark surviving candidates.
+"""Stage 6 orchestrator -- functional benchmarking of surviving candidates.
 
 :func:`run_stage6` loads the circuits that survived Stage 5 filtering,
-compares them against the original corpus baselines using circuit-level
-metrics and (optionally) SupermarQ features, and persists the results.
+builds benchmark tasks from the algorithm corpus, and evaluates each
+survivor by:
+
+1. Computing its unitary matrix.
+2. Matching it against tasks of the same qubit count via process fidelity.
+3. Identifying real improvements: high fidelity (>= threshold) AND fewer gates.
+4. Persisting detailed results.
 """
 from __future__ import annotations
 
@@ -14,8 +19,15 @@ from tqdm import tqdm
 
 from zx_webs.config import BenchConfig
 from zx_webs.persistence import load_manifest, save_json, save_manifest
-from zx_webs.stage6_bench.comparator import compare_candidate_to_baselines
-from zx_webs.stage6_bench.metrics import CircuitMetrics, SupermarQFeatures
+from zx_webs.stage6_bench.comparator import match_candidate_to_tasks
+from zx_webs.stage6_bench.metrics import (
+    CircuitMetrics,
+    SupermarQFeatures,
+    compute_unitary,
+    entanglement_capacity,
+    is_clifford_unitary,
+)
+from zx_webs.stage6_bench.tasks import build_benchmark_tasks
 
 logger = logging.getLogger(__name__)
 
@@ -56,16 +68,18 @@ def run_stage6(
     output_dir: Path,
     config: BenchConfig | None = None,
 ) -> list[dict[str, Any]]:
-    """Run Stage 6: benchmark surviving candidates.
+    """Run Stage 6: functional benchmarking of surviving candidates.
 
     Workflow
     -------
-    1. Load filtered circuits from Stage 5.
-    2. Load original corpus circuits as baselines.
-    3. Compute metrics and SupermarQ features for each survivor.
-    4. Compare candidates against baselines.
-    5. Identify candidates that Pareto-dominate at least one baseline.
-    6. Persist results to *output_dir*.
+    1. Build benchmark tasks from the algorithm corpus (target unitaries).
+    2. Load filtered circuits from Stage 5.
+    3. For each survivor:
+       a. Compute metrics and SupermarQ features.
+       b. Compute unitary and classify (Clifford, entanglement capacity).
+       c. Match against all tasks of the same qubit count via fidelity.
+       d. Identify real improvements (high fidelity + fewer gates).
+    4. Persist results to *output_dir*.
 
     Parameters
     ----------
@@ -89,91 +103,126 @@ def run_stage6(
     if config is None:
         config = BenchConfig()
 
-    # -- 1. Load Stage 5 survivors -------------------------------------------
+    fidelity_threshold = getattr(config, "fidelity_threshold", 0.99)
+
+    # -- 1. Build benchmark tasks from the corpus ----------------------------
+    try:
+        tasks = build_benchmark_tasks()
+    except Exception:
+        logger.warning(
+            "Failed to build benchmark tasks from corpus; "
+            "proceeding with empty task list.",
+            exc_info=True,
+        )
+        tasks = []
+
+    task_qubit_counts = sorted(set(t.n_qubits for t in tasks))
+    logger.info(
+        "Stage 6: built %d benchmark tasks for qubit counts %s.",
+        len(tasks),
+        task_qubit_counts,
+    )
+
+    # -- 2. Load Stage 5 survivors -------------------------------------------
     filtered_manifest = load_manifest(filtered_dir)
     if not filtered_manifest:
-        logger.warning("Stage 5 manifest at %s is empty -- nothing to benchmark.", filtered_dir)
+        logger.warning(
+            "Stage 5 manifest at %s is empty -- nothing to benchmark.",
+            filtered_dir,
+        )
         output_dir.mkdir(parents=True, exist_ok=True)
         save_json([], output_dir / "results.json")
         save_manifest([], output_dir)
         return []
 
-    # -- 2. Load baselines from corpus ---------------------------------------
-    corpus_manifest = load_manifest(corpus_dir)
-    baselines: list[dict[str, Any]] = []
-    for item in corpus_manifest:
-        qasm_text = _load_qasm_text(item)
-        if qasm_text:
-            baselines.append(
-                {
-                    "id": item.get("algorithm_id", item.get("name", "unknown")),
-                    "qasm": qasm_text,
-                    "family": item.get("family", ""),
-                }
-            )
-
     logger.info(
-        "Stage 6: loaded %d survivors and %d baselines.",
+        "Stage 6: loaded %d survivors, matching against %d tasks.",
         len(filtered_manifest),
-        len(baselines),
+        len(tasks),
     )
 
-    # -- 3-5. Compute metrics & compare --------------------------------------
+    # -- 3. Benchmark each survivor ------------------------------------------
     results: list[dict[str, Any]] = []
 
-    for survivor in tqdm(filtered_manifest, desc="Stage 6: Benchmarking", unit="survivor"):
+    for survivor in tqdm(
+        filtered_manifest,
+        desc="Stage 6: Benchmarking",
+        unit="survivor",
+    ):
         survivor_id = survivor.get("survivor_id", "unknown")
         qasm_str = _load_qasm_text(survivor)
         if not qasm_str:
             logger.debug("Survivor %s has no readable QASM -- skipping.", survivor_id)
             continue
 
-        # Compute metrics.
+        # 3a. Compute circuit metrics.
         try:
             metrics = CircuitMetrics.from_qasm(qasm_str)
-        except Exception:  # noqa: BLE001
+        except Exception:
             logger.warning("Failed to compute metrics for %s.", survivor_id)
             continue
 
-        # Compute SupermarQ features.
+        # 3a. Compute SupermarQ features.
         try:
             features = SupermarQFeatures.from_qasm(qasm_str)
-        except Exception:  # noqa: BLE001
+        except Exception:
             features = SupermarQFeatures()
 
-        # Compare against baselines.
-        comparisons = compare_candidate_to_baselines(survivor_id, qasm_str, baselines)
+        # 3b. Compute unitary and classify.
+        unitary = compute_unitary(qasm_str)
+        classification: dict[str, Any] = {}
+        if unitary is not None:
+            classification["is_clifford"] = is_clifford_unitary(unitary)
+            classification["entanglement_capacity"] = entanglement_capacity(unitary)
+        else:
+            classification["is_clifford"] = None
+            classification["entanglement_capacity"] = None
 
-        dominates_any = any(c.candidate_dominates for c in comparisons)
+        # 3c. Match against benchmark tasks.
+        matches = match_candidate_to_tasks(
+            candidate_id=survivor_id,
+            candidate_qasm=qasm_str,
+            tasks=tasks,
+            fidelity_threshold=fidelity_threshold,
+        )
+
+        # 3d. Identify real improvements.
+        real_improvements = [m for m in matches if m.is_improvement]
+        best_fidelity = max((m.fidelity for m in matches), default=0.0)
+        dominates_any = len(real_improvements) > 0
 
         results.append(
             {
                 "survivor_id": survivor_id,
                 "metrics": metrics.to_dict(),
                 "features": features.to_dict(),
+                "classification": classification,
+                "n_qubits": metrics.qubit_count,
+                # Backward-compatible fields.
                 "dominates_any_baseline": dominates_any,
-                "n_baselines_dominated": sum(1 for c in comparisons if c.candidate_dominates),
-                "comparisons": [
-                    {
-                        "baseline_id": c.baseline_id,
-                        "candidate_dominates": c.candidate_dominates,
-                        "baseline_dominates": c.baseline_dominates,
-                        "improvements": c.improvements,
-                    }
-                    for c in comparisons
-                ],
+                "n_baselines_dominated": len(real_improvements),
+                # New functional benchmarking fields.
+                "best_fidelity": best_fidelity,
+                "n_task_matches": len(matches),
+                "n_improvements": len(real_improvements),
+                "task_matches": [m.to_dict() for m in matches],
+                "improvements": [m.to_dict() for m in real_improvements],
             }
         )
 
-    # -- 6. Persist results --------------------------------------------------
+    # -- 4. Persist results --------------------------------------------------
     output_dir.mkdir(parents=True, exist_ok=True)
     save_json(results, output_dir / "results.json")
     save_manifest(results, output_dir)
 
-    n_dominant = sum(1 for r in results if r.get("dominates_any_baseline"))
+    n_with_matches = sum(1 for r in results if r.get("n_task_matches", 0) > 0)
+    n_improvements = sum(1 for r in results if r.get("n_improvements", 0) > 0)
     logger.info(
-        "Stage 6 complete: %d/%d candidates dominate at least one baseline.",
-        n_dominant,
+        "Stage 6 complete: %d/%d survivors matched tasks, "
+        "%d have real improvements (fidelity >= %.2f + fewer gates).",
+        n_with_matches,
         len(results),
+        n_improvements,
+        fidelity_threshold,
     )
     return results

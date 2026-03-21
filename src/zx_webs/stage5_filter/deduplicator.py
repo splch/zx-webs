@@ -4,11 +4,20 @@ Two circuits are considered duplicates if they implement the same unitary
 transformation (up to a global phase).  For circuits that are too large to
 compare via full unitary matrices, a fallback QASM-string comparison is used.
 
+This module provides two deduplication strategies:
+
+- **Hash-based (O(n))**: :func:`deduplicate_circuits` computes a
+  phase-normalised unitary hash for each circuit and uses a dict for
+  constant-time lookups.
+- **Pairwise (legacy)**: :func:`circuits_equivalent` compares two circuits
+  directly.
+
 When CuPy is available, GPU-accelerated matrix operations are used for the
-unitary comparison.  Otherwise, NumPy is used as a fallback.
+pairwise comparison.  Otherwise, NumPy is used as a fallback.
 """
 from __future__ import annotations
 
+import hashlib
 import logging
 from typing import Any
 
@@ -34,7 +43,7 @@ except ImportError:
 
 
 # ---------------------------------------------------------------------------
-# Unitary equivalence
+# Unitary equivalence (pairwise)
 # ---------------------------------------------------------------------------
 
 
@@ -138,6 +147,56 @@ def circuits_equivalent(
 
 
 # ---------------------------------------------------------------------------
+# Hash-based deduplication (O(n))
+# ---------------------------------------------------------------------------
+
+
+def _unitary_hash(qasm_str: str, atol: float = 1e-8) -> str | None:
+    """Compute a hash of the phase-normalised unitary for fast dedup.
+
+    The unitary matrix is normalised to remove global phase (first non-zero
+    element rotated to real positive), then rounded and hashed.
+
+    Parameters
+    ----------
+    qasm_str:
+        An OPENQASM 2.0 string.
+    atol:
+        Tolerance used during global-phase normalisation.
+
+    Returns
+    -------
+    str or None
+        A hex digest string, or ``None`` if the unitary cannot be computed
+        (too many qubits, parse error, etc.).
+    """
+    try:
+        c = zx.Circuit.from_qasm(qasm_str)
+    except Exception:
+        return None
+
+    if c.qubits > _MAX_UNITARY_QUBITS:
+        return None
+
+    try:
+        mat = np.array(c.to_matrix(), dtype=np.complex128)
+    except Exception:
+        return None
+
+    # Normalise global phase: rotate so first significant element is real+positive.
+    flat = mat.ravel()
+    for val in flat:
+        if abs(val) > atol:
+            phase = val / abs(val)
+            mat = mat / phase
+            break
+
+    # Round to avoid floating-point noise, then hash.
+    rounded = np.round(mat, decimals=6)
+    return hashlib.sha256(rounded.tobytes()).hexdigest()
+
+
+# ---------------------------------------------------------------------------
 # Deduplication
 # ---------------------------------------------------------------------------
 
@@ -146,7 +205,7 @@ def deduplicate_circuits(
     circuits: list[dict[str, Any]],
     method: str = "unitary",
 ) -> list[dict[str, Any]]:
-    """Remove duplicate circuits from a list.
+    """Remove duplicate circuits from a list using hash-based O(n) dedup.
 
     Each element in *circuits* is a dict that must contain a
     ``"circuit_qasm"`` key.
@@ -154,12 +213,17 @@ def deduplicate_circuits(
     The first occurrence of each unique circuit is kept; later duplicates
     are dropped.
 
+    For circuits small enough to compute unitaries (<= 8 qubits), a
+    phase-normalised unitary hash is used for O(1) lookup.  For larger
+    circuits, QASM string equality is used as a fallback.
+
     Parameters
     ----------
     circuits:
         List of dicts, each with at least ``"circuit_qasm"`` and ``"stats"``.
     method:
-        Equivalence method passed to :func:`circuits_equivalent`.
+        Equivalence method: ``"unitary"`` (hash-based, default) or
+        ``"qasm"`` (literal string equality).
 
     Returns
     -------
@@ -169,16 +233,33 @@ def deduplicate_circuits(
     if not circuits:
         return []
 
+    seen_hashes: dict[str, bool] = {}
+    seen_qasm: set[str] = set()
     unique: list[dict[str, Any]] = []
+
     for candidate in circuits:
         qasm = candidate.get("circuit_qasm", "")
-        is_dup = False
-        for kept in unique:
-            kept_qasm = kept.get("circuit_qasm", "")
-            if circuits_equivalent(qasm, kept_qasm, method=method):
-                is_dup = True
-                break
-        if not is_dup:
+
+        if method == "unitary":
+            h = _unitary_hash(qasm)
+            if h is not None:
+                if h in seen_hashes:
+                    continue
+                seen_hashes[h] = True
+                unique.append(candidate)
+            else:
+                # Fallback: QASM string comparison for large circuits.
+                stripped = qasm.strip()
+                if stripped in seen_qasm:
+                    continue
+                seen_qasm.add(stripped)
+                unique.append(candidate)
+        else:
+            # Pure QASM string comparison.
+            stripped = qasm.strip()
+            if stripped in seen_qasm:
+                continue
+            seen_qasm.add(stripped)
             unique.append(candidate)
 
     n_removed = len(circuits) - len(unique)

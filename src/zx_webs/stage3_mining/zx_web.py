@@ -83,6 +83,7 @@ class ZXWeb:
     boundary_wires: list[BoundaryWire] = field(default_factory=list)
     support: int = 0
     source_graph_ids: list[int] = field(default_factory=list)
+    source_families: list[str] = field(default_factory=list)
     n_spiders: int = 0
     n_inputs: int = 0
     n_outputs: int = 0
@@ -116,6 +117,7 @@ class ZXWeb:
             ],
             "support": self.support,
             "source_graph_ids": self.source_graph_ids,
+            "source_families": self.source_families,
             "n_spiders": self.n_spiders,
             "n_inputs": self.n_inputs,
             "n_outputs": self.n_outputs,
@@ -140,6 +142,7 @@ class ZXWeb:
             boundary_wires=bwires,
             support=d.get("support", 0),
             source_graph_ids=d.get("source_graph_ids", []),
+            source_families=d.get("source_families", []),
             n_spiders=d.get("n_spiders", 0),
             n_inputs=d.get("n_inputs", 0),
             n_outputs=d.get("n_outputs", 0),
