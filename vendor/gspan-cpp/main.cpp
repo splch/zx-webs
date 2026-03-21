@@ -13,15 +13,15 @@ int main(int argc, char *argv[])
 	}
 
 	int maxVertices = 0;
-	if (argc >= 4) {
-		string s(argv[3]);
-		maxVertices = stoi(s);
-	}
+	int minVertices = 0;
+	if (argc >= 4) { string s(argv[3]); maxVertices = stoi(s); }
+	if (argc >= 5) { string s(argv[4]); minVertices = stoi(s); }
 
 	Solver solver;
 	solver.init(inputPath, minSup);
 	solver.input();
 	solver.gspan.maxVertices = maxVertices;
+	solver.gspan.minVertices = minVertices;
 	solver.solve();
 	solver.output();
 

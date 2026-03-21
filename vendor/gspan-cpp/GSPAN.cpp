@@ -11,6 +11,7 @@ void GSPAN::init()
 	//cntFreqPattern = 0;
 	freqPattern.clear();
 	maxVertices = 0;
+	minVertices = 0;
 }
 
 void GSPAN::input(const InputFilter &inputFilter, double _minSup)
@@ -240,6 +241,15 @@ bool GSPAN::isPatternInGraph(Graph graph, const DFSCode &dfscode)
 
 void GSPAN::SolveFreqPattern(const DFSCode &dfscode)
 {
+	// Count unique vertices in this pattern.
+	if (minVertices > 0) {
+		set<int> verts;
+		for (auto &node : dfscode.dfsCodeList) {
+			verts.insert(node.a);
+			verts.insert(node.b);
+		}
+		if ((int)verts.size() < minVertices) return;
+	}
 	freqPattern.push_back(dfscode);
 	/*out << "Pattern #" << cntFreqPattern++ << ": " << endl;
 	for (int i = 0;i < (int)dfscode.dfsCodeList.size();i++)

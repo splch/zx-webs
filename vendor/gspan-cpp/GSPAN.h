@@ -65,6 +65,7 @@ public:
 	double minSup; // minimum support
 	int minSupDeg; // minSup * cntGraph
 	int maxVertices; // max pattern vertices (0 = unlimited)
+	int minVertices; // min pattern vertices (0 = no minimum)
 
 	Graph graph[maxGraph]; // 0 to cntGraph-1
 	int cntGraph; // Num of graphs in the graph set
