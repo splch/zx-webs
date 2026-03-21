@@ -38,6 +38,7 @@ composition, and persists the results.
 from __future__ import annotations
 
 import logging
+import math
 import os
 import random
 from collections import defaultdict
@@ -66,6 +67,204 @@ logger = logging.getLogger(__name__)
 _VT_BOUNDARY = 0
 _VT_Z = 1
 _VT_X = 2
+
+
+# ---------------------------------------------------------------------------
+# Farthest-point sampling (FPS) helpers
+# ---------------------------------------------------------------------------
+
+
+def _manifest_feature_vector(entry: dict[str, Any]) -> list[float]:
+    """Build a raw feature vector from a single manifest entry.
+
+    Features (all numeric, derived from manifest metadata):
+      0. n_inputs
+      1. n_outputs
+      2. n_spiders
+      3. support
+      4. n_families  (number of distinct source families)
+
+    This is the *unstandardised* vector; call :func:`_standardise_features`
+    on the full matrix before computing distances.
+    """
+    return [
+        float(entry.get("n_inputs", 0)),
+        float(entry.get("n_outputs", 0)),
+        float(entry.get("n_spiders", 0)),
+        float(entry.get("support", 0)),
+        float(len(entry.get("source_families", []))),
+    ]
+
+
+def _web_feature_vector(web: ZXWeb) -> list[float]:
+    """Build a raw feature vector from a loaded :class:`ZXWeb` object.
+
+    Same layout as :func:`_manifest_feature_vector` but sourced from the
+    dataclass fields rather than a manifest dict.
+    """
+    return [
+        float(web.n_inputs),
+        float(web.n_outputs),
+        float(web.n_spiders),
+        float(web.support),
+        float(len(web.source_families)),
+    ]
+
+
+def _standardise_features(
+    matrix: list[list[float]],
+) -> list[list[float]]:
+    """Z-score standardise each column of *matrix* in place and return it.
+
+    Columns with zero variance are left as-is (all zeros after centering)
+    to avoid division by zero.  Runs in O(n * d) with no external deps.
+    """
+    if not matrix:
+        return matrix
+    n = len(matrix)
+    d = len(matrix[0])
+    for col in range(d):
+        mean = sum(row[col] for row in matrix) / n
+        var = sum((row[col] - mean) ** 2 for row in matrix) / n
+        std = math.sqrt(var) if var > 0 else 0.0
+        if std > 0:
+            for row in matrix:
+                row[col] = (row[col] - mean) / std
+        else:
+            for row in matrix:
+                row[col] = 0.0
+    return matrix
+
+
+def _euclidean_sq(a: list[float], b: list[float]) -> float:
+    """Squared Euclidean distance between two vectors."""
+    return sum((ai - bi) ** 2 for ai, bi in zip(a, b))
+
+
+def _farthest_point_sample(
+    features: list[list[float]],
+    k: int,
+    rng: random.Random,
+) -> list[int]:
+    """Select *k* indices from *features* using farthest-point sampling.
+
+    1. Pick a random seed point.
+    2. Greedily pick the point farthest from the already-selected set.
+
+    Returns a list of *k* indices (or fewer if ``len(features) <= k``).
+    Time complexity is O(k * n) which is fast for typical corpus sizes.
+    """
+    n = len(features)
+    if n <= k:
+        return list(range(n))
+
+    selected: list[int] = []
+    # min distance from each point to *any* selected point
+    min_dist = [float("inf")] * n
+
+    # Seed with a random point
+    seed = rng.randrange(n)
+    selected.append(seed)
+    # Update distances from the seed
+    for i in range(n):
+        d = _euclidean_sq(features[i], features[seed])
+        if d < min_dist[i]:
+            min_dist[i] = d
+
+    for _ in range(k - 1):
+        # Pick the point with the largest min-distance to selected set
+        best_idx = -1
+        best_dist = -1.0
+        for i in range(n):
+            if min_dist[i] > best_dist:
+                best_dist = min_dist[i]
+                best_idx = i
+        if best_idx < 0:
+            break
+        selected.append(best_idx)
+        # Update min distances
+        new_feat = features[best_idx]
+        for i in range(n):
+            d = _euclidean_sq(features[i], new_feat)
+            if d < min_dist[i]:
+                min_dist[i] = d
+
+    return selected
+
+
+def _fps_dissimilar_pairs(
+    features: list[list[float]],
+    n_pairs: int,
+    rng: random.Random,
+) -> list[tuple[int, int]]:
+    """Generate pairs biased toward structural dissimilarity.
+
+    For each web (in shuffled order), pair it with the most distant web
+    that hasn't been used as a primary partner yet.  Continue until we
+    have *n_pairs* unique pairs.  Falls back to random pairing if the
+    greedy pass is exhausted.
+
+    Time complexity: O(n^2) in the worst case for the distance lookups,
+    but with early stopping at *n_pairs* this is fast in practice.
+    """
+    n = len(features)
+    if n < 2:
+        return []
+
+    pairs: list[tuple[int, int]] = []
+    pair_set: set[tuple[int, int]] = set()
+
+    # Pre-compute pairwise distances on the (already small) sampled set.
+    # For typical sizes (hundreds to low thousands), this is cheap.
+    # We only store upper-triangle to save memory.
+    dist_cache: dict[tuple[int, int], float] = {}
+
+    def _get_dist(i: int, j: int) -> float:
+        key = (min(i, j), max(i, j))
+        if key not in dist_cache:
+            dist_cache[key] = _euclidean_sq(features[i], features[j])
+        return dist_cache[key]
+
+    # Greedy pass: for each web, pair with most distant unused partner
+    order = list(range(n))
+    rng.shuffle(order)
+
+    for i in order:
+        if len(pairs) >= n_pairs:
+            break
+        # Find the most distant partner not yet paired with i
+        best_j = -1
+        best_d = -1.0
+        for j in range(n):
+            if i == j:
+                continue
+            key = (min(i, j), max(i, j))
+            if key in pair_set:
+                continue
+            d = _get_dist(i, j)
+            if d > best_d:
+                best_d = d
+                best_j = j
+        if best_j >= 0:
+            key = (min(i, best_j), max(i, best_j))
+            pair_set.add(key)
+            pairs.append(key)
+
+    # If we still need more pairs, fill with random unique pairs
+    if len(pairs) < n_pairs:
+        attempts = 0
+        max_attempts = n_pairs * 10
+        while len(pairs) < n_pairs and attempts < max_attempts:
+            i = rng.randrange(n)
+            j = rng.randrange(n)
+            if i != j:
+                key = (min(i, j), max(i, j))
+                if key not in pair_set:
+                    pair_set.add(key)
+                    pairs.append(key)
+            attempts += 1
+
+    return pairs
 
 
 # ---------------------------------------------------------------------------
@@ -467,20 +666,17 @@ class Stitcher:
                 return True
             return False
 
-        # -- Build random pairs without materialising all combinations ----------
+        # -- Build dissimilar pairs via FPS feature distances --------------------
         n_webs = len(webs)
         n_pairs_needed = max_cand * 10
 
-        # Sample random pairs directly — O(n_pairs_needed), not O(n_webs^2).
-        pair_set: set[tuple[int, int]] = set()
-        while len(pair_set) < n_pairs_needed and len(pair_set) < n_webs * (n_webs - 1) // 2:
-            i = self.rng.randrange(n_webs)
-            j = self.rng.randrange(n_webs)
-            if i != j:
-                pair_set.add((min(i, j), max(i, j)))
-
-        ordered_pairs = list(pair_set)
-        self.rng.shuffle(ordered_pairs)
+        # Compute standardised feature vectors for the loaded webs and
+        # generate pairs biased toward structural dissimilarity.
+        web_features = [_web_feature_vector(w) for w in webs]
+        _standardise_features(web_features)
+        ordered_pairs = _fps_dissimilar_pairs(
+            web_features, n_pairs_needed, self.rng,
+        )
 
         # Allocate budget per strategy so all strategies get representation.
         modes = self.config.composition_modes
@@ -935,45 +1131,28 @@ def run_stage4(
         return []
 
     # Cap the number of webs loaded to avoid OOM on large mining runs.
-    # Sample a balanced mix of boundary sizes to enable compositions at
-    # all qubit counts (not just 2-qubit or 4-qubit).
+    # Use farthest-point sampling (FPS) over a structural feature vector
+    # to maximise diversity of the selected webs without biasing toward
+    # any particular boundary size or family.
     max_webs_to_load = min(len(manifest), config.max_candidates * 10)
     if len(manifest) > max_webs_to_load:
         rng = random.Random(config.seed)
-        # Group webs by (n_inputs, n_outputs) and sample proportionally,
-        # but ensure all boundary-size groups are represented.
-        from collections import defaultdict
-        by_io: dict[tuple[int, int], list] = defaultdict(list)
-        for e in manifest:
-            key = (e.get("n_inputs", 0), e.get("n_outputs", 0))
-            by_io[key].append(e)
+        feat_matrix = [_manifest_feature_vector(e) for e in manifest]
+        _standardise_features(feat_matrix)
+        selected_indices = _farthest_point_sample(
+            feat_matrix, max_webs_to_load, rng,
+        )
+        manifest = [manifest[i] for i in selected_indices]
 
-        sampled: list = []
-        # First, include ALL webs from rare groups (< 1% of max_webs)
-        rare_threshold = max_webs_to_load // 100
-        for key, group in by_io.items():
-            if len(group) <= rare_threshold:
-                sampled.extend(group)
-
-        # Then fill remaining budget proportionally from larger groups
-        remaining = max_webs_to_load - len(sampled)
-        large_groups = {k: v for k, v in by_io.items() if len(v) > rare_threshold}
-        total_large = sum(len(v) for v in large_groups.values())
-        if total_large > 0 and remaining > 0:
-            for key, group in large_groups.items():
-                share = max(1, int(remaining * len(group) / total_large))
-                sampled.extend(rng.sample(group, min(share, len(group))))
-
-        rng.shuffle(sampled)
-        # Log the distribution
         from collections import Counter
-        io_counts = Counter((e.get("n_inputs", 0), e.get("n_outputs", 0)) for e in sampled)
+        io_counts = Counter(
+            (e.get("n_inputs", 0), e.get("n_outputs", 0)) for e in manifest
+        )
         logger.info(
-            "Sampled %d webs from %d total. Boundary distribution: %s",
-            len(sampled), len(manifest),
+            "FPS-sampled %d webs from %d total. Boundary distribution: %s",
+            len(manifest), len(feat_matrix),
             {k: v for k, v in sorted(io_counts.items(), key=lambda x: -x[1])[:6]},
         )
-        manifest = sampled
 
     webs: list[ZXWeb] = []
     for entry in manifest:
