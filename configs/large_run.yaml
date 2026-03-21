@@ -29,6 +29,7 @@ mining:
 compose:
   max_webs_per_candidate: 3
   max_candidates: 50000
+  max_webs_loaded: 50000
   composition_modes: [sequential, parallel]
   min_compose_qubits: 2
   max_compose_qubits: 20
