@@ -935,11 +935,32 @@ def run_stage4(
         )
         return []
 
+    # Cap the number of webs loaded to avoid OOM on large mining runs.
+    # We need at most O(max_candidates) webs — loading millions is wasteful.
+    max_webs_to_load = min(len(manifest), config.max_candidates * 10)
+    if len(manifest) > max_webs_to_load:
+        rng = random.Random(config.seed)
+        # Prefer multi-qubit webs (n_inputs >= 2) by loading them all,
+        # then sampling from single-qubit webs to fill the rest.
+        multi_q = [e for e in manifest if e.get("n_inputs", 0) >= 2]
+        single_q = [e for e in manifest if e.get("n_inputs", 0) < 2]
+        if len(multi_q) >= max_webs_to_load:
+            sampled = rng.sample(multi_q, max_webs_to_load)
+        else:
+            remaining = max_webs_to_load - len(multi_q)
+            sampled = multi_q + rng.sample(single_q, min(remaining, len(single_q)))
+        logger.info(
+            "Sampled %d webs from %d total (%d multi-qubit, %d single-qubit).",
+            len(sampled), len(manifest),
+            sum(1 for e in sampled if e.get("n_inputs", 0) >= 2),
+            sum(1 for e in sampled if e.get("n_inputs", 0) < 2),
+        )
+        manifest = sampled
+
     webs: list[ZXWeb] = []
     for entry in manifest:
         web_path = Path(entry["web_path"])
         if not web_path.exists():
-            logger.warning("Web file not found: %s -- skipping.", web_path)
             continue
         web_data = load_json(web_path)
         webs.append(ZXWeb.from_dict(web_data))
