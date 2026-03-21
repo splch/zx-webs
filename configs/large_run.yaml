@@ -22,13 +22,13 @@ mining:
   min_support: 2
   min_vertices: 4
   max_vertices: 10
-  max_input_vertices: 50
+  max_input_vertices: 75
   phase_discretization: 8
   include_phase_in_label: true
 
 compose:
   max_webs_per_candidate: 3
-  max_candidates: 50000
+  max_candidates: 100000
   max_webs_loaded: 50000
   composition_modes: [sequential, parallel]
   min_compose_qubits: 2
