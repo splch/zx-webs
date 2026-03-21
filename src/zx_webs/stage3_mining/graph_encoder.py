@@ -52,7 +52,10 @@ class ZXLabelEncoder:
         Whether to incorporate phase into the vertex label.
     """
 
-    N_VERTEX_TYPES = 4  # 0=boundary, 1=Z, 2=X, 3=H_BOX
+    # Labels 0-4: vertex types (boundary_in=0, boundary_out=4, Z=1, X=2, H_BOX=3)
+    LABEL_BOUNDARY_INPUT = 0
+    LABEL_BOUNDARY_OUTPUT = 4
+    N_BASE_LABELS = 5  # 0=boundary_in, 1=Z, 2=X, 3=H_BOX, 4=boundary_out
 
     def __init__(self, phase_bins: int = 8, include_phase: bool = True) -> None:
         self.phase_bins = phase_bins
@@ -62,29 +65,52 @@ class ZXLabelEncoder:
     # Vertex encoding / decoding
     # ------------------------------------------------------------------
 
-    def encode_vertex(self, vtype: int, phase: Fraction | float | int = 0) -> int:
+    def encode_vertex(
+        self,
+        vtype: int,
+        phase: Fraction | float | int = 0,
+        is_input: bool = False,
+        is_output: bool = False,
+    ) -> int:
         """Map ``(vertex_type, phase)`` to a single integer label.
 
-        Boundary vertices always receive label 0.  When ``include_phase`` is
-        *False* the label equals the raw vertex type.
+        Boundary vertices are split into input (label 0) and output (label 4)
+        so that gSpan preserves input/output direction when mining patterns.
         """
-        if vtype == _VT_BOUNDARY or not self.include_phase:
+        if vtype == _VT_BOUNDARY:
+            if is_output:
+                return self.LABEL_BOUNDARY_OUTPUT
+            return self.LABEL_BOUNDARY_INPUT  # default for boundaries
+        if not self.include_phase:
             return int(vtype)
         phase_bin = self._discretize_phase(phase)
-        return self.N_VERTEX_TYPES + (vtype - 1) * self.phase_bins + phase_bin
+        return self.N_BASE_LABELS + (vtype - 1) * self.phase_bins + phase_bin
 
     def decode_vertex(self, label: int) -> tuple[int, int | None]:
         """Decode an integer label to ``(vertex_type, phase_bin | None)``.
 
         Returns ``phase_bin = None`` for boundary vertices or when phase
-        encoding was disabled.
+        encoding was disabled.  Use ``is_input_boundary`` / ``is_output_boundary``
+        to check direction.
         """
-        if label < self.N_VERTEX_TYPES:
-            return label, None
-        adjusted = label - self.N_VERTEX_TYPES
-        vtype = adjusted // self.phase_bins + 1  # +1: boundary is excluded
+        if label == self.LABEL_BOUNDARY_INPUT:
+            return _VT_BOUNDARY, None
+        if label == self.LABEL_BOUNDARY_OUTPUT:
+            return _VT_BOUNDARY, None
+        if label < self.N_BASE_LABELS:
+            return label, None  # Z=1, X=2, H_BOX=3
+        adjusted = label - self.N_BASE_LABELS
+        vtype = adjusted // self.phase_bins + 1
         phase_bin = adjusted % self.phase_bins
         return vtype, phase_bin
+
+    def is_input_boundary(self, label: int) -> bool:
+        """Check if a label represents an input boundary vertex."""
+        return label == self.LABEL_BOUNDARY_INPUT
+
+    def is_output_boundary(self, label: int) -> bool:
+        """Check if a label represents an output boundary vertex."""
+        return label == self.LABEL_BOUNDARY_OUTPUT
 
     # ------------------------------------------------------------------
     # Edge encoding / decoding
@@ -152,10 +178,18 @@ def pyzx_graph_to_gspan_lines(
 
     lines: list[str] = [f"t # {graph_id}"]
 
+    # Determine input/output sets for boundary direction encoding.
+    input_set = set(graph.inputs()) if graph.inputs() else set()
+    output_set = set(graph.outputs()) if graph.outputs() else set()
+
     # Vertices
     for pv in pyzx_vids:
         gv = vid_map[pv]
-        vlabel = encoder.encode_vertex(graph.type(pv), graph.phase(pv))
+        vlabel = encoder.encode_vertex(
+            graph.type(pv), graph.phase(pv),
+            is_input=(pv in input_set),
+            is_output=(pv in output_set),
+        )
         lines.append(f"v {gv} {vlabel}")
 
     # Edges -- emit each undirected edge once.

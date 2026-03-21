@@ -493,40 +493,49 @@ class Stitcher:
         if len(ordered_pairs) > max_cand * 10:
             ordered_pairs = ordered_pairs[: max_cand * 10]
 
+        # Allocate budget per strategy so all strategies get representation.
+        modes = self.config.composition_modes
+        n_modes = len(modes) + 1  # +1 for phase perturbation
+        budget_per_mode = max(max_cand // n_modes, 1)
+
         # -- 1. Pairwise sequential -------------------------------------------
-        if "sequential" in self.config.composition_modes:
+        seq_budget = budget_per_mode if "sequential" in modes else 0
+        if seq_budget:
+            seq_count = 0
             for i, j in tqdm(ordered_pairs, desc="Stage 4: Sequential compose", unit="pair"):
-                if len(candidates) >= max_cand:
+                if seq_count >= seq_budget or len(candidates) >= max_cand:
                     break
-                # Try both orderings.
                 for a_idx, b_idx in [(i, j), (j, i)]:
-                    if len(candidates) >= max_cand:
+                    if seq_count >= seq_budget:
                         break
                     g = self.compose_sequential(webs[a_idx], webs[b_idx])
-                    _try_add(g, [a_idx, b_idx], "sequential")
+                    if _try_add(g, [a_idx, b_idx], "sequential"):
+                        seq_count += 1
 
         # -- 2. Pairwise parallel (tensor + optional Hadamard stitch) ---------
-        if "parallel" in self.config.composition_modes:
+        par_budget = budget_per_mode if "parallel" in modes else 0
+        if par_budget:
+            par_count = 0
             for i, j in tqdm(ordered_pairs, desc="Stage 4: Parallel compose", unit="pair"):
-                if len(candidates) >= max_cand:
+                if par_count >= par_budget or len(candidates) >= max_cand:
                     break
 
-                # Pure parallel (tensor).
                 g = self.compose_parallel(webs[i], webs[j])
-                _try_add(g, [i, j], "parallel")
+                if _try_add(g, [i, j], "parallel"):
+                    par_count += 1
 
-                if len(candidates) >= max_cand:
+                if par_count >= par_budget:
                     break
 
-                # Parallel with Hadamard stitching.
                 g_stitch = self.compose_parallel_stitch(
                     webs[i], webs[j], n_hadamard_edges=1
                 )
-                _try_add(g_stitch, [i, j], "parallel_stitch")
+                if _try_add(g_stitch, [i, j], "parallel_stitch"):
+                    par_count += 1
 
         # -- 3. Phase perturbation on successful compositions -----------------
         phase_perturb_count = 0
-        max_perturb = min(max_cand // 4, len(candidates))
+        max_perturb = min(budget_per_mode, len(candidates))
         base_candidates = list(candidates)  # snapshot
         for base_cand in base_candidates:
             if len(candidates) >= max_cand:
@@ -563,7 +572,8 @@ class Stitcher:
 
         # -- 4. Triple sequential (A -> B -> C) -------------------------------
         if "sequential" in self.config.composition_modes and len(webs) >= 3:
-            all_triples = list(combinations(range(min(len(webs), 50)), 3))
+            triple_pool = min(len(webs), 200)  # limit combinatorial explosion
+            all_triples = list(combinations(range(triple_pool), 3))
             if len(all_triples) > max_cand * 5:
                 triples = self.rng.sample(
                     all_triples, min(len(all_triples), max_cand * 5)
@@ -675,7 +685,7 @@ class Stitcher:
             if "sequential" in self.config.composition_modes and len(matching_webs) >= 2:
                 pairs = list(combinations(matching_webs, 2))
                 self.rng.shuffle(pairs)
-                for i, j in pairs[:max_cand // 4]:
+                for i, j in pairs[:max_cand]:
                     if len(candidates) >= max_cand:
                         break
                     for a_idx, b_idx in [(i, j), (j, i)]:
@@ -705,7 +715,7 @@ class Stitcher:
                     if webs[f_idx].n_outputs == webs[o_idx].n_inputs
                 ]
                 self.rng.shuffle(cross_pairs)
-                for f_idx, o_idx in cross_pairs[:max_cand // 4]:
+                for f_idx, o_idx in cross_pairs[:max_cand]:
                     if len(candidates) >= max_cand:
                         break
                     g = self.compose_sequential(webs[f_idx], webs[o_idx])
@@ -728,7 +738,7 @@ class Stitcher:
                     if webs[i].n_inputs + webs[j].n_inputs == target_qubits
                 ]
                 self.rng.shuffle(target_parallel_pairs)
-                for i, j in target_parallel_pairs[:max_cand // 4]:
+                for i, j in target_parallel_pairs[:max_cand]:
                     if len(candidates) >= max_cand:
                         break
                     g = self.compose_parallel(webs[i], webs[j])

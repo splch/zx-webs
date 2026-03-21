@@ -257,17 +257,16 @@ class GSpanAdapter:
             pv = g.add_vertex(ty=vtype, phase=phase, qubit=idx, row=1)
             gspan_to_pyzx[vid] = pv
 
-        # Add boundary vertices with row positions that encode direction.
-        # We split boundary vertices into equal-sized input (row=0) and
-        # output (row=2) groups.  For even counts this is a clean split;
-        # for odd counts we put the extra vertex on the output side so
-        # that _ensure_proper_boundaries can add a matching input if needed.
-        n_boundary = len(boundary_vids)
-        n_input_boundary = n_boundary // 2
-        # n_output_boundary = n_boundary - n_input_boundary
+        # Add boundary vertices using the label to determine direction.
+        # The encoder distinguishes input boundaries (label 0) from
+        # output boundaries (label 4), so we can recover the correct
+        # input/output assignment that was present in the source graph.
+        input_qubit = 0
+        output_qubit = 0
+        input_pvs: list[int] = []
+        output_pvs: list[int] = []
 
-        boundary_qubit_counter = 0
-        for bv_idx, vid in enumerate(boundary_vids):
+        for vid in boundary_vids:
             vertex = gg.vertices[vid]
             vlabel = int(vertex.vlb) if isinstance(vertex.vlb, str) else vertex.vlb
             vtype, phase_bin = self.encoder.decode_vertex(vlabel)
@@ -275,14 +274,22 @@ class GSpanAdapter:
             if phase_bin is not None and self.encoder.include_phase:
                 phase_val = Fraction(2 * phase_bin, self.encoder.phase_bins)
 
-            row = 0 if bv_idx < n_input_boundary else 2
+            if self.encoder.is_output_boundary(vlabel):
+                row = 2
+                qubit = output_qubit
+                output_qubit += 1
+            else:
+                row = 0
+                qubit = input_qubit
+                input_qubit += 1
 
-            pv = g.add_vertex(
-                ty=vtype, phase=phase_val,
-                qubit=boundary_qubit_counter, row=row,
-            )
+            pv = g.add_vertex(ty=vtype, phase=phase_val, qubit=qubit, row=row)
             gspan_to_pyzx[vid] = pv
-            boundary_qubit_counter += 1
+
+            if self.encoder.is_output_boundary(vlabel):
+                output_pvs.append(pv)
+            else:
+                input_pvs.append(pv)
 
         # Collect edges (avoid duplicates in undirected graph).
         seen: set[tuple[int, int]] = set()
@@ -298,5 +305,11 @@ class GSpanAdapter:
                 pv_from = gspan_to_pyzx[vid]
                 pv_to = gspan_to_pyzx[to_vid]
                 g.add_edge((pv_from, pv_to), edgetype=etype)
+
+        # Set inputs/outputs if we identified any from the labels.
+        if input_pvs:
+            g.set_inputs(tuple(input_pvs))
+        if output_pvs:
+            g.set_outputs(tuple(output_pvs))
 
         return g
