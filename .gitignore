@@ -11,3 +11,8 @@ build/
 .env
 .venv/
 logs/
+vendor/gspan-cpp/gSpan
+vendor/gspan-cpp/*.o
+vendor/gspan-cpp/graph.data
+vendor/gspan-cpp/out.txt
+vendor/gspan-cpp/in.txt

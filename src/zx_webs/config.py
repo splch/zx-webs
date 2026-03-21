@@ -44,6 +44,7 @@ class MiningConfig(BaseModel):
     phase_discretization: int = 8
     include_phase_in_label: bool = True
     mining_reduction: str = "teleport_reduce"  # "full_reduce", "teleport_reduce", or "none"
+    gspan_binary_path: str = ""  # path to C++ gSpan binary; empty = auto-detect or fallback to Python
 
 
 class ComposeConfig(BaseModel):
