@@ -18,6 +18,7 @@ The adapter works around several quirks of the ``gspan-mining`` library:
 """
 from __future__ import annotations
 
+import collections
 import copy
 import itertools
 import tempfile
@@ -27,7 +28,9 @@ from pathlib import Path
 from typing import Any
 
 import pyzx as zx
-from gspan_mining.gspan import DFScode, gSpan as _GSpanAlgo
+from gspan_mining.gspan import DFScode, DFSedge, PDFS, Projected, gSpan as _GSpanAlgo
+from gspan_mining.gspan import record_timestamp
+from tqdm import tqdm
 
 from zx_webs.config import MiningConfig
 from zx_webs.stage3_mining.graph_encoder import (
@@ -82,6 +85,29 @@ class _SilentGSpan(_GSpanAlgo):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.captured_results: list[GSpanResult] = []
+
+    @record_timestamp
+    def run(self) -> None:
+        """Override to add tqdm progress over root edge labels."""
+        self._read_graphs()
+        self._generate_1edge_frequent_subgraphs()
+        if self._max_num_vertices < 2:
+            return
+        root = collections.defaultdict(Projected)
+        for g in self.graphs.values():
+            for vid, v in g.vertices.items():
+                edges = self._get_forward_root_edges(g, vid)
+                for e in edges:
+                    root[(v.vlb, e.elb, g.vertices[e.to].vlb)].append(
+                        PDFS(g.gid, e, None)
+                    )
+
+        for vevlb, projected in tqdm(
+            root.items(), desc="Stage 3: gSpan mining", unit="edge-label"
+        ):
+            self._DFScode.append(DFSedge(0, 1, vevlb))
+            self._subgraph_mining(projected)
+            self._DFScode.pop()
 
     def _report(self, projected: Any) -> None:  # type: ignore[override]
         """Override to silently record the current DFScode + metadata."""
