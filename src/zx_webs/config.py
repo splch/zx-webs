@@ -51,6 +51,7 @@ class ComposeConfig(BaseModel):
     max_candidates: int = 10000
     composition_modes: list[str] = ["sequential", "parallel"]
     boundary_match_strategy: str = "exact_type"
+    min_compose_qubits: int = 2
     seed: int = 42
 
 

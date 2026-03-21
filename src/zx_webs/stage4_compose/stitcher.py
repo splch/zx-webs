@@ -34,6 +34,7 @@ from pathlib import Path
 from typing import Any
 
 import pyzx as zx
+from tqdm import tqdm
 
 from zx_webs.config import ComposeConfig
 from zx_webs.persistence import load_json, load_manifest, save_json, save_manifest
@@ -313,6 +314,8 @@ class Stitcher:
         max_cand = self.config.max_candidates
         cand_idx = 0
 
+        min_qubits = self.config.min_compose_qubits
+
         # Helper to build a CandidateAlgorithm from a composed graph.
         def _make_candidate(
             graph: zx.Graph,
@@ -320,7 +323,14 @@ class Stitcher:
             comp_type: str,
         ) -> CandidateAlgorithm | None:
             n_qubits = len(graph.inputs()) if graph.inputs() else 0
+            n_outputs = len(graph.outputs()) if graph.outputs() else 0
             if n_qubits > _MAX_QUBITS or n_qubits == 0:
+                return None
+            if n_qubits < min_qubits:
+                return None
+            # A valid quantum circuit requires equal numbers of inputs
+            # and outputs.  Reject unbalanced compositions early.
+            if n_qubits != n_outputs:
                 return None
             n_spiders = sum(
                 1 for v in graph.vertices() if graph.type(v) != _VT_BOUNDARY
@@ -346,7 +356,7 @@ class Stitcher:
             else:
                 pairs = list(all_pairs)
                 self.rng.shuffle(pairs)
-            for i, j in pairs:
+            for i, j in tqdm(pairs, desc="Stage 4: Sequential compose", unit="pair"):
                 if len(candidates) >= max_cand:
                     break
                 # Try both orderings.
@@ -371,7 +381,7 @@ class Stitcher:
             else:
                 pairs = list(all_pairs)
                 self.rng.shuffle(pairs)
-            for i, j in pairs:
+            for i, j in tqdm(pairs, desc="Stage 4: Parallel compose", unit="pair"):
                 if len(candidates) >= max_cand:
                     break
 
@@ -499,7 +509,8 @@ class Stitcher:
                     g = self.compose_sequential(webs[a_idx], webs[b_idx])
                     if g is not None:
                         n_qubits = len(g.inputs()) if g.inputs() else 0
-                        if 0 < n_qubits <= _MAX_QUBITS:
+                        n_outputs = len(g.outputs()) if g.outputs() else 0
+                        if 0 < n_qubits <= _MAX_QUBITS and n_qubits == n_outputs:
                             n_spiders = sum(
                                 1 for v in g.vertices()
                                 if g.type(v) != _VT_BOUNDARY
@@ -519,7 +530,8 @@ class Stitcher:
                 g = self.compose_parallel(webs[i], webs[j])
                 if g is not None:
                     n_qubits = len(g.inputs()) if g.inputs() else 0
-                    if 0 < n_qubits <= _MAX_QUBITS:
+                    n_outputs = len(g.outputs()) if g.outputs() else 0
+                    if 0 < n_qubits <= _MAX_QUBITS and n_qubits == n_outputs:
                         n_spiders = sum(
                             1 for v in g.vertices()
                             if g.type(v) != _VT_BOUNDARY
@@ -541,7 +553,8 @@ class Stitcher:
                 )
                 if g_stitch is not None:
                     n_qubits = len(g_stitch.inputs()) if g_stitch.inputs() else 0
-                    if 0 < n_qubits <= _MAX_QUBITS:
+                    n_outputs = len(g_stitch.outputs()) if g_stitch.outputs() else 0
+                    if 0 < n_qubits <= _MAX_QUBITS and n_qubits == n_outputs:
                         n_spiders = sum(
                             1 for v in g_stitch.vertices()
                             if g_stitch.type(v) != _VT_BOUNDARY

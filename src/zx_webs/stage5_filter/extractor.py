@@ -28,6 +28,7 @@ from pathlib import Path
 from typing import Any
 
 import pyzx as zx
+from tqdm import tqdm
 
 from zx_webs.config import FilterConfig
 from zx_webs.persistence import load_json, load_manifest, save_json, save_manifest
@@ -383,7 +384,7 @@ def run_stage5(
         with Pool(processes=n_workers) as pool:
             results = pool.map(_extract_worker, worker_args)
 
-        for result in results:
+        for result in tqdm(results, desc="Stage 5: Collecting results", unit="cand"):
             if result is not None:
                 n_success += 1
                 survivors.append(result)
@@ -391,7 +392,7 @@ def run_stage5(
                 n_fail += 1
     else:
         # Sequential fallback.
-        for cand in candidates:
+        for cand in tqdm(candidates, desc="Stage 5: Extracting circuits", unit="cand"):
             g = zx.Graph.from_json(cand.graph_json)
             result = try_extract_circuit(
                 g,

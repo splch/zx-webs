@@ -9,6 +9,8 @@ import argparse
 import logging
 from pathlib import Path
 
+from tqdm import tqdm
+
 from zx_webs.config import PipelineConfig, load_config
 from zx_webs.persistence import save_manifest
 from zx_webs.stage1_corpus import build_corpus, circuit_to_pyzx_qasm
@@ -50,7 +52,7 @@ def run_stage1(config: PipelineConfig) -> list[dict]:
     corpus_entries = build_corpus(config.corpus)
 
     manifest: list[dict] = []
-    for entry in corpus_entries:
+    for entry in tqdm(corpus_entries, desc="Stage 1: Building corpus", unit="circuit"):
         family = entry["family"]
         name = entry["name"]
         n_qubits = entry["n_qubits"]

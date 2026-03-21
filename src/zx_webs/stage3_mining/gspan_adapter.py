@@ -202,19 +202,61 @@ class GSpanAdapter:
         gg = result.gspan_graph
         g = zx.Graph()
 
+        # Separate boundary and non-boundary vertices so we can assign
+        # meaningful row/qubit positions that enable correct input/output
+        # assignment later in _ensure_proper_boundaries.
+        _VT_BOUNDARY = 0
+        boundary_vids: list[Any] = []
+        interior_vids: list[Any] = []
+
+        for vid, vertex in gg.vertices.items():
+            vlabel = int(vertex.vlb) if isinstance(vertex.vlb, str) else vertex.vlb
+            vtype, _ = self.encoder.decode_vertex(vlabel)
+            if vtype == _VT_BOUNDARY:
+                boundary_vids.append(vid)
+            else:
+                interior_vids.append(vid)
+
         # Map gspan vertex ids -> pyzx vertex ids.
         gspan_to_pyzx: dict[Any, int] = {}
 
-        for vid, vertex in gg.vertices.items():
-            # The gspan library stores labels as strings.
+        # Add interior vertices first (row=1, sequential qubit assignment).
+        for idx, vid in enumerate(interior_vids):
+            vertex = gg.vertices[vid]
             vlabel = int(vertex.vlb) if isinstance(vertex.vlb, str) else vertex.vlb
             vtype, phase_bin = self.encoder.decode_vertex(vlabel)
             phase: Fraction | int = 0
             if phase_bin is not None and self.encoder.include_phase:
-                # Reverse the discretisation: bin centre -> phase value.
                 phase = Fraction(2 * phase_bin, self.encoder.phase_bins)
-            pv = g.add_vertex(ty=vtype, phase=phase)
+            pv = g.add_vertex(ty=vtype, phase=phase, qubit=idx, row=1)
             gspan_to_pyzx[vid] = pv
+
+        # Add boundary vertices with row positions that encode direction.
+        # We split boundary vertices into equal-sized input (row=0) and
+        # output (row=2) groups.  For even counts this is a clean split;
+        # for odd counts we put the extra vertex on the output side so
+        # that _ensure_proper_boundaries can add a matching input if needed.
+        n_boundary = len(boundary_vids)
+        n_input_boundary = n_boundary // 2
+        # n_output_boundary = n_boundary - n_input_boundary
+
+        boundary_qubit_counter = 0
+        for bv_idx, vid in enumerate(boundary_vids):
+            vertex = gg.vertices[vid]
+            vlabel = int(vertex.vlb) if isinstance(vertex.vlb, str) else vertex.vlb
+            vtype, phase_bin = self.encoder.decode_vertex(vlabel)
+            phase_val: Fraction | int = 0
+            if phase_bin is not None and self.encoder.include_phase:
+                phase_val = Fraction(2 * phase_bin, self.encoder.phase_bins)
+
+            row = 0 if bv_idx < n_input_boundary else 2
+
+            pv = g.add_vertex(
+                ty=vtype, phase=phase_val,
+                qubit=boundary_qubit_counter, row=row,
+            )
+            gspan_to_pyzx[vid] = pv
+            boundary_qubit_counter += 1
 
         # Collect edges (avoid duplicates in undirected graph).
         seen: set[tuple[int, int]] = set()

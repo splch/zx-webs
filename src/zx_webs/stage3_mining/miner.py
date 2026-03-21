@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import logging
+import time
 from fractions import Fraction
 from pathlib import Path
 from typing import Any
@@ -40,15 +41,15 @@ _VT_BOUNDARY = 0
 def _ensure_proper_boundaries(pyzx_graph: zx.Graph) -> zx.Graph:
     """Ensure a sub-diagram has proper PyZX boundary vertices.
 
-    When gSpan mines a sub-graph, boundary (type 0) vertices and
-    input/output designations are lost.  This function:
+    When gSpan mines a sub-graph that includes boundary (type 0) vertices
+    from the original circuit, those vertices naturally represent the
+    circuit's qubit wires.  We use the ``row`` attribute to distinguish
+    inputs (lower row) from outputs (higher row), which preserves the
+    multi-qubit structure of the source circuit.
 
-    1. Identifies leaf vertices (degree 1) as cut points.
-    2. For each leaf non-boundary vertex, adds a boundary (type 0) vertex
-       connected to it.
-    3. Assigns the first half of boundary vertices as inputs and the
-       second half as outputs.
-    4. If the graph already has proper boundaries, returns it unchanged.
+    When no boundary vertices are present (the mined pattern is purely
+    interior), we attach new boundary vertices at leaf positions and use
+    ``row`` to assign input/output direction.
 
     Parameters
     ----------
@@ -66,23 +67,75 @@ def _ensure_proper_boundaries(pyzx_graph: zx.Graph) -> zx.Graph:
 
     g = pyzx_graph
 
-    # Collect existing boundary vertices.
+    # Collect existing boundary vertices (type 0).
     existing_boundaries = [
         v for v in g.vertices() if g.type(v) == _VT_BOUNDARY
     ]
 
     # If there are existing boundary vertices but no inputs/outputs set,
-    # assign them now.
+    # use the row attribute to determine direction: lower row = input,
+    # higher row = output.  This preserves the original circuit's
+    # multi-qubit structure.
     if existing_boundaries:
-        half = len(existing_boundaries) // 2
-        if half == 0:
-            half = 1
-        inputs = tuple(existing_boundaries[:half])
-        outputs = tuple(existing_boundaries[half:])
-        if not outputs:
-            outputs = inputs  # single boundary acts as both
-        g.set_inputs(inputs)
-        g.set_outputs(outputs)
+        if len(existing_boundaries) == 1:
+            # Single boundary: create a second one connected to the same
+            # neighbour so we have at least one input and one output.
+            bv = existing_boundaries[0]
+            neighbors = list(g.neighbors(bv))
+            if neighbors:
+                nb = neighbors[0]
+                bv2 = g.add_vertex(
+                    ty=_VT_BOUNDARY,
+                    qubit=g.qubit(bv),
+                    row=g.row(bv) + 1.0,
+                )
+                g.add_edge((bv2, nb), edgetype=1)
+                g.set_inputs(tuple([bv]))
+                g.set_outputs(tuple([bv2]))
+            else:
+                g.set_inputs(tuple([bv]))
+                g.set_outputs(tuple([bv]))
+            return g
+
+        # Multiple boundary vertices: partition by row.
+        # Sort by row to get a clean input/output split.
+        sorted_boundaries = sorted(existing_boundaries, key=lambda v: g.row(v))
+
+        # Split evenly: first half = inputs, second half = outputs.
+        # For valid quantum circuits, we need n_inputs == n_outputs.
+        n_total = len(sorted_boundaries)
+        half = n_total // 2
+
+        if n_total % 2 == 0:
+            # Even number: clean split.
+            inputs = sorted_boundaries[:half]
+            outputs = sorted_boundaries[half:]
+        else:
+            # Odd number: take floor(n/2) for each side and add a
+            # matching boundary vertex to balance.
+            inputs = sorted_boundaries[:half]
+            outputs = sorted_boundaries[half:]
+            # outputs has one more than inputs; add a boundary vertex
+            # to balance on the input side by connecting to the same
+            # interior neighbour as the last output vertex.
+            extra_out = outputs[-1]
+            neighbors = list(g.neighbors(extra_out))
+            interior_nbs = [nb for nb in neighbors if g.type(nb) != _VT_BOUNDARY]
+            if interior_nbs:
+                nb = interior_nbs[0]
+                bv_new = g.add_vertex(
+                    ty=_VT_BOUNDARY,
+                    qubit=g.qubit(extra_out),
+                    row=0,
+                )
+                g.add_edge((bv_new, nb), edgetype=1)
+                inputs.append(bv_new)
+            else:
+                # Fallback: just move the extra to inputs.
+                inputs.append(outputs.pop())
+
+        g.set_inputs(tuple(inputs))
+        g.set_outputs(tuple(outputs))
         return g
 
     # No boundary vertices exist.  Identify leaf vertices (degree 1)
@@ -105,22 +158,41 @@ def _ensure_proper_boundaries(pyzx_graph: zx.Graph) -> zx.Graph:
         else:
             return g  # empty graph, nothing to do
 
-    # Add boundary vertices for each leaf.
-    boundary_verts = []
+    # Add boundary vertices for each leaf, using row to determine
+    # input vs output direction.
+    rows = [g.row(lv) for lv in leaf_vertices]
+    median_row = sorted(rows)[len(rows) // 2]
+
+    input_boundaries = []
+    output_boundaries = []
     for lv in leaf_vertices:
+        is_input = g.row(lv) <= median_row and len(input_boundaries) <= len(output_boundaries)
+        if is_input:
+            row_offset = -0.5
+        else:
+            row_offset = 0.5
+
         bv = g.add_vertex(
             ty=_VT_BOUNDARY,
             qubit=g.qubit(lv),
-            row=g.row(lv) - 0.5 if len(boundary_verts) < len(leaf_vertices) // 2 + 1
-            else g.row(lv) + 0.5,
+            row=g.row(lv) + row_offset,
         )
         g.add_edge((bv, lv), edgetype=1)  # simple edge
-        boundary_verts.append(bv)
 
-    # Assign inputs/outputs: first half -> inputs, second half -> outputs.
-    if len(boundary_verts) == 1:
-        # Single boundary: duplicate it (add another boundary vertex
-        # connected to the same leaf).
+        if is_input:
+            input_boundaries.append(bv)
+        else:
+            output_boundaries.append(bv)
+
+    # Ensure both sides are non-empty.
+    if not input_boundaries and output_boundaries:
+        input_boundaries = [output_boundaries.pop(0)]
+    elif not output_boundaries and input_boundaries:
+        output_boundaries = [input_boundaries.pop()]
+
+    # If we ended up with only one boundary total, add a second one.
+    all_bv = input_boundaries + output_boundaries
+    if len(all_bv) == 1:
         lv = leaf_vertices[0]
         bv2 = g.add_vertex(
             ty=_VT_BOUNDARY,
@@ -128,12 +200,13 @@ def _ensure_proper_boundaries(pyzx_graph: zx.Graph) -> zx.Graph:
             row=g.row(lv) + 0.5,
         )
         g.add_edge((bv2, lv), edgetype=1)
-        g.set_inputs(tuple([boundary_verts[0]]))
-        g.set_outputs(tuple([bv2]))
-    else:
-        half = max(1, len(boundary_verts) // 2)
-        g.set_inputs(tuple(boundary_verts[:half]))
-        g.set_outputs(tuple(boundary_verts[half:]))
+        if not output_boundaries:
+            output_boundaries = [bv2]
+        else:
+            input_boundaries = [bv2]
+
+    g.set_inputs(tuple(input_boundaries))
+    g.set_outputs(tuple(output_boundaries))
 
     return g
 
@@ -356,10 +429,22 @@ def run_stage3(
     logger.info("Loaded %d ZX-diagrams for mining.", len(small_graphs))
 
     # -- 2. Run gSpan mining on small graphs -----------------------------------
-    adapter = GSpanAdapter(config)
-    results = adapter.mine(small_graphs)
+    sizes = [g.num_vertices() for g in small_graphs]
+    sizes_summary = "min=%d, max=%d, mean=%.1f" % (
+        min(sizes), max(sizes), sum(sizes) / len(sizes),
+    )
+    logger.info(
+        "Starting gSpan mining on %d graphs (sizes: %s)...",
+        len(small_graphs), sizes_summary,
+    )
 
-    logger.info("gSpan found %d frequent sub-graphs.", len(results))
+    adapter = GSpanAdapter(config)
+    t0 = time.time()
+    results = adapter.mine(small_graphs)
+    logger.info(
+        "gSpan completed in %.1fs: found %d frequent sub-graphs.",
+        time.time() - t0, len(results),
+    )
 
     # -- 3. Convert to ZXWeb objects ------------------------------------------
     webs: list[ZXWeb] = []

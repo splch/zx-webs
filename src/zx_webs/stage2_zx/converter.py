@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import pyzx as zx
+from tqdm import tqdm
 
 from zx_webs.config import ZXConfig
 from zx_webs.persistence import load_manifest, save_graph_json, save_manifest
@@ -107,7 +108,7 @@ def run_stage2(
 
     entries: list[dict[str, Any]] = []
 
-    for item in corpus_manifest:
+    for item in tqdm(corpus_manifest, desc="Stage 2: Converting to ZX", unit="graph"):
         algorithm_id: str = item["algorithm_id"]
         qasm_path = Path(item["qasm_path"])
 

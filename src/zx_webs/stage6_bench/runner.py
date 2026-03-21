@@ -10,6 +10,8 @@ import logging
 from pathlib import Path
 from typing import Any
 
+from tqdm import tqdm
+
 from zx_webs.config import BenchConfig
 from zx_webs.persistence import load_manifest, save_json, save_manifest
 from zx_webs.stage6_bench.comparator import compare_candidate_to_baselines
@@ -119,7 +121,7 @@ def run_stage6(
     # -- 3-5. Compute metrics & compare --------------------------------------
     results: list[dict[str, Any]] = []
 
-    for survivor in filtered_manifest:
+    for survivor in tqdm(filtered_manifest, desc="Stage 6: Benchmarking", unit="survivor"):
         survivor_id = survivor.get("survivor_id", "unknown")
         qasm_str = _load_qasm_text(survivor)
         if not qasm_str:

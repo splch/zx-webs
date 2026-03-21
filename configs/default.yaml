@@ -27,6 +27,7 @@ compose:
   max_candidates: 5000
   composition_modes: [sequential, parallel]
   boundary_match_strategy: exact_type
+  min_compose_qubits: 2
   seed: 42
 
 filter:
