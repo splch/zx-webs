@@ -946,24 +946,43 @@ def run_stage4(
         return []
 
     # Cap the number of webs loaded to avoid OOM on large mining runs.
-    # We need at most O(max_candidates) webs — loading millions is wasteful.
+    # Sample a balanced mix of boundary sizes to enable compositions at
+    # all qubit counts (not just 2-qubit or 4-qubit).
     max_webs_to_load = min(len(manifest), config.max_candidates * 10)
     if len(manifest) > max_webs_to_load:
         rng = random.Random(config.seed)
-        # Prefer multi-qubit webs (n_inputs >= 2) by loading them all,
-        # then sampling from single-qubit webs to fill the rest.
-        multi_q = [e for e in manifest if e.get("n_inputs", 0) >= 2]
-        single_q = [e for e in manifest if e.get("n_inputs", 0) < 2]
-        if len(multi_q) >= max_webs_to_load:
-            sampled = rng.sample(multi_q, max_webs_to_load)
-        else:
-            remaining = max_webs_to_load - len(multi_q)
-            sampled = multi_q + rng.sample(single_q, min(remaining, len(single_q)))
+        # Group webs by (n_inputs, n_outputs) and sample proportionally,
+        # but ensure all boundary-size groups are represented.
+        from collections import defaultdict
+        by_io: dict[tuple[int, int], list] = defaultdict(list)
+        for e in manifest:
+            key = (e.get("n_inputs", 0), e.get("n_outputs", 0))
+            by_io[key].append(e)
+
+        sampled: list = []
+        # First, include ALL webs from rare groups (< 1% of max_webs)
+        rare_threshold = max_webs_to_load // 100
+        for key, group in by_io.items():
+            if len(group) <= rare_threshold:
+                sampled.extend(group)
+
+        # Then fill remaining budget proportionally from larger groups
+        remaining = max_webs_to_load - len(sampled)
+        large_groups = {k: v for k, v in by_io.items() if len(v) > rare_threshold}
+        total_large = sum(len(v) for v in large_groups.values())
+        if total_large > 0 and remaining > 0:
+            for key, group in large_groups.items():
+                share = max(1, int(remaining * len(group) / total_large))
+                sampled.extend(rng.sample(group, min(share, len(group))))
+
+        rng.shuffle(sampled)
+        # Log the distribution
+        from collections import Counter
+        io_counts = Counter((e.get("n_inputs", 0), e.get("n_outputs", 0)) for e in sampled)
         logger.info(
-            "Sampled %d webs from %d total (%d multi-qubit, %d single-qubit).",
+            "Sampled %d webs from %d total. Boundary distribution: %s",
             len(sampled), len(manifest),
-            sum(1 for e in sampled if e.get("n_inputs", 0) >= 2),
-            sum(1 for e in sampled if e.get("n_inputs", 0) < 2),
+            {k: v for k, v in sorted(io_counts.items(), key=lambda x: -x[1])[:6]},
         )
         manifest = sampled
 
