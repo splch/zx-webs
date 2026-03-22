@@ -1366,6 +1366,24 @@ def run_stage4(
     stitcher = Stitcher(config)
     strategy = config.compose_strategy
 
+    def _save_exploration_log(log: list[dict], path: Path) -> None:
+        """Save BYOL exploration log, converting numpy scalars for JSON."""
+        import json as _json
+        import numpy as _np
+
+        class _NumpyEncoder(_json.JSONEncoder):
+            def default(self, obj: object) -> object:
+                if isinstance(obj, (_np.floating, _np.float32, _np.float64)):
+                    return float(obj)
+                if isinstance(obj, (_np.integer, _np.int32, _np.int64)):
+                    return int(obj)
+                if isinstance(obj, _np.ndarray):
+                    return obj.tolist()
+                return super().default(obj)
+
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(_json.dumps(log, indent=2, cls=_NumpyEncoder))
+
     if strategy == "byol":
         # Pure BYOL-Explore: all candidates come from curiosity-driven search.
         from zx_webs.byol_explore import run_curiosity_exploration
@@ -1379,10 +1397,9 @@ def run_stage4(
             seed=config.seed,
         )
         # Persist exploration log alongside candidates.
-        log_path = output_dir / "byol_exploration_log.json"
-        log_path.parent.mkdir(parents=True, exist_ok=True)
-        import json as _json
-        log_path.write_text(_json.dumps(exploration_log, indent=2))
+        _save_exploration_log(
+            exploration_log, output_dir / "byol_exploration_log.json",
+        )
         logger.info(
             "BYOL-Explore produced %d candidates (%d exploration steps logged).",
             len(candidates), len(exploration_log),
@@ -1405,10 +1422,9 @@ def run_stage4(
             steps_per_episode=config.byol_steps_per_episode,
             seed=config.seed,
         )
-        log_path = output_dir / "byol_exploration_log.json"
-        log_path.parent.mkdir(parents=True, exist_ok=True)
-        import json as _json
-        log_path.write_text(_json.dumps(exploration_log, indent=2))
+        _save_exploration_log(
+            exploration_log, output_dir / "byol_exploration_log.json",
+        )
         logger.info(
             "BYOL-Explore (hybrid) produced %d candidates.", len(byol_candidates),
         )
