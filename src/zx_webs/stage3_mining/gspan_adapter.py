@@ -10,12 +10,25 @@ This module provides :class:`GSpanAdapter`, which:
 The primary backend is **submine** (a C++ gSpan implementation).  When
 submine is not installed, we fall back to the pure-Python ``gspan-mining``
 library with a silent subclass that captures results without printing.
+
+**Performance notes**:
+
+- The C++ ``mine_from_string`` call holds the Python GIL for the entire
+  computation.  ``signal.alarm`` / ``SIGALRM`` cannot interrupt it, so
+  Python-level timeouts are ineffective.  We use subprocess-based isolation
+  to enforce hard timeouts when ``mining_timeout`` is set.
+- Memory usage scales with ``(n_graphs * max_vertices * n_labels)``.
+  With 300 graphs and ``max_vertices >= 6``, peak RSS can exceed 2 GB.
+  On systems with per-user cgroup memory limits (e.g. SLURM head nodes),
+  this causes swap-thrashing and apparent hangs.  Always run heavy mining
+  on compute nodes with adequate RAM.
 """
 from __future__ import annotations
 
 import collections
 import copy
 import logging
+import multiprocessing as mp
 import tempfile
 from dataclasses import dataclass, field
 from fractions import Fraction
@@ -32,6 +45,63 @@ from zx_webs.stage3_mining.graph_encoder import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+def _check_memory_environment() -> str | None:
+    """Check for memory constraints that could cause mining to hang.
+
+    Returns a warning string if problems are detected, or None if OK.
+    Checks:
+    - cgroup v2 memory limits (common on SLURM head nodes)
+    - System swap exhaustion (causes allocation failures and hangs)
+    """
+    warnings = []
+
+    # Check cgroup memory limit.
+    try:
+        cgroup_path = Path("/proc/self/cgroup")
+        if cgroup_path.exists():
+            cg_text = cgroup_path.read_text().strip()
+            parts = cg_text.split("::")
+            if len(parts) >= 2:
+                cg_dir = Path("/sys/fs/cgroup") / parts[-1].lstrip("/")
+                mem_max = cg_dir / "memory.max"
+                if mem_max.exists():
+                    val = mem_max.read_text().strip()
+                    if val != "max":
+                        limit_mb = int(val) / (1024 * 1024)
+                        if limit_mb < 4096:
+                            warnings.append(
+                                f"cgroup memory limit is {limit_mb:.0f} MB"
+                            )
+    except Exception:
+        pass
+
+    # Check system swap availability.
+    try:
+        meminfo = Path("/proc/meminfo")
+        if meminfo.exists():
+            content = meminfo.read_text()
+            swap_total = swap_free = None
+            for line in content.splitlines():
+                if line.startswith("SwapTotal:"):
+                    swap_total = int(line.split()[1])  # kB
+                elif line.startswith("SwapFree:"):
+                    swap_free = int(line.split()[1])  # kB
+            if swap_total and swap_free is not None:
+                swap_used_pct = 100 * (1 - swap_free / swap_total) if swap_total > 0 else 0
+                if swap_used_pct > 90:
+                    warnings.append(
+                        f"system swap is {swap_used_pct:.0f}% full "
+                        f"({swap_free // 1024} MB free of {swap_total // 1024} MB)"
+                    )
+    except Exception:
+        pass
+
+    if warnings:
+        return "; ".join(warnings)
+    return None
+
 
 # Try to import the C++ backend from submine.
 try:
@@ -50,6 +120,38 @@ try:
     _HAS_GSPAN_MINING = True
 except ImportError:
     _HAS_GSPAN_MINING = False
+
+
+# ---------------------------------------------------------------------------
+# Subprocess worker for timeout-safe mining
+# ---------------------------------------------------------------------------
+
+
+def _submine_worker(
+    gspan_data: str,
+    minsup: int,
+    minv: int,
+    maxv: int,
+    result_queue: mp.Queue,
+) -> None:
+    """Run gSpan mining in a subprocess.
+
+    Must be a module-level function for ``multiprocessing`` pickling.
+    Re-imports submine in the child to avoid issues with fork-inherited
+    C extension state.
+    """
+    # Re-import to get a clean C++ module state in the subprocess.
+    from submine.algorithms import gspan_cpp as cpp
+
+    raw = cpp.mine_from_string(
+        gspan_data,
+        minsup=minsup,
+        maxpat_min=minv,
+        maxpat_max=maxv,
+        directed=False,
+        where=True,
+    )
+    result_queue.put(raw)
 
 
 # ---------------------------------------------------------------------------
@@ -212,21 +314,36 @@ class GSpanAdapter:
         )
 
     def _mine_submine(self, graphs: list[zx.Graph]) -> list[GSpanResult]:
-        """Mine using the submine C++ backend."""
+        """Mine using the submine C++ backend.
+
+        When ``mining_timeout`` is configured, mining runs in a subprocess
+        so it can be killed if it exceeds the time limit.  This is necessary
+        because the C++ code holds the GIL and ``signal.alarm`` cannot
+        interrupt it.
+        """
         with tempfile.TemporaryDirectory() as tmpdir:
             gspan_path = Path(tmpdir) / "corpus.gspan"
             pyzx_graphs_to_gspan_file(graphs, gspan_path, self.encoder)
             gspan_data = gspan_path.read_text(encoding="utf-8")
 
-        logger.debug("Running submine C++ gSpan backend.")
-        raw_results = _gspan_cpp.mine_from_string(
-            gspan_data,
-            minsup=self.config.min_support,
-            maxpat_min=self.config.min_vertices,
-            maxpat_max=self.config.max_vertices,
-            directed=False,
-            where=True,
-        )
+        # Warn if memory constraints could cause hangs.
+        mem_warning = _check_memory_environment()
+        if mem_warning:
+            logger.warning(
+                "Memory constraint detected: %s. "
+                "gSpan mining with %d graphs and max_vertices=%d may require "
+                "several GB of RAM and could hang due to swap-thrashing. "
+                "Consider running on a SLURM compute node with adequate RAM, "
+                "or increasing min_support to reduce memory usage.",
+                mem_warning, len(graphs), self.config.max_vertices,
+            )
+
+        timeout = getattr(self.config, "mining_timeout", 0)
+
+        if timeout and timeout > 0:
+            raw_results = self._mine_submine_subprocess(gspan_data, timeout)
+        else:
+            raw_results = self._mine_submine_inline(gspan_data)
 
         results: list[GSpanResult] = []
         for rd in raw_results:
@@ -242,6 +359,81 @@ class GSpanAdapter:
         # Sort by descending support, then ascending number of nodes.
         results.sort(key=lambda r: (-r.support, len(r.submine_dict["nodes"])))
         return results
+
+    def _mine_submine_inline(self, gspan_data: str) -> list[dict]:
+        """Run submine in the current process (no timeout protection)."""
+        logger.debug("Running submine C++ gSpan backend (inline).")
+        return _gspan_cpp.mine_from_string(
+            gspan_data,
+            minsup=self.config.min_support,
+            maxpat_min=self.config.min_vertices,
+            maxpat_max=self.config.max_vertices,
+            directed=False,
+            where=True,
+        )
+
+    def _mine_submine_subprocess(self, gspan_data: str, timeout: int) -> list[dict]:
+        """Run submine in a subprocess with a hard timeout.
+
+        The C++ ``mine_from_string`` holds the GIL, making it impossible
+        to interrupt via Python signals.  Running in a subprocess allows
+        us to ``kill()`` it if the timeout is exceeded.
+
+        **Important**: we read from the result queue *before* calling
+        ``proc.join()`` to avoid a pipe-buffer deadlock.  The child
+        blocks in ``Queue.put()`` if the pipe buffer fills up, and the
+        parent blocks in ``proc.join()`` waiting for the child to exit
+        -- classic multiprocessing deadlock (see Python docs on
+        ``multiprocessing.Queue``).
+        """
+        import queue as _queue_mod
+
+        logger.info(
+            "Running submine C++ gSpan backend in subprocess "
+            "(timeout=%ds, minsup=%d, max_v=%d).",
+            timeout, self.config.min_support, self.config.max_vertices,
+        )
+
+        result_queue: mp.Queue = mp.Queue()
+        proc = mp.Process(
+            target=_submine_worker,
+            args=(
+                gspan_data,
+                self.config.min_support,
+                self.config.min_vertices,
+                self.config.max_vertices,
+                result_queue,
+            ),
+        )
+        proc.start()
+
+        # Read from queue BEFORE join to avoid pipe-buffer deadlock.
+        # The child's Queue.put() blocks if the pipe is full, so the
+        # parent must consume the result before the child can exit.
+        result = None
+        try:
+            result = result_queue.get(timeout=timeout)
+        except _queue_mod.Empty:
+            pass
+
+        # Now safe to join (child has finished or will be killed).
+        proc.join(timeout=5)
+
+        if proc.is_alive():
+            logger.error(
+                "submine mining exceeded %ds timeout -- killing subprocess. "
+                "Try increasing min_support or decreasing max_vertices.",
+                timeout,
+            )
+            proc.kill()
+            proc.join()
+            return []
+
+        if result is not None:
+            return result
+
+        logger.error("submine subprocess exited without producing results.")
+        return []
 
     def _mine_python(self, graphs: list[zx.Graph]) -> list[GSpanResult]:
         """Mine using the pure-Python gspan-mining fallback."""

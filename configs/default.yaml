@@ -26,6 +26,7 @@ mining:
   phase_discretization: 8
   include_phase_in_label: true
   mining_reduction: teleport_reduce  # "full_reduce", "teleport_reduce", or "none"
+  mining_timeout: 600  # seconds; 0 = no timeout. Protects against GIL-locked hangs.
 
 compose:
   max_webs_per_candidate: 3

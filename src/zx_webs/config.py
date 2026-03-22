@@ -38,7 +38,24 @@ class ZXConfig(BaseModel):
 
 
 class MiningConfig(BaseModel):
-    """Stage 3 -- frequent sub-graph mining."""
+    """Stage 3 -- frequent sub-graph mining.
+
+    **Performance guidance** -- runtime scales exponentially with
+    ``max_vertices`` at low ``min_support``.  Benchmark data on a
+    294-graph corpus (<=50 vertices each):
+
+    ==========  =========  ===========  ==========
+    min_support  max_v=6   max_v=12     max_v=16
+    ==========  =========  ===========  ==========
+    2-3          835K/246s  intractable  intractable
+    10           29K/48s    intractable  intractable
+    20           1.2K/2.7s  2.2K/22s     2.2K/22s
+    30           296/1.0s   421/3.5s     421/3.5s
+    ==========  =========  ===========  ==========
+
+    Pattern counts saturate around max_v=12-14 for most corpora,
+    so increasing beyond that adds no new patterns.
+    """
 
     min_support: int = 3
     min_vertices: int = 2
@@ -47,6 +64,7 @@ class MiningConfig(BaseModel):
     phase_discretization: int = 8
     include_phase_in_label: bool = True
     mining_reduction: str = "teleport_reduce"  # "full_reduce", "teleport_reduce", or "none"
+    mining_timeout: int = 0  # seconds; 0 = no timeout (runs inline)
 
 
 class ComposeConfig(BaseModel):
