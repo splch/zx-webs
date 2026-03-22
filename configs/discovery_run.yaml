@@ -1,0 +1,74 @@
+data_dir: data
+
+corpus:
+  families:
+    - oracular
+    - arithmetic
+    - variational
+    - simulation
+    - entanglement
+    - error_correction
+    - linear_algebra
+    - communication
+  max_qubits: 5
+  qubit_counts: [3, 4, 5]
+  seed: 42
+
+zx:
+  reduction: full_reduce
+  mining_reduction: teleport_reduce
+  normalize: true
+
+mining:
+  min_support: 3
+  min_vertices: 3
+  max_vertices: 12
+  max_input_vertices: 50
+  phase_discretization: 8
+  include_phase_in_label: true
+  mining_reduction: teleport_reduce
+  discriminative_mining: true
+  discriminative_min_support: 2
+  discriminative_max_family_ratio: 0.4
+
+compose:
+  max_webs_per_candidate: 3
+  max_candidates: 20000
+  max_webs_loaded: 50000
+  composition_modes: [sequential, parallel]
+  min_compose_qubits: 2
+  max_compose_qubits: 10
+  seed: 42
+  prefer_cross_family: true
+  guided: true
+  target_qubit_counts: [3, 4, 5]
+  phase_perturbation_resolution: 8
+  phase_perturbation_rate: 0.3
+  continuous_phase_perturbation: true
+
+filter:
+  extract_timeout_seconds: 15.0
+  max_cnot_blowup_factor: 5.0
+  cnot_blowup_enabled: true
+  dedup_method: unitary
+  optimize_cnots_level: 2
+  gflow_precheck: false
+  max_unitary_qubits: 8
+  n_workers: 4
+
+bench:
+  tasks:
+    - grover_oracle
+    - maxcut
+    - qpe
+    - ghz
+    - arithmetic
+  qasmbench_path: data/qasmbench
+  fidelity_shots: 8192
+  fidelity_threshold: 0.99
+  novelty_scoring: true
+  max_unitary_qubits: 8
+
+report:
+  output_format: [json, html]
+  figure_dpi: 150
