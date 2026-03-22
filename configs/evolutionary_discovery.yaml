@@ -46,6 +46,11 @@ compose:
   phase_perturbation_resolution: 8
   phase_perturbation_rate: 0.3
   continuous_phase_perturbation: true
+  # BYOL-Explore: "standard", "byol", or "hybrid"
+  compose_strategy: hybrid
+  byol_episodes: 5
+  byol_steps_per_episode: 300
+  byol_budget_fraction: 0.5
 
 filter:
   extract_timeout_seconds: 30.0

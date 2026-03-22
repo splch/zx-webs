@@ -86,6 +86,11 @@ class ComposeConfig(BaseModel):
     phase_perturbation_resolution: int = 8  # k*pi/N for k in 0..2N-1
     phase_perturbation_rate: float = 0.3  # probability of perturbing each spider
     continuous_phase_perturbation: bool = False  # use uniform random phases instead of discrete palette
+    # BYOL-Explore curiosity-driven composition
+    compose_strategy: str = "standard"  # "standard", "byol", or "hybrid"
+    byol_episodes: int = 5  # number of BYOL-Explore exploration episodes
+    byol_steps_per_episode: int = 200  # composition attempts per episode
+    byol_budget_fraction: float = 0.5  # fraction of max_candidates allocated to BYOL in hybrid mode
 
 
 class FilterConfig(BaseModel):

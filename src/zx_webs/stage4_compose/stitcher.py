@@ -1364,10 +1364,76 @@ def run_stage4(
 
     # -- 2. Generate candidates -----------------------------------------------
     stitcher = Stitcher(config)
-    candidates = stitcher.generate_candidates(
-        webs, target_tasks=target_tasks,
-        fitness_weights=idx_fitness_weights,
-    )
+    strategy = config.compose_strategy
+
+    if strategy == "byol":
+        # Pure BYOL-Explore: all candidates come from curiosity-driven search.
+        from zx_webs.byol_explore import run_curiosity_exploration
+
+        candidates, exploration_log = run_curiosity_exploration(
+            webs=webs,
+            stitcher=stitcher,
+            config=config,
+            n_episodes=config.byol_episodes,
+            steps_per_episode=config.byol_steps_per_episode,
+            seed=config.seed,
+        )
+        # Persist exploration log alongside candidates.
+        log_path = output_dir / "byol_exploration_log.json"
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        import json as _json
+        log_path.write_text(_json.dumps(exploration_log, indent=2))
+        logger.info(
+            "BYOL-Explore produced %d candidates (%d exploration steps logged).",
+            len(candidates), len(exploration_log),
+        )
+
+    elif strategy == "hybrid":
+        # Hybrid: split the candidate budget between BYOL and standard.
+        from zx_webs.byol_explore import run_curiosity_exploration
+
+        byol_budget = int(config.max_candidates * config.byol_budget_fraction)
+        std_budget = config.max_candidates - byol_budget
+
+        # Run BYOL-Explore with its share of the budget.
+        byol_config = config.model_copy(update={"max_candidates": byol_budget})
+        byol_candidates, exploration_log = run_curiosity_exploration(
+            webs=webs,
+            stitcher=stitcher,
+            config=byol_config,
+            n_episodes=config.byol_episodes,
+            steps_per_episode=config.byol_steps_per_episode,
+            seed=config.seed,
+        )
+        log_path = output_dir / "byol_exploration_log.json"
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        import json as _json
+        log_path.write_text(_json.dumps(exploration_log, indent=2))
+        logger.info(
+            "BYOL-Explore (hybrid) produced %d candidates.", len(byol_candidates),
+        )
+
+        # Run standard composition with its share of the budget.
+        std_config = config.model_copy(update={"max_candidates": std_budget})
+        std_stitcher = Stitcher(std_config)
+        std_candidates = std_stitcher.generate_candidates(
+            webs, target_tasks=target_tasks,
+            fitness_weights=idx_fitness_weights,
+        )
+        logger.info(
+            "Standard (hybrid) produced %d candidates.", len(std_candidates),
+        )
+
+        # Merge: BYOL candidates first (they explored novel regions),
+        # then standard candidates to fill remaining budget.
+        candidates = byol_candidates + std_candidates
+
+    else:
+        # Standard strategy (default).
+        candidates = stitcher.generate_candidates(
+            webs, target_tasks=target_tasks,
+            fitness_weights=idx_fitness_weights,
+        )
 
     # -- 3. Persist results ---------------------------------------------------
     output_dir.mkdir(parents=True, exist_ok=True)
