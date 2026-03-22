@@ -359,6 +359,69 @@ def _is_n_qubit_pauli(mat: np.ndarray, n: int, atol: float = 1e-8) -> bool:
     return _is_n_qubit_pauli(coeffs, 1, atol) and _is_n_qubit_pauli(ref_block, n - 1, atol)
 
 
+def process_fidelity(u1: np.ndarray, u2: np.ndarray) -> float:
+    """Compute the process fidelity between two unitary matrices.
+
+    ``|Tr(U1^dag @ U2)|^2 / d^2`` where ``d`` is the matrix dimension.
+
+    Parameters
+    ----------
+    u1, u2:
+        Unitary matrices of the same shape.
+
+    Returns
+    -------
+    float
+        Fidelity in [0, 1].
+    """
+    if u1.shape != u2.shape:
+        return 0.0
+    d = u1.shape[0]
+    tr = np.trace(u1.conj().T @ u2)
+    return float(abs(tr) ** 2) / (d * d)
+
+
+def novelty_score(
+    candidate_unitary: np.ndarray,
+    corpus_unitaries: list[np.ndarray],
+) -> float:
+    """Compute how novel a candidate unitary is relative to all known unitaries.
+
+    Returns ``1 - max_fidelity`` where ``max_fidelity`` is the highest process
+    fidelity to any corpus unitary of the same dimension.  A score of 1.0 means
+    the candidate is maximally unlike anything in the corpus; 0.0 means it's
+    identical to a known algorithm.
+
+    Parameters
+    ----------
+    candidate_unitary:
+        The candidate's unitary matrix.
+    corpus_unitaries:
+        List of known algorithm unitaries.
+
+    Returns
+    -------
+    float
+        Novelty score in [0, 1].
+    """
+    if not corpus_unitaries:
+        return 1.0
+
+    max_fidelity = 0.0
+    d = candidate_unitary.shape[0]
+
+    for corpus_u in corpus_unitaries:
+        if corpus_u.shape != candidate_unitary.shape:
+            continue
+        fid = process_fidelity(candidate_unitary, corpus_u)
+        if fid > max_fidelity:
+            max_fidelity = fid
+            if max_fidelity >= 1.0 - 1e-10:
+                break  # exact match, no need to continue
+
+    return 1.0 - max_fidelity
+
+
 def entanglement_capacity(unitary: np.ndarray) -> float:
     """Estimate the entanglement-generating capacity of a unitary.
 

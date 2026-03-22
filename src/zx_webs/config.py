@@ -65,6 +65,9 @@ class MiningConfig(BaseModel):
     include_phase_in_label: bool = True
     mining_reduction: str = "teleport_reduce"  # "full_reduce", "teleport_reduce", or "none"
     mining_timeout: int = 0  # seconds; 0 = no timeout (runs inline)
+    discriminative_mining: bool = False  # mine family-specific rare patterns
+    discriminative_min_support: int = 2  # lower support threshold for per-family mining
+    discriminative_max_family_ratio: float = 0.5  # max fraction of families a pattern can appear in
 
 
 class ComposeConfig(BaseModel):
@@ -82,6 +85,7 @@ class ComposeConfig(BaseModel):
     target_qubit_counts: list[int] = [3, 5, 7]  # qubit counts to target when guided
     phase_perturbation_resolution: int = 8  # k*pi/N for k in 0..2N-1
     phase_perturbation_rate: float = 0.3  # probability of perturbing each spider
+    continuous_phase_perturbation: bool = False  # use uniform random phases instead of discrete palette
 
 
 class FilterConfig(BaseModel):
@@ -122,6 +126,7 @@ class BenchConfig(BaseModel):
     supermarq_qubits: list[int] = [3, 5, 8]
     fidelity_shots: int = 8192
     fidelity_threshold: float = 0.99
+    novelty_scoring: bool = False  # compute novelty score (distance from all known unitaries)
     max_unitary_qubits: int = 10  # max qubits for unitary matrix computation
     backends: list[BackendConfig] = [
         BackendConfig(name="aer_ideal", type="simulator", provider="aer"),

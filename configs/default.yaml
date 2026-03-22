@@ -27,6 +27,9 @@ mining:
   include_phase_in_label: true
   mining_reduction: teleport_reduce  # "full_reduce", "teleport_reduce", or "none"
   mining_timeout: 600  # seconds; 0 = no timeout. Protects against GIL-locked hangs.
+  discriminative_mining: true
+  discriminative_min_support: 2
+  discriminative_max_family_ratio: 0.5
 
 compose:
   max_webs_per_candidate: 3
@@ -35,11 +38,12 @@ compose:
   min_compose_qubits: 2
   max_compose_qubits: 20
   seed: 42
-  prefer_cross_family: false   # neutral baseline: no cross-family bias
-  guided: false                # enable target-guided composition
-  target_qubit_counts: [3, 5, 7]  # qubit counts to target when guided
+  prefer_cross_family: true
+  guided: true
+  target_qubit_counts: [3, 5, 7]
   phase_perturbation_resolution: 8  # k*pi/N for k in 0..2N-1
   phase_perturbation_rate: 0.3
+  continuous_phase_perturbation: true
 
 filter:
   extract_timeout_seconds: 60.0
@@ -60,6 +64,7 @@ bench:
   qasmbench_path: data/qasmbench
   fidelity_shots: 8192
   fidelity_threshold: 0.99
+  novelty_scoring: true
   max_unitary_qubits: 10
 
 report:

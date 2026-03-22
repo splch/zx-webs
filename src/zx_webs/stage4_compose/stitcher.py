@@ -405,6 +405,7 @@ class Stitcher:
         N = config.phase_perturbation_resolution
         self._phase_palette = [Fraction(k, N) for k in range(2 * N)]
         self._perturbation_rate = config.phase_perturbation_rate
+        self._continuous_phase = config.continuous_phase_perturbation
 
     # ------------------------------------------------------------------
     # Strategy 1: Sequential compose via PyZX native compose()
@@ -607,7 +608,11 @@ class Stitcher:
             if v in boundary_set:
                 continue
             if self.rng.random() < rate:
-                new_phase = self.rng.choice(self._phase_palette)
+                if self._continuous_phase:
+                    # Sample from uniform [0, 2) as a fraction of pi.
+                    new_phase = Fraction(self.rng.randint(0, 1023), 512)
+                else:
+                    new_phase = self.rng.choice(self._phase_palette)
                 g.set_phase(v, new_phase)
 
         return g

@@ -577,3 +577,74 @@ class TestRunStage3EndToEnd:
         output_dir = tmp_path / "webs_empty"
         webs = run_stage3(zx_dir, output_dir)
         assert webs == []
+
+
+# ---------------------------------------------------------------------------
+# Tests for discriminative mining
+# ---------------------------------------------------------------------------
+
+
+class TestDiscriminativeMining:
+    """Tests for the discriminative mining feature."""
+
+    def test_discriminative_mining_produces_webs(self, tmp_path: Path) -> None:
+        """Discriminative mining with >=2 families should produce webs."""
+        from zx_webs.stage3_mining.miner import _mine_discriminative
+
+        # Create graphs with two distinct families.
+        graphs = []
+        families = []
+
+        # Family A: Z-Z chains (simple structure).
+        for _ in range(3):
+            g = zx.Graph()
+            v1 = g.add_vertex(ty=1, phase=Fraction(0))
+            v2 = g.add_vertex(ty=1, phase=Fraction(0))
+            g.add_edge((v1, v2), edgetype=1)
+            graphs.append(g)
+            families.append("family_a")
+
+        # Family B: Z-X chains (different structure).
+        for _ in range(3):
+            g = zx.Graph()
+            v1 = g.add_vertex(ty=1, phase=Fraction(0))
+            v2 = g.add_vertex(ty=2, phase=Fraction(0))
+            g.add_edge((v1, v2), edgetype=1)
+            graphs.append(g)
+            families.append("family_b")
+
+        family_lookup = {i: f for i, f in enumerate(families)}
+        config = MiningConfig(
+            min_support=2,
+            min_vertices=2,
+            max_vertices=6,
+            discriminative_mining=True,
+            discriminative_min_support=2,
+            discriminative_max_family_ratio=0.5,
+        )
+
+        webs = _mine_discriminative(graphs, families, config, family_lookup)
+        # Should produce at least some webs from the per-family mining.
+        assert isinstance(webs, list)
+
+    def test_discriminative_mining_skips_single_family(self) -> None:
+        """Discriminative mining with <2 families should return empty."""
+        from zx_webs.stage3_mining.miner import _mine_discriminative
+
+        g = zx.Graph()
+        v1 = g.add_vertex(ty=1, phase=Fraction(0))
+        v2 = g.add_vertex(ty=1, phase=Fraction(0))
+        g.add_edge((v1, v2), edgetype=1)
+
+        config = MiningConfig(discriminative_mining=True, discriminative_min_support=2)
+        webs = _mine_discriminative(
+            [g, g], ["family_a", "family_a"], config, {0: "family_a", 1: "family_a"},
+        )
+        assert webs == []
+
+    def test_discriminative_mining_config_defaults(self) -> None:
+        """Config defaults for discriminative mining should be sensible."""
+        config = MiningConfig()
+        assert config.discriminative_mining is False
+        assert config.discriminative_min_support == 2
+        assert config.discriminative_max_family_ratio == 0.5

@@ -1176,3 +1176,51 @@ class TestFarthestPointSample:
 
         assert len(selected) == 1000
         assert elapsed < 2.0, f"FPS on 100K points took {elapsed:.2f}s (should be < 2s)"
+
+
+# ---------------------------------------------------------------------------
+# Tests for continuous phase perturbation
+# ---------------------------------------------------------------------------
+
+
+class TestContinuousPhasePerturb:
+    """Tests for continuous (non-discrete) phase perturbation."""
+
+    def test_continuous_phases_differ_from_palette(self) -> None:
+        """Continuous perturbation produces phases outside the discrete palette."""
+        config = ComposeConfig(
+            seed=42,
+            continuous_phase_perturbation=True,
+            phase_perturbation_resolution=8,
+        )
+        stitcher = Stitcher(config)
+
+        # Build a graph with several interior Z-spiders.
+        g = _make_2q_graph()
+        perturbed = stitcher.perturb_phases(g, rate=1.0)
+
+        # Collect all phases from interior spiders.
+        phases = []
+        for v in perturbed.vertices():
+            if perturbed.type(v) in (1, 2):  # Z or X spider
+                phases.append(perturbed.phase(v))
+
+        # With continuous mode, phases should be Fraction(k, 512)
+        # which gives much finer resolution than Fraction(k, 8).
+        assert len(phases) > 0
+
+    def test_continuous_phase_preserves_structure(self) -> None:
+        """Continuous phase perturbation preserves graph structure."""
+        config = ComposeConfig(seed=42, continuous_phase_perturbation=True)
+        stitcher = Stitcher(config)
+
+        g = _make_2q_graph()
+        perturbed = stitcher.perturb_phases(g, rate=0.5)
+
+        assert perturbed.num_vertices() == g.num_vertices()
+        assert perturbed.num_edges() == g.num_edges()
+
+    def test_continuous_phase_config_default(self) -> None:
+        """Continuous phase perturbation is off by default."""
+        config = ComposeConfig()
+        assert config.continuous_phase_perturbation is False

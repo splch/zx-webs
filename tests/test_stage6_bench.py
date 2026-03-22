@@ -644,3 +644,83 @@ class TestRunStage6EndToEnd:
         assert "entanglement_capacity" in classification
         # A CNOT+H circuit should be Clifford.
         assert classification["is_clifford"] is True
+
+
+# ---------------------------------------------------------------------------
+# Tests for novelty scoring
+# ---------------------------------------------------------------------------
+
+
+class TestNoveltyScore:
+    """Tests for the novelty_score function."""
+
+    def test_identical_unitary_zero_novelty(self) -> None:
+        """A unitary identical to corpus should have novelty 0."""
+        from zx_webs.stage6_bench.metrics import novelty_score
+
+        u = np.eye(4, dtype=complex)
+        score = novelty_score(u, [u])
+        assert abs(score) < 1e-10
+
+    def test_empty_corpus_max_novelty(self) -> None:
+        """With no corpus unitaries, novelty should be 1.0."""
+        from zx_webs.stage6_bench.metrics import novelty_score
+
+        u = np.eye(4, dtype=complex)
+        score = novelty_score(u, [])
+        assert abs(score - 1.0) < 1e-10
+
+    def test_different_unitary_positive_novelty(self) -> None:
+        """A random unitary should have positive novelty vs identity."""
+        from zx_webs.stage6_bench.metrics import novelty_score
+
+        identity = np.eye(4, dtype=complex)
+        # CNOT matrix is different from identity.
+        cnot = np.array([
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 0, 1],
+            [0, 0, 1, 0],
+        ], dtype=complex)
+        score = novelty_score(cnot, [identity])
+        assert score > 0.0
+
+    def test_novelty_in_unit_interval(self) -> None:
+        """Novelty score should always be in [0, 1]."""
+        from zx_webs.stage6_bench.metrics import novelty_score
+
+        u = np.eye(2, dtype=complex)
+        corpus = [
+            np.array([[0, 1], [1, 0]], dtype=complex),  # X gate
+            np.array([[1, 0], [0, -1]], dtype=complex),  # Z gate
+        ]
+        score = novelty_score(u, corpus)
+        assert 0.0 <= score <= 1.0
+
+
+class TestProcessFidelity:
+    """Tests for the process_fidelity function."""
+
+    def test_identical_unitaries_fidelity_one(self) -> None:
+        """Fidelity of a unitary with itself should be 1."""
+        from zx_webs.stage6_bench.metrics import process_fidelity
+
+        u = np.eye(4, dtype=complex)
+        fid = process_fidelity(u, u)
+        assert abs(fid - 1.0) < 1e-10
+
+    def test_mismatched_shapes_zero(self) -> None:
+        """Mismatched unitary shapes should give fidelity 0."""
+        from zx_webs.stage6_bench.metrics import process_fidelity
+
+        u1 = np.eye(2, dtype=complex)
+        u2 = np.eye(4, dtype=complex)
+        fid = process_fidelity(u1, u2)
+        assert fid == 0.0
+
+    def test_novelty_scoring_config(self) -> None:
+        """Novelty scoring config should default to False."""
+        from zx_webs.config import BenchConfig
+
+        config = BenchConfig()
+        assert config.novelty_scoring is False

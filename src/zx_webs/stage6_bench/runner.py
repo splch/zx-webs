@@ -26,6 +26,7 @@ from zx_webs.stage6_bench.metrics import (
     compute_unitary,
     entanglement_capacity,
     is_clifford_unitary,
+    novelty_score,
 )
 from zx_webs.stage6_bench.tasks import build_benchmark_tasks
 
@@ -105,6 +106,7 @@ def run_stage6(
 
     fidelity_threshold = getattr(config, "fidelity_threshold", 0.99)
     max_unitary_qubits = getattr(config, "max_unitary_qubits", 10)
+    novelty_enabled = getattr(config, "novelty_scoring", False)
 
     # -- 1. Build benchmark tasks from the corpus ----------------------------
     # Derive qubit counts from the survivor manifest so tasks match actual data.
@@ -152,6 +154,17 @@ def run_stage6(
         len(tasks),
     )
 
+    # -- 2b. Collect corpus unitaries for novelty scoring --------------------
+    import numpy as np
+
+    corpus_unitaries_by_qubits: dict[int, list[np.ndarray]] = {}
+    if novelty_enabled:
+        for task in tasks:
+            nq = task.n_qubits
+            if nq not in corpus_unitaries_by_qubits:
+                corpus_unitaries_by_qubits[nq] = []
+            corpus_unitaries_by_qubits[nq].append(task.target_unitary)
+
     # -- 3. Benchmark each survivor ------------------------------------------
     results: list[dict[str, Any]] = []
 
@@ -189,7 +202,13 @@ def run_stage6(
             classification["is_clifford"] = None
             classification["entanglement_capacity"] = None
 
-        # 3c. Match against benchmark tasks.
+        # 3c. Compute novelty score.
+        nov_score: float | None = None
+        if novelty_enabled and unitary is not None:
+            corpus_us = corpus_unitaries_by_qubits.get(metrics.qubit_count, [])
+            nov_score = novelty_score(unitary, corpus_us)
+
+        # 3d. Match against benchmark tasks.
         matches = match_candidate_to_tasks(
             candidate_id=survivor_id,
             candidate_qasm=qasm_str,
@@ -198,29 +217,30 @@ def run_stage6(
             max_unitary_qubits=max_unitary_qubits,
         )
 
-        # 3d. Identify real improvements.
+        # 3e. Identify real improvements.
         real_improvements = [m for m in matches if m.is_improvement]
         best_fidelity = max((m.fidelity for m in matches), default=0.0)
         dominates_any = len(real_improvements) > 0
 
-        results.append(
-            {
-                "survivor_id": survivor_id,
-                "metrics": metrics.to_dict(),
-                "features": features.to_dict(),
-                "classification": classification,
-                "n_qubits": metrics.qubit_count,
-                # Backward-compatible fields.
-                "dominates_any_baseline": dominates_any,
-                "n_baselines_dominated": len(real_improvements),
-                # New functional benchmarking fields.
-                "best_fidelity": best_fidelity,
-                "n_task_matches": len(matches),
-                "n_improvements": len(real_improvements),
-                "task_matches": [m.to_dict() for m in matches],
-                "improvements": [m.to_dict() for m in real_improvements],
-            }
-        )
+        result_entry: dict[str, Any] = {
+            "survivor_id": survivor_id,
+            "metrics": metrics.to_dict(),
+            "features": features.to_dict(),
+            "classification": classification,
+            "n_qubits": metrics.qubit_count,
+            # Backward-compatible fields.
+            "dominates_any_baseline": dominates_any,
+            "n_baselines_dominated": len(real_improvements),
+            # New functional benchmarking fields.
+            "best_fidelity": best_fidelity,
+            "n_task_matches": len(matches),
+            "n_improvements": len(real_improvements),
+            "task_matches": [m.to_dict() for m in matches],
+            "improvements": [m.to_dict() for m in real_improvements],
+        }
+        if nov_score is not None:
+            result_entry["novelty_score"] = nov_score
+        results.append(result_entry)
 
     # -- 4. Persist results --------------------------------------------------
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -237,4 +257,16 @@ def run_stage6(
         n_improvements,
         fidelity_threshold,
     )
+    if novelty_enabled:
+        novelty_scores = [r["novelty_score"] for r in results if "novelty_score" in r]
+        if novelty_scores:
+            high_novelty = sum(1 for s in novelty_scores if s >= 0.5)
+            logger.info(
+                "Novelty: %d/%d survivors scored (mean=%.3f, max=%.3f, "
+                "%d with novelty >= 0.5).",
+                len(novelty_scores), len(results),
+                sum(novelty_scores) / len(novelty_scores),
+                max(novelty_scores),
+                high_novelty,
+            )
     return results

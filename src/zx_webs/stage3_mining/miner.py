@@ -472,6 +472,145 @@ def _make_reversed_web(web: ZXWeb, new_web_id: str) -> ZXWeb | None:
 
 
 # ---------------------------------------------------------------------------
+# Discriminative mining -- find family-specific patterns
+# ---------------------------------------------------------------------------
+
+
+def _mine_discriminative(
+    graphs: list[zx.Graph],
+    families: list[str],
+    config: MiningConfig,
+    family_lookup: dict[int, str],
+) -> list[ZXWeb]:
+    """Mine patterns that are frequent within individual families but rare globally.
+
+    Instead of mining patterns common across all families (which only finds
+    universally shared motifs), this mines each family separately with a
+    lower support threshold, then keeps patterns that appear in at most
+    ``discriminative_max_family_ratio`` of all families.  These
+    family-specific patterns carry more algorithmic "information" and
+    produce more novel combinations when recombined cross-family.
+
+    Parameters
+    ----------
+    graphs:
+        All ZX-diagram graphs (already filtered by max_input_vertices).
+    families:
+        Family label for each graph (parallel to *graphs*).
+    config:
+        Mining configuration.
+    family_lookup:
+        Mapping from graph index to family name.
+
+    Returns
+    -------
+    list[ZXWeb]
+        Discriminative webs not found by standard frequent mining.
+    """
+    from collections import defaultdict
+
+    # Group graph indices by family.
+    family_groups: dict[str, list[int]] = defaultdict(list)
+    for idx, fam in enumerate(families):
+        if fam:
+            family_groups[fam].append(idx)
+
+    if len(family_groups) < 2:
+        logger.info("Discriminative mining skipped: need >=2 families, got %d.", len(family_groups))
+        return []
+
+    max_family_ratio = config.discriminative_max_family_ratio
+    disc_min_support = config.discriminative_min_support
+    all_webs: list[ZXWeb] = []
+    web_counter = 0
+
+    # Track which pattern graph structures we've seen (by vertex+edge hash)
+    # to avoid duplicates across families.
+    seen_hashes: set[str] = set()
+
+    for fam_name, fam_indices in sorted(family_groups.items()):
+        if len(fam_indices) < disc_min_support:
+            continue
+
+        fam_graphs = [graphs[i] for i in fam_indices]
+
+        # Build a local family_lookup for this subset.
+        local_family_lookup: dict[int, str] = {}
+        for local_idx, global_idx in enumerate(fam_indices):
+            local_family_lookup[local_idx] = family_lookup.get(global_idx, fam_name)
+
+        adapter = GSpanAdapter(
+            MiningConfig(
+                min_support=disc_min_support,
+                min_vertices=config.min_vertices,
+                max_vertices=config.max_vertices,
+                max_input_vertices=config.max_input_vertices,
+                phase_discretization=config.phase_discretization,
+                include_phase_in_label=config.include_phase_in_label,
+            )
+        )
+
+        try:
+            results = adapter.mine(fam_graphs)
+        except Exception as exc:
+            logger.debug("Discriminative mining failed for family %s: %s", fam_name, exc)
+            continue
+
+        for result in results:
+            # Create a simple hash of the pattern structure to deduplicate.
+            if result.submine_dict is not None:
+                rd = result.submine_dict
+                pat_hash = str(sorted(zip(rd["nodes"], rd["node_labels"]))) + str(sorted(
+                    (min(s, d), max(s, d), l)
+                    for (s, d), l in zip(rd["edges"], rd["edge_labels"])
+                ))
+            else:
+                pat_hash = str(result.dfscode) if result.dfscode else str(web_counter)
+
+            if pat_hash in seen_hashes:
+                continue
+            seen_hashes.add(pat_hash)
+
+            web_id = f"disc_{web_counter:04d}"
+            web = _result_to_zx_web(
+                result, web_id, adapter,
+                family_lookup=local_family_lookup,
+            )
+            all_webs.append(web)
+            web_counter += 1
+
+            # Also generate reversed version.
+            reversed_web = _make_reversed_web(web, f"disc_{web_counter:04d}")
+            if reversed_web is not None:
+                all_webs.append(reversed_web)
+                web_counter += 1
+
+    if not all_webs:
+        logger.info("Discriminative mining produced no additional webs.")
+        return []
+
+    # Filter to patterns that appear in at most max_family_ratio of families.
+    # A pattern that appears in all families is not discriminative.
+    n_families = len(family_groups)
+    max_families = max(1, int(n_families * max_family_ratio))
+
+    discriminative_webs: list[ZXWeb] = []
+    for web in all_webs:
+        n_source_families = len(web.source_families)
+        if n_source_families <= max_families:
+            discriminative_webs.append(web)
+
+    logger.info(
+        "Discriminative mining: %d patterns from %d families, "
+        "%d kept after family-ratio filter (max %d/%d families).",
+        len(all_webs), len(family_groups),
+        len(discriminative_webs), max_families, n_families,
+    )
+
+    return discriminative_webs
+
+
+# ---------------------------------------------------------------------------
 # Stage 3 entry point
 # ---------------------------------------------------------------------------
 
@@ -682,6 +821,21 @@ def run_stage3(
         "Created %d ZXWeb objects (lazy) in %.1fs from %d mining results.",
         len(webs), time.time() - t_convert, len(results),
     )
+
+    # -- 3b. Discriminative mining (optional) ---------------------------------
+    small_families = [family_lookup.get(small_to_original.get(i, -1), "")
+                      for i in range(len(small_graphs))]
+
+    if config.discriminative_mining:
+        disc_webs = _mine_discriminative(
+            small_graphs, small_families, config, small_family_lookup,
+        )
+        if disc_webs:
+            webs.extend(disc_webs)
+            logger.info(
+                "Total webs after discriminative mining: %d (+%d discriminative).",
+                len(webs), len(disc_webs),
+            )
 
     # -- 4. Persist results ---------------------------------------------------
     output_dir.mkdir(parents=True, exist_ok=True)
