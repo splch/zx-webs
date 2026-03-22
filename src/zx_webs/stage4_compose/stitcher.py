@@ -148,11 +148,18 @@ def _farthest_point_sample(
     features: list[list[float]],
     k: int,
     rng: random.Random,
+    fitness_weights: dict[int, float] | None = None,
 ) -> list[int]:
     """Select *k* indices from *features* using farthest-point sampling.
 
     1. Pick a random seed point.
     2. Greedily pick the point farthest from the already-selected set.
+
+    When *fitness_weights* is provided (mapping original index -> weight),
+    distances are multiplied by ``1 + weight`` so that webs with higher
+    fitness appear "farther" and are selected earlier.  This biases the
+    sample toward historically productive webs while still maintaining
+    diversity (the geometric FPS structure prevents over-concentration).
 
     Returns a list of *k* indices (or fewer if ``len(features) <= k``).
 
@@ -188,6 +195,27 @@ def _farthest_point_sample(
         n, n_unique, n / max(n_unique, 1),
     )
 
+    # --- Fitness boost per unique group -----------------------------------
+    # When fitness_weights is provided, compute a per-unique-group
+    # multiplier.  Groups containing webs with high fitness get a boost
+    # that makes their effective distance larger, so FPS selects them
+    # earlier.  The boost is ``1 + max_weight_in_group`` so that
+    # unscored webs (weight=0) are unaffected.
+    fitness_boost = np.ones(n_unique, dtype=np.float64)
+    if fitness_weights:
+        for uid in range(n_unique):
+            max_w = 0.0
+            for orig_idx in groups[uid]:
+                w = fitness_weights.get(orig_idx, 0.0)
+                if w > max_w:
+                    max_w = w
+            fitness_boost[uid] = 1.0 + max_w
+        n_boosted = int(np.sum(fitness_boost > 1.0))
+        logger.debug(
+            "FPS fitness boost: %d/%d unique groups have fitness > 0",
+            n_boosted, n_unique,
+        )
+
     # --- FPS on unique features -----------------------------------------
     min_dist = np.full(n_unique, np.inf, dtype=np.float64)
     selected_unique: list[int] = []
@@ -212,7 +240,9 @@ def _farthest_point_sample(
     )
 
     while len(selected_unique) < n_unique:
-        best_idx = int(np.argmax(min_dist))
+        # Apply fitness boost to effective distances.
+        effective_dist = min_dist * fitness_boost
+        best_idx = int(np.argmax(effective_dist))
         if min_dist[best_idx] <= 0:
             break
         selected_unique.append(best_idx)
@@ -667,6 +697,7 @@ class Stitcher:
         self,
         webs: list[ZXWeb],
         target_tasks: list[dict[str, Any]] | None = None,
+        fitness_weights: dict[int, float] | None = None,
     ) -> list[CandidateAlgorithm]:
         """Generate candidate algorithms from a list of ZX-Webs.
 
@@ -735,6 +766,14 @@ class Stitcher:
         ordered_pairs = _fps_dissimilar_pairs(
             web_features, n_pairs_needed, self.rng,
         )
+
+        # When fitness weights are available, re-sort pairs so that those
+        # involving high-fitness webs appear earlier.  This biases the
+        # composition toward historically productive recipes.
+        if fitness_weights:
+            def _pair_fitness_score(pair: tuple[int, int]) -> float:
+                return fitness_weights.get(pair[0], 0.0) + fitness_weights.get(pair[1], 0.0)
+            ordered_pairs.sort(key=_pair_fitness_score, reverse=True)
 
         # Allocate budget per strategy so all strategies get representation.
         modes = self.config.composition_modes
@@ -1154,6 +1193,7 @@ def run_stage4(
     output_dir: Path,
     config: ComposeConfig | None = None,
     webs_in_memory: list[ZXWeb] | None = None,
+    fitness_weights: dict[str, float] | None = None,
 ) -> list[CandidateAlgorithm]:
     """Run Stage 4: compose ZX-Webs into candidate algorithms.
 
@@ -1177,6 +1217,10 @@ def run_stage4(
         When provided, skip disk I/O entirely and use these webs directly.
         This eliminates the 224K individual file reads that were the #1
         wall-clock bottleneck when stages are run sequentially.
+    fitness_weights:
+        Optional mapping from web_id to fitness score from previous
+        refinement rounds.  When provided, FPS is biased toward webs
+        with higher fitness (historically productive recipes).
 
     Returns
     -------
@@ -1200,8 +1244,17 @@ def run_stage4(
             rng = random.Random(config.seed)
             feat_matrix = [_web_feature_vector(w) for w in all_webs]
             _standardise_features(feat_matrix)
+            # Build index-based fitness weights for FPS.
+            _idx_fw = None
+            if fitness_weights:
+                _idx_fw = {
+                    i: fitness_weights[w.web_id]
+                    for i, w in enumerate(all_webs)
+                    if w.web_id in fitness_weights
+                }
             selected_indices = _farthest_point_sample(
                 feat_matrix, max_webs_to_load, rng,
+                fitness_weights=_idx_fw,
             )
             all_webs = [all_webs[i] for i in selected_indices]
             logger.info(
@@ -1226,8 +1279,16 @@ def run_stage4(
                 rng = random.Random(config.seed)
                 feat_matrix = [_web_feature_vector(w) for w in all_webs_from_bulk]
                 _standardise_features(feat_matrix)
+                _idx_fw = None
+                if fitness_weights:
+                    _idx_fw = {
+                        i: fitness_weights[w.web_id]
+                        for i, w in enumerate(all_webs_from_bulk)
+                        if w.web_id in fitness_weights
+                    }
                 selected_indices = _farthest_point_sample(
                     feat_matrix, max_webs_to_load, rng,
+                    fitness_weights=_idx_fw,
                 )
                 all_webs_from_bulk = [all_webs_from_bulk[i] for i in selected_indices]
                 logger.info(
@@ -1280,6 +1341,20 @@ def run_stage4(
 
     logger.info("Loaded %d webs for composition.", len(webs))
 
+    # -- Convert web_id fitness weights to index-based weights. ----------------
+    idx_fitness_weights: dict[int, float] | None = None
+    if fitness_weights:
+        idx_fitness_weights = {}
+        for i, w in enumerate(webs):
+            fw = fitness_weights.get(w.web_id, 0.0)
+            if fw > 0:
+                idx_fitness_weights[i] = fw
+        if idx_fitness_weights:
+            logger.info(
+                "Fitness-guided FPS: %d/%d webs have fitness > 0.",
+                len(idx_fitness_weights), len(webs),
+            )
+
     # -- Build target tasks from config if guided mode is enabled. ------------
     target_tasks: list[dict[str, Any]] | None = None
     if config.guided and config.target_qubit_counts:
@@ -1289,7 +1364,10 @@ def run_stage4(
 
     # -- 2. Generate candidates -----------------------------------------------
     stitcher = Stitcher(config)
-    candidates = stitcher.generate_candidates(webs, target_tasks=target_tasks)
+    candidates = stitcher.generate_candidates(
+        webs, target_tasks=target_tasks,
+        fitness_weights=idx_fitness_weights,
+    )
 
     # -- 3. Persist results ---------------------------------------------------
     output_dir.mkdir(parents=True, exist_ok=True)

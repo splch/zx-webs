@@ -161,6 +161,13 @@ class PipelineConfig(BaseModel):
     # Iterative refinement: feed survivors back as corpus entries for re-mining.
     refinement_rounds: int = 0  # 0 = no refinement (single pass)
     refinement_top_k: int = 50  # how many top survivors to feed back per round
+    # Fitness-guided evolutionary search (active when refinement_rounds > 0).
+    fitness_guided: bool = True  # use fitness profiles to bias web selection
+    fitness_decay: float = 0.7  # exponential decay for older fitness signals
+    phase_optimize_near_misses: bool = True  # run Nelder-Mead on near-miss candidates
+    phase_optimize_max_iters: int = 200  # Nelder-Mead iterations per near-miss
+    near_miss_fidelity_lo: float = 0.80  # lower bound of near-miss fidelity window
+    near_miss_fidelity_hi: float = 0.99  # upper bound of near-miss fidelity window
 
 
 # ---------------------------------------------------------------------------
