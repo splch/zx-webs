@@ -12,3 +12,4 @@ build/
 .env
 .venv/
 logs/
+data_evolutionary/
