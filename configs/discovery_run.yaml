@@ -55,6 +55,9 @@ filter:
   gflow_precheck: false
   max_unitary_qubits: 8
   n_workers: 4
+  zx_anneal: true
+  zx_anneal_iters: 200
+  zx_anneal_max_qubits: 5
 
 bench:
   tasks:
@@ -72,3 +75,6 @@ bench:
 report:
   output_format: [json, html]
   figure_dpi: 150
+
+refinement_rounds: 2
+refinement_top_k: 30

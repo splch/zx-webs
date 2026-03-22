@@ -39,6 +39,101 @@ logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
+# ZX rewrite search via simulated annealing
+# ---------------------------------------------------------------------------
+
+
+def _safe_anneal_score(g: zx.Graph) -> float:
+    """Score function for ZX annealing that handles extraction failures.
+
+    Returns a weighted gate count (10*T + total_gates) on success,
+    or a large penalty on extraction failure.
+    """
+    try:
+        g_tmp = g.copy()
+        c = zx.extract_circuit(g_tmp).to_basic_gates()
+        return 10.0 * c.tcount() + len(c.gates)
+    except Exception:
+        return 999999.0
+
+
+def zx_anneal_optimize(
+    graph: zx.Graph,
+    iters: int = 200,
+    timeout: float = 10.0,
+) -> zx.Graph | None:
+    """Explore the ZX equivalence class via simulated annealing.
+
+    Applies random local complementation and pivot congruences that
+    preserve the unitary while potentially discovering simpler circuit
+    implementations.  Returns the best graph found, or None if annealing
+    fails.
+
+    Parameters
+    ----------
+    graph:
+        A fully-reduced ZX-diagram (must be graph-like).
+    iters:
+        Number of annealing iterations.
+    timeout:
+        Maximum seconds for the annealing run.
+
+    Returns
+    -------
+    zx.Graph | None
+        The best equivalent graph found, or None on failure.
+    """
+    try:
+        from pyzx.local_search.simulated_annealing import anneal
+    except ImportError:
+        logger.debug("pyzx.local_search not available; skipping ZX annealing.")
+        return None
+
+    try:
+        g = graph.copy()
+        best_g, _ = anneal(
+            g,
+            iters=iters,
+            score=_safe_anneal_score,
+            quiet=True,
+            temp=25,
+            cool=0.005,
+            full_reduce_prob=0.15,
+        )
+        return best_g
+    except Exception as exc:
+        logger.debug("ZX annealing failed: %s", exc)
+        return None
+
+
+def _try_anneal_and_extract(
+    graph: zx.Graph,
+    iters: int,
+    optimize_cnots: int,
+) -> ExtractionResult | None:
+    """Anneal a ZX-diagram and attempt extraction from the result.
+
+    Returns an ExtractionResult if the annealed version extracts to a
+    better (fewer gates) circuit than the original, otherwise None.
+    """
+    annealed = zx_anneal_optimize(graph, iters=iters)
+    if annealed is None:
+        return None
+
+    try:
+        circuit = zx.extract_circuit(annealed.copy(), optimize_cnots=optimize_cnots)
+        stats = _parse_stats(circuit)
+        qasm = circuit.to_qasm()
+        return ExtractionResult(
+            success=True,
+            circuit_qasm=qasm,
+            stats=stats,
+        )
+    except Exception:
+        return None
+
+
+# ---------------------------------------------------------------------------
 # Timeout context manager (SIGALRM-based, Linux only)
 # ---------------------------------------------------------------------------
 
@@ -127,6 +222,8 @@ def try_extract_circuit(
     cnot_blowup_enabled: bool = True,
     optimize_cnots: int = 2,
     gflow_precheck: bool = False,
+    anneal_iters: int = 0,
+    anneal_max_qubits: int = 6,
 ) -> ExtractionResult:
     """Attempt to extract a quantum circuit from a ZX-diagram.
 
@@ -232,6 +329,19 @@ def try_extract_circuit(
     stats = _parse_stats(circuit)
     qasm = circuit.to_qasm()
 
+    # -- Optional ZX annealing to find simpler equivalent circuit ------------
+    if anneal_iters > 0 and n_qubits <= anneal_max_qubits:
+        annealed_result = _try_anneal_and_extract(g, anneal_iters, optimize_cnots)
+        if annealed_result is not None and annealed_result.success:
+            orig_gates = stats.get("n_gates", 999999)
+            annealed_gates = annealed_result.stats.get("n_gates", 999999)
+            if annealed_gates < orig_gates:
+                logger.debug(
+                    "ZX annealing improved circuit: %d -> %d gates",
+                    orig_gates, annealed_gates,
+                )
+                return annealed_result
+
     return ExtractionResult(
         success=True,
         circuit_qasm=qasm,
@@ -251,6 +361,8 @@ def _evaluate_candidate_data(
     cnot_blowup_enabled: bool = True,
     optimize_cnots: int = 2,
     gflow_precheck: bool = False,
+    anneal_iters: int = 0,
+    anneal_max_qubits: int = 6,
 ) -> dict[str, Any] | None:
     """Evaluate a single candidate (designed for process-pool execution).
 
@@ -283,6 +395,8 @@ def _evaluate_candidate_data(
             cnot_blowup_enabled=cnot_blowup_enabled,
             optimize_cnots=optimize_cnots,
             gflow_precheck=gflow_precheck,
+            anneal_iters=anneal_iters,
+            anneal_max_qubits=anneal_max_qubits,
         )
         if result.success:
             return {
@@ -300,26 +414,29 @@ def _evaluate_candidate_data(
     return None
 
 
-def _extract_worker(args: tuple[dict[str, Any], float, float, bool, int, bool]) -> dict[str, Any] | None:
+def _extract_worker(args: tuple[dict[str, Any], float, float, bool, int, bool, int, int]) -> dict[str, Any] | None:
     """Worker function for multiprocessing Pool-based parallel extraction.
 
     Parameters
     ----------
     args:
         Tuple of ``(candidate_data, timeout, max_cnot_blowup,
-        cnot_blowup_enabled, optimize_cnots, gflow_precheck)``.
+        cnot_blowup_enabled, optimize_cnots, gflow_precheck,
+        anneal_iters, anneal_max_qubits)``.
 
     Returns
     -------
     dict | None
         Survivor dict on success, ``None`` on failure.
     """
-    cand_data, timeout, max_cnot_blowup, cnot_blowup_enabled, optimize_cnots, gflow_precheck = args
+    cand_data, timeout, max_cnot_blowup, cnot_blowup_enabled, optimize_cnots, gflow_precheck, anneal_iters, anneal_max_qubits = args
     return _evaluate_candidate_data(
         cand_data, timeout, max_cnot_blowup,
         cnot_blowup_enabled=cnot_blowup_enabled,
         optimize_cnots=optimize_cnots,
         gflow_precheck=gflow_precheck,
+        anneal_iters=anneal_iters,
+        anneal_max_qubits=anneal_max_qubits,
     )
 
 
@@ -398,8 +515,11 @@ def run_stage5(
     n_success = 0
     n_fail = 0
 
+    anneal_iters = config.zx_anneal_iters if config.zx_anneal else 0
+    anneal_max_qubits = config.zx_anneal_max_qubits
+
     # Prepare worker arguments.
-    worker_args: list[tuple[dict[str, Any], float, float, bool, int, bool]] = [
+    worker_args: list[tuple[dict[str, Any], float, float, bool, int, bool, int, int]] = [
         (
             cand.to_dict(),
             config.extract_timeout_seconds,
@@ -407,6 +527,8 @@ def run_stage5(
             config.cnot_blowup_enabled,
             config.optimize_cnots_level,
             config.gflow_precheck,
+            anneal_iters,
+            anneal_max_qubits,
         )
         for cand in candidates
     ]
@@ -445,6 +567,8 @@ def run_stage5(
                 cnot_blowup_enabled=config.cnot_blowup_enabled,
                 optimize_cnots=config.optimize_cnots_level,
                 gflow_precheck=config.gflow_precheck,
+                anneal_iters=anneal_iters,
+                anneal_max_qubits=anneal_max_qubits,
             )
             if result.success:
                 n_success += 1

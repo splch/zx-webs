@@ -2,17 +2,29 @@
 
 Provides :func:`run_stage1` to build the algorithm corpus and :class:`Pipeline`
 to orchestrate multi-stage execution from corpus generation through reporting.
+
+Iterative refinement
+--------------------
+When ``refinement_rounds > 0``, the pipeline runs multiple passes.  After each
+pass, the top survivors (by novelty score) are converted to QASM files and
+injected into the corpus as a new ``"discovered"`` family.  The next round
+re-mines the augmented corpus, allowing the pipeline to discover sub-patterns
+*within its own discoveries* and recombine them with the original corpus
+patterns.  This creates evolutionary pressure toward increasingly complex
+and novel algorithms.
 """
 from __future__ import annotations
 
 import argparse
+import json
 import logging
+import shutil
 from pathlib import Path
 
 from tqdm import tqdm
 
 from zx_webs.config import PipelineConfig, load_config
-from zx_webs.persistence import save_manifest
+from zx_webs.persistence import load_manifest, save_manifest
 from zx_webs.stage1_corpus import build_corpus, circuit_to_pyzx_qasm
 from zx_webs.stage2_zx import run_stage2
 from zx_webs.stage3_mining.miner import run_stage3
@@ -118,6 +130,11 @@ class Pipeline:
         When running consecutive stages (e.g. mining -> compose), intermediate
         results are passed in-memory to avoid redundant disk I/O.
 
+        When ``config.refinement_rounds > 0`` and start/end span the full
+        pipeline (corpus through report), iterative refinement is enabled:
+        after each complete pass, top survivors are injected into the corpus
+        and the pipeline re-runs from Stage 2 (ZX conversion) onward.
+
         Raises
         ------
         ValueError
@@ -132,9 +149,133 @@ class Pipeline:
                 f"end_stage {end_stage!r} (index {end_idx})"
             )
 
+        # -- Initial pass (round 0) -------------------------------------------
         for stage_name in self.STAGES[start_idx : end_idx + 1]:
             logger.info("Running stage: %s", stage_name)
             self.run_stage(stage_name)
+
+        # -- Iterative refinement (rounds 1..N) --------------------------------
+        n_rounds = self.config.refinement_rounds
+        if n_rounds <= 0:
+            return
+
+        # Refinement only makes sense when we ran the full pipeline.
+        bench_idx = self._stage_index("bench")
+        if end_idx < bench_idx:
+            logger.info("Refinement skipped: pipeline did not reach 'bench' stage.")
+            return
+
+        for round_num in range(1, n_rounds + 1):
+            logger.info(
+                "=== Iterative refinement round %d/%d ===", round_num, n_rounds,
+            )
+
+            n_injected = self._inject_survivors_into_corpus(round_num)
+            if n_injected == 0:
+                logger.info("No survivors to inject; stopping refinement.")
+                break
+
+            # Clear data dirs for stages 2-7 (keep corpus).
+            for subdir in ["zx_diagrams", "mined_webs", "candidates",
+                           "filtered", "benchmarks", "report"]:
+                d = self.data_dir / subdir
+                if d.exists():
+                    shutil.rmtree(d)
+
+            # Re-run from ZX conversion through reporting.
+            refine_start = max(start_idx, self._stage_index("zx"))
+            for stage_name in self.STAGES[refine_start : end_idx + 1]:
+                logger.info("Running stage: %s (round %d)", stage_name, round_num)
+                self.run_stage(stage_name)
+
+    def _inject_survivors_into_corpus(self, round_num: int) -> int:
+        """Inject top survivors from benchmarking back into the corpus.
+
+        Reads the benchmark results, selects the top-K survivors by
+        novelty score (or by highest best_fidelity if novelty is unavailable),
+        writes their QASM as new corpus entries under a ``discovered_rN``
+        family, and updates the corpus manifest.
+
+        Returns the number of survivors injected.
+        """
+        top_k = self.config.refinement_top_k
+        bench_dir = self.data_dir / "benchmarks"
+        results_path = bench_dir / "results.json"
+        if not results_path.exists():
+            return 0
+
+        results_data = json.loads(results_path.read_text())
+        if not results_data:
+            return 0
+
+        # Sort by novelty (descending), falling back to 1 - best_fidelity.
+        for r in results_data:
+            if "novelty_score" not in r:
+                r["novelty_score"] = 1.0 - r.get("best_fidelity", 1.0)
+        results_data.sort(key=lambda r: r["novelty_score"], reverse=True)
+
+        # Select top K.
+        top_survivors = results_data[:top_k]
+
+        # Load QASM for each survivor from the filtered directory.
+        filtered_dir = self.data_dir / "filtered"
+        filtered_manifest = load_manifest(filtered_dir)
+        if not filtered_manifest:
+            return 0
+
+        # Build a lookup from survivor_id to circuit data.
+        surv_lookup: dict[str, dict] = {}
+        for entry in filtered_manifest:
+            sid = entry.get("survivor_id", "")
+            surv_lookup[sid] = entry
+
+        # Inject into corpus.
+        corpus_dir = self.data_dir / "corpus"
+        corpus_manifest = load_manifest(corpus_dir) or []
+        family_name = f"discovered_r{round_num}"
+        family_dir = corpus_dir / "algorithms" / family_name
+        family_dir.mkdir(parents=True, exist_ok=True)
+
+        injected = 0
+        for r in top_survivors:
+            sid = r.get("survivor_id", "")
+            entry = surv_lookup.get(sid)
+            if not entry:
+                continue
+
+            # Load QASM from the circuit JSON file.
+            circuit_path = entry.get("circuit_path", "")
+            if not circuit_path or not Path(circuit_path).exists():
+                continue
+            circ_data = json.loads(Path(circuit_path).read_text())
+            qasm = circ_data.get("circuit_qasm", "")
+            if not qasm:
+                continue
+
+            n_qubits = r.get("n_qubits", entry.get("n_qubits", 0))
+            alg_id = f"{family_name}/{sid}"
+
+            # Write QASM file.
+            qasm_path = family_dir / f"{sid}_{n_qubits}q.qasm"
+            qasm_path.write_text(qasm)
+
+            # Add to corpus manifest.
+            corpus_manifest.append({
+                "algorithm_id": alg_id,
+                "family": family_name,
+                "name": sid,
+                "n_qubits": n_qubits,
+                "qasm_path": str(qasm_path),
+            })
+            injected += 1
+
+        save_manifest(corpus_manifest, corpus_dir)
+        logger.info(
+            "Refinement round %d: injected %d survivors into corpus as '%s' "
+            "(corpus now has %d entries).",
+            round_num, injected, family_name, len(corpus_manifest),
+        )
+        return injected
 
     def run_stage(self, stage_name: str) -> None:
         """Run a single pipeline stage by name.

@@ -99,6 +99,9 @@ class FilterConfig(BaseModel):
     optimize_cnots_level: int = 2  # passed to extract_circuit optimize_cnots
     gflow_precheck: bool = False  # when False (default), skip gflow pre-filter
     max_unitary_qubits: int = 10  # max qubits for unitary matrix computation
+    zx_anneal: bool = False  # post-extraction ZX rewrite search via simulated annealing
+    zx_anneal_iters: int = 200  # iterations per candidate for ZX annealing
+    zx_anneal_max_qubits: int = 6  # only anneal circuits with <= this many qubits
 
 
 class BackendConfig(BaseModel):
@@ -155,6 +158,9 @@ class PipelineConfig(BaseModel):
     filter: FilterConfig = FilterConfig()
     bench: BenchConfig = BenchConfig()
     report: ReportConfig = ReportConfig()
+    # Iterative refinement: feed survivors back as corpus entries for re-mining.
+    refinement_rounds: int = 0  # 0 = no refinement (single pass)
+    refinement_top_k: int = 50  # how many top survivors to feed back per round
 
 
 # ---------------------------------------------------------------------------

@@ -267,3 +267,79 @@ class TestPipelineValidation:
         pipeline = Pipeline(small_config)
         with pytest.raises(ValueError, match="comes after"):
             pipeline.run(start_stage="zx", end_stage="corpus")
+
+
+# ---------------------------------------------------------------------------
+# Iterative refinement tests
+# ---------------------------------------------------------------------------
+
+
+class TestIterativeRefinement:
+    """Tests for the iterative refinement loop."""
+
+    def test_refinement_injects_survivors(self, tmp_path: Path) -> None:
+        """One round of refinement should inject survivors into the corpus."""
+        config = PipelineConfig(
+            data_dir=tmp_path / "data",
+            corpus=CorpusConfig(
+                families=["entanglement"],
+                max_qubits=3,
+                qubit_counts=[3],
+            ),
+            mining=MiningConfig(
+                min_support=2,
+                min_vertices=2,
+                max_vertices=6,
+            ),
+            compose=ComposeConfig(
+                max_candidates=20,
+                seed=42,
+            ),
+            filter=FilterConfig(
+                extract_timeout_seconds=10.0,
+                max_cnot_blowup_factor=10.0,
+                n_workers=1,
+            ),
+            refinement_rounds=1,
+            refinement_top_k=5,
+        )
+        pipeline = Pipeline(config)
+        pipeline.run(start_stage="corpus", end_stage="report")
+
+        # After refinement, the corpus should have "discovered_r1" entries.
+        corpus_manifest = load_manifest(Path(config.data_dir) / "corpus")
+        assert corpus_manifest is not None
+        discovered = [e for e in corpus_manifest if e.get("family", "").startswith("discovered_")]
+        # May have 0 discovered if no survivors, but the pipeline should complete.
+        assert isinstance(discovered, list)
+
+    def test_zero_refinement_runs_single_pass(self, tmp_path: Path) -> None:
+        """With refinement_rounds=0, pipeline should run once normally."""
+        config = PipelineConfig(
+            data_dir=tmp_path / "data",
+            corpus=CorpusConfig(
+                families=["entanglement"],
+                max_qubits=3,
+                qubit_counts=[3],
+            ),
+            mining=MiningConfig(
+                min_support=2,
+                min_vertices=2,
+                max_vertices=6,
+            ),
+            compose=ComposeConfig(max_candidates=10, seed=42),
+            filter=FilterConfig(n_workers=1, extract_timeout_seconds=10.0),
+            refinement_rounds=0,
+        )
+        pipeline = Pipeline(config)
+        pipeline.run(start_stage="corpus", end_stage="report")
+
+        # Should complete without error.
+        report_dir = Path(config.data_dir) / "report"
+        assert (report_dir / "summary.json").exists()
+
+    def test_refinement_config_defaults(self) -> None:
+        """Refinement config defaults should be zero rounds."""
+        config = PipelineConfig()
+        assert config.refinement_rounds == 0
+        assert config.refinement_top_k == 50

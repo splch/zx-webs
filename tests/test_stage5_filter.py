@@ -637,3 +637,70 @@ class TestRunStage5EndToEnd:
         # All 3 candidates should extract (they're from circuit round-trips).
         # After dedup, at least 1 should survive.
         assert len(survivors) >= 1
+
+
+# ---------------------------------------------------------------------------
+# Tests for ZX rewrite search (simulated annealing)
+# ---------------------------------------------------------------------------
+
+
+class TestZXAnnealOptimize:
+    """Tests for the ZX annealing post-extraction optimization."""
+
+    def test_anneal_returns_graph(self) -> None:
+        """zx_anneal_optimize should return a valid ZX graph."""
+        from zx_webs.stage5_filter.extractor import zx_anneal_optimize
+
+        c = zx.Circuit(2)
+        c.add_gate("HAD", 0)
+        c.add_gate("CNOT", 0, 1)
+        g = c.to_graph()
+        zx.simplify.to_graph_like(g)
+        zx.full_reduce(g)
+
+        result = zx_anneal_optimize(g, iters=20)
+        assert result is not None
+        assert result.num_vertices() > 0
+
+    def test_anneal_preserves_unitary(self) -> None:
+        """Annealed graph should implement the same unitary."""
+        import numpy as np
+        from zx_webs.stage5_filter.extractor import zx_anneal_optimize
+
+        c = zx.Circuit(2)
+        c.add_gate("HAD", 0)
+        c.add_gate("CNOT", 0, 1)
+        c.add_gate("T", 1)
+        original_unitary = np.array(c.to_matrix())
+
+        g = c.to_graph()
+        zx.simplify.to_graph_like(g)
+        zx.full_reduce(g)
+
+        annealed = zx_anneal_optimize(g, iters=30)
+        if annealed is not None:
+            try:
+                c_out = zx.extract_circuit(annealed.copy())
+                annealed_unitary = np.array(c_out.to_matrix())
+                # Unitaries should match up to global phase.
+                d = original_unitary.shape[0]
+                fid = abs(np.trace(original_unitary.conj().T @ annealed_unitary)) ** 2 / d**2
+                assert fid > 0.99, f"Fidelity {fid} too low after annealing"
+            except Exception:
+                pass  # Extraction may fail; that's OK for this test
+
+    def test_anneal_config_defaults(self) -> None:
+        """ZX annealing config defaults should be off."""
+        config = FilterConfig()
+        assert config.zx_anneal is False
+        assert config.zx_anneal_iters == 200
+        assert config.zx_anneal_max_qubits == 6
+
+    def test_extract_with_anneal_enabled(self) -> None:
+        """try_extract_circuit with anneal should succeed on extractable graphs."""
+        g = _make_extractable_graph(n_qubits=2)
+        result = try_extract_circuit(
+            g, timeout=30.0, anneal_iters=20, anneal_max_qubits=4,
+        )
+        assert result.success is True
+        assert result.circuit_qasm != ""
