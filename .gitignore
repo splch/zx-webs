@@ -13,3 +13,7 @@ build/
 .venv/
 logs/
 data_evolutionary/
+data_qaoa_discovery/mined_webs/
+data_qaoa_discovery/zx_diagrams/
+data_qaoa_discovery/candidates/candidates/
+data_qaoa_discovery/filtered/circuits/

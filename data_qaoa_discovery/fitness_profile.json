@@ -1,0 +1,26 @@
+{
+  "web_fitness": {},
+  "strategy_fitness": {
+    "unknown": 490.65192053068307
+  },
+  "family_pair_fitness": {},
+  "near_miss_candidates": [
+    {
+      "survivor_id": "surv_0039",
+      "best_fidelity": 0.8901650429449555,
+      "target_task": "hadamard_test_2q",
+      "n_qubits": 2,
+      "component_web_ids": [],
+      "composition_type": "unknown"
+    },
+    {
+      "survivor_id": "surv_0139",
+      "best_fidelity": 0.9335231227578464,
+      "target_task": "bb84_encoding_2q",
+      "n_qubits": 2,
+      "component_web_ids": [],
+      "composition_type": "unknown"
+    }
+  ],
+  "round_num": 2
+}

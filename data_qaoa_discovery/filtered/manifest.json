@@ -1,0 +1,2990 @@
+[
+  {
+    "survivor_id": "surv_0000",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0000.json",
+    "candidate_id": "byol_0001",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        1 is the T-count\n        7 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0001",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0001.json",
+    "candidate_id": "byol_0003",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 11,
+      "two_qubit_count": 5,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 11 gates.\n        2 is the T-count\n        9 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0002",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0002.json",
+    "candidate_id": "byol_0007",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 10,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 10 gates.\n        1 is the T-count\n        9 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0003",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0003.json",
+    "candidate_id": "byol_0008",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0004",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0004.json",
+    "candidate_id": "byol_0009",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        0 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0005",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0005.json",
+    "candidate_id": "byol_0011",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 6 gates.\n        3 is the T-count\n        3 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0006",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0006.json",
+    "candidate_id": "byol_0013",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        0 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0007",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0007.json",
+    "candidate_id": "byol_0017",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 0,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 0 gates.\n        0 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0008",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0008.json",
+    "candidate_id": "byol_0024",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 6 gates.\n        0 is the T-count\n        6 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0009",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0009.json",
+    "candidate_id": "byol_0028",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 6 gates.\n        0 is the T-count\n        6 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0010",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0010.json",
+    "candidate_id": "byol_0030",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 9,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 9 gates.\n        1 is the T-count\n        8 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        5 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0011",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0011.json",
+    "candidate_id": "byol_0037",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 6 gates.\n        1 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0012",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0012.json",
+    "candidate_id": "byol_0040",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0013",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0013.json",
+    "candidate_id": "byol_0041",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 10,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 10 gates.\n        1 is the T-count\n        9 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        5 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0014",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0014.json",
+    "candidate_id": "byol_0050",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        0 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0015",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0015.json",
+    "candidate_id": "cand_0000",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 6 gates.\n        1 is the T-count\n        5 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0016",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0016.json",
+    "candidate_id": "cand_0001",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 7 gates.\n        1 is the T-count\n        6 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0017",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0017.json",
+    "candidate_id": "cand_0002",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        1 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0018",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0018.json",
+    "candidate_id": "cand_0006",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 6 gates.\n        0 is the T-count\n        6 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0019",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0019.json",
+    "candidate_id": "cand_0007",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 9,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 9 gates.\n        0 is the T-count\n        9 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0020",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0020.json",
+    "candidate_id": "cand_0010",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 9,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 9 gates.\n        2 is the T-count\n        7 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0021",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0021.json",
+    "candidate_id": "cand_0016",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0022",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0022.json",
+    "candidate_id": "cand_0017",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        0 is the T-count\n        4 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0023",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0023.json",
+    "candidate_id": "cand_0019",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        0 is the T-count\n        2 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0024",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0024.json",
+    "candidate_id": "cand_0021",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        0 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0025",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0025.json",
+    "candidate_id": "cand_0026",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        1 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0026",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0026.json",
+    "candidate_id": "cand_0027",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0027",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0027.json",
+    "candidate_id": "cand_0028",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 4 gates.\n        0 is the T-count\n        4 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0028",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0028.json",
+    "candidate_id": "cand_0029",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 5 gates.\n        0 is the T-count\n        5 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0029",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0029.json",
+    "candidate_id": "cand_0036",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 5 gates.\n        0 is the T-count\n        5 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0030",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0030.json",
+    "candidate_id": "cand_0037",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 6 gates.\n        0 is the T-count\n        6 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0031",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0031.json",
+    "candidate_id": "cand_0040",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 5 gates.\n        0 is the T-count\n        5 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0032",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0032.json",
+    "candidate_id": "cand_0044",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 2 gates.\n        0 is the T-count\n        2 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0033",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0033.json",
+    "candidate_id": "cand_0045",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 5 gates.\n        0 is the T-count\n        5 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0034",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0034.json",
+    "candidate_id": "cand_0057",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        0 is the T-count\n        2 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0035",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0035.json",
+    "candidate_id": "cand_0062",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0036",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0036.json",
+    "candidate_id": "cand_0063",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        1 is the T-count\n        2 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0037",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0037.json",
+    "candidate_id": "cand_0066",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0038",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0038.json",
+    "candidate_id": "cand_0090",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        0 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0039",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0039.json",
+    "candidate_id": "cand_0091",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0040",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0040.json",
+    "candidate_id": "cand_0096",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        1 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0041",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0041.json",
+    "candidate_id": "cand_0102",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0042",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0042.json",
+    "candidate_id": "cand_0103",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 4 gates.\n        0 is the T-count\n        4 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0043",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0043.json",
+    "candidate_id": "cand_0109",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        0 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0044",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0044.json",
+    "candidate_id": "cand_0114",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        0 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0045",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0045.json",
+    "candidate_id": "cand_0115",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        0 is the T-count\n        2 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0046",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0046.json",
+    "candidate_id": "cand_0124",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 5 gates.\n        0 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0047",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0047.json",
+    "candidate_id": "cand_0125",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        0 is the T-count\n        8 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0048",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0048.json",
+    "candidate_id": "cand_0130",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        0 is the T-count\n        8 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0049",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0049.json",
+    "candidate_id": "cand_0131",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 10,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 10 gates.\n        0 is the T-count\n        10 Cliffords among which\n        4 2-qubit gates (0 CNOT, 4 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0050",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0050.json",
+    "candidate_id": "cand_0136",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 7 gates.\n        1 is the T-count\n        6 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0051",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0051.json",
+    "candidate_id": "cand_0137",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        1 is the T-count\n        7 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0052",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0052.json",
+    "candidate_id": "cand_0139",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        0 is the T-count\n        2 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0053",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0053.json",
+    "candidate_id": "cand_0146",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 5 gates.\n        0 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0054",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0054.json",
+    "candidate_id": "cand_0154",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0055",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0055.json",
+    "candidate_id": "cand_0155",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 6 gates.\n        0 is the T-count\n        6 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0056",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0056.json",
+    "candidate_id": "cand_0159",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        1 is the T-count\n        3 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0057",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0057.json",
+    "candidate_id": "cand_0162",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0058",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0058.json",
+    "candidate_id": "cand_0163",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 4 gates.\n        0 is the T-count\n        4 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0059",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0059.json",
+    "candidate_id": "cand_0170",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        1 is the T-count\n        3 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0060",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0060.json",
+    "candidate_id": "cand_0171",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 8 gates.\n        1 is the T-count\n        7 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0061",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0061.json",
+    "candidate_id": "cand_0174",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 4 gates.\n        0 is the T-count\n        4 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0062",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0062.json",
+    "candidate_id": "cand_0175",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 5 gates.\n        0 is the T-count\n        5 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0063",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0063.json",
+    "candidate_id": "cand_0182",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 4 gates.\n        0 is the T-count\n        4 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0064",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0064.json",
+    "candidate_id": "cand_0183",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 5 gates.\n        0 is the T-count\n        5 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0065",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0065.json",
+    "candidate_id": "cand_0186",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        0 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0066",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0066.json",
+    "candidate_id": "cand_0187",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        0 is the T-count\n        2 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0067",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0067.json",
+    "candidate_id": "cand_0198",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0068",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0068.json",
+    "candidate_id": "cand_0199",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        1 is the T-count\n        2 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0069",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0069.json",
+    "candidate_id": "cand_0206",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 2 gates.\n        0 is the T-count\n        2 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0070",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0070.json",
+    "candidate_id": "cand_0207",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0071",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0071.json",
+    "candidate_id": "cand_0208",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        1 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0072",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0072.json",
+    "candidate_id": "cand_0209",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0073",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0073.json",
+    "candidate_id": "cand_0211",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        0 is the T-count\n        4 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0074",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0074.json",
+    "candidate_id": "cand_0214",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 10,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 10 gates.\n        1 is the T-count\n        9 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0075",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0075.json",
+    "candidate_id": "cand_0218",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 9,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 9 gates.\n        2 is the T-count\n        7 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0076",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0076.json",
+    "candidate_id": "cand_0219",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 10,
+      "two_qubit_count": 3,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 10 gates.\n        2 is the T-count\n        8 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0077",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0077.json",
+    "candidate_id": "cand_0242",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0078",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0078.json",
+    "candidate_id": "cand_0254",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        1 is the T-count\n        3 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0079",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0079.json",
+    "candidate_id": "cand_0255",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 7 gates.\n        1 is the T-count\n        6 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0080",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0080.json",
+    "candidate_id": "cand_0264",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        0 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0081",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0081.json",
+    "candidate_id": "cand_0265",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0082",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0082.json",
+    "candidate_id": "cand_0266",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 9,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 9 gates.\n        4 is the T-count\n        5 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0083",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0083.json",
+    "candidate_id": "cand_0267",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        2 is the T-count\n        6 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0084",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0084.json",
+    "candidate_id": "cand_0268",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        1 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0085",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0085.json",
+    "candidate_id": "cand_0269",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        2 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0086",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0086.json",
+    "candidate_id": "cand_0272",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        3 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0087",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0087.json",
+    "candidate_id": "cand_0273",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 15,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 15 gates.\n        3 is the T-count\n        12 Cliffords among which\n        5 2-qubit gates (0 CNOT, 5 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0088",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0088.json",
+    "candidate_id": "cand_0274",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 5 gates.\n        3 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0089",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0089.json",
+    "candidate_id": "cand_0276",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 11,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 11 gates.\n        4 is the T-count\n        7 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0090",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0090.json",
+    "candidate_id": "cand_0282",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 8 gates.\n        3 is the T-count\n        5 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0091",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0091.json",
+    "candidate_id": "cand_0283",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 6 gates.\n        2 is the T-count\n        4 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0092",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0092.json",
+    "candidate_id": "cand_0284",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0093",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0093.json",
+    "candidate_id": "cand_0285",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 8 gates.\n        2 is the T-count\n        6 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        5 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0094",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0094.json",
+    "candidate_id": "cand_0286",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        2 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0095",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0095.json",
+    "candidate_id": "cand_0287",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0096",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0096.json",
+    "candidate_id": "cand_0288",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        1 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0097",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0097.json",
+    "candidate_id": "cand_0289",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 8 gates.\n        3 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0098",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0098.json",
+    "candidate_id": "cand_0290",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        3 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0099",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0099.json",
+    "candidate_id": "cand_0291",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 7 gates.\n        3 is the T-count\n        4 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0100",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0100.json",
+    "candidate_id": "cand_0292",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        1 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0101",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0101.json",
+    "candidate_id": "cand_0293",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0102",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0102.json",
+    "candidate_id": "cand_0294",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 6 gates.\n        2 is the T-count\n        4 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0103",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0103.json",
+    "candidate_id": "cand_0295",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 13,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 13 gates.\n        4 is the T-count\n        9 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0104",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0104.json",
+    "candidate_id": "cand_0298",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        1 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0105",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0105.json",
+    "candidate_id": "cand_0301",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        2 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0106",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0106.json",
+    "candidate_id": "cand_0302",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 7 gates.\n        2 is the T-count\n        5 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0107",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0107.json",
+    "candidate_id": "cand_0303",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 9,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 9 gates.\n        3 is the T-count\n        6 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0108",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0108.json",
+    "candidate_id": "cand_0305",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 12,
+      "two_qubit_count": 5,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 12 gates.\n        3 is the T-count\n        9 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0109",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0109.json",
+    "candidate_id": "cand_0306",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 6 gates.\n        1 is the T-count\n        5 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0110",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0110.json",
+    "candidate_id": "cand_0311",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 7 gates.\n        2 is the T-count\n        5 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0111",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0111.json",
+    "candidate_id": "cand_0314",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0112",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0112.json",
+    "candidate_id": "cand_0316",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 5 gates.\n        3 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0113",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0113.json",
+    "candidate_id": "cand_0317",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 8 gates.\n        3 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0114",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0114.json",
+    "candidate_id": "cand_0322",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        2 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0115",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0115.json",
+    "candidate_id": "cand_0323",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 5 gates.\n        1 is the T-count\n        4 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0116",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0116.json",
+    "candidate_id": "cand_0325",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0117",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0117.json",
+    "candidate_id": "cand_0326",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        2 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0118",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0118.json",
+    "candidate_id": "cand_0327",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 11,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 11 gates.\n        6 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0119",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0119.json",
+    "candidate_id": "cand_0328",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0120",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0120.json",
+    "candidate_id": "cand_0329",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        2 is the T-count\n        2 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0121",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0121.json",
+    "candidate_id": "cand_0332",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        1 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0122",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0122.json",
+    "candidate_id": "cand_0338",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0123",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0123.json",
+    "candidate_id": "cand_0339",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 7 gates.\n        3 is the T-count\n        4 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0124",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0124.json",
+    "candidate_id": "cand_0346",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        2 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0125",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0125.json",
+    "candidate_id": "cand_0347",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 8 gates.\n        3 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0126",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0126.json",
+    "candidate_id": "cand_0350",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        2 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0127",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0127.json",
+    "candidate_id": "cand_0351",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 5 gates.\n        2 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0128",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0128.json",
+    "candidate_id": "cand_0352",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        2 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0129",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0129.json",
+    "candidate_id": "cand_0356",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        1 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0130",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0130.json",
+    "candidate_id": "cand_0358",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 5 gates.\n        3 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0131",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0131.json",
+    "candidate_id": "cand_0359",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        1 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0132",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0132.json",
+    "candidate_id": "cand_0362",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        1 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0133",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0133.json",
+    "candidate_id": "cand_0366",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        1 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0134",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0134.json",
+    "candidate_id": "cand_0368",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        3 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0135",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0135.json",
+    "candidate_id": "cand_0369",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 5 gates.\n        1 is the T-count\n        4 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0136",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0136.json",
+    "candidate_id": "cand_0370",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 5 gates.\n        3 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0137",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0137.json",
+    "candidate_id": "cand_0371",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 8 gates.\n        3 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0138",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0138.json",
+    "candidate_id": "cand_0375",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        2 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0139",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0139.json",
+    "candidate_id": "cand_0380",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0140",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0140.json",
+    "candidate_id": "cand_0384",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        2 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0141",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0141.json",
+    "candidate_id": "cand_0385",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        2 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0142",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0142.json",
+    "candidate_id": "cand_0389",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        1 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0143",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0143.json",
+    "candidate_id": "cand_0390",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        3 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0144",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0144.json",
+    "candidate_id": "cand_0391",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 11,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 11 gates.\n        3 is the T-count\n        8 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0145",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0145.json",
+    "candidate_id": "cand_0396",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 13,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 13 gates.\n        5 is the T-count\n        8 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0146",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0146.json",
+    "candidate_id": "cand_0397",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 15,
+      "two_qubit_count": 3,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 15 gates.\n        4 is the T-count\n        11 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        7 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0147",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0147.json",
+    "candidate_id": "cand_0398",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        1 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0148",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0148.json",
+    "candidate_id": "cand_0399",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        2 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0149",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0149.json",
+    "candidate_id": "cand_0400",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        2 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0150",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0150.json",
+    "candidate_id": "cand_0401",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        1 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0151",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0151.json",
+    "candidate_id": "cand_0402",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        3 is the T-count\n        5 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0152",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0152.json",
+    "candidate_id": "cand_0403",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        1 is the T-count\n        7 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0153",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0153.json",
+    "candidate_id": "cand_0404",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        2 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0154",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0154.json",
+    "candidate_id": "cand_0405",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0155",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0155.json",
+    "candidate_id": "cand_0408",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        2 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0156",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0156.json",
+    "candidate_id": "cand_0409",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0157",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0157.json",
+    "candidate_id": "cand_0412",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 7 gates.\n        2 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0158",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0158.json",
+    "candidate_id": "cand_0414",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 6 gates.\n        4 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0159",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0159.json",
+    "candidate_id": "cand_0415",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 7 gates.\n        2 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0160",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0160.json",
+    "candidate_id": "cand_0419",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        1 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0161",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0161.json",
+    "candidate_id": "cand_0420",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        1 is the T-count\n        3 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0162",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0162.json",
+    "candidate_id": "cand_0421",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 7 gates.\n        1 is the T-count\n        6 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0163",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0163.json",
+    "candidate_id": "cand_0422",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 5 gates.\n        3 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0164",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0164.json",
+    "candidate_id": "cand_0423",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 5 gates.\n        2 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0165",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0165.json",
+    "candidate_id": "cand_0424",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        2 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0166",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0166.json",
+    "candidate_id": "cand_0428",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 6 gates.\n        3 is the T-count\n        3 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0167",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0167.json",
+    "candidate_id": "cand_0429",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        4 is the T-count\n        4 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0168",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0168.json",
+    "candidate_id": "cand_0434",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 5 gates.\n        2 is the T-count\n        3 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0169",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0169.json",
+    "candidate_id": "cand_0435",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 8 gates.\n        2 is the T-count\n        6 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        5 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0170",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0170.json",
+    "candidate_id": "cand_0436",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 5 gates.\n        3 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0171",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0171.json",
+    "candidate_id": "cand_0437",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 9,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 9 gates.\n        3 is the T-count\n        6 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0172",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0172.json",
+    "candidate_id": "cand_0439",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        2 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0173",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0173.json",
+    "candidate_id": "cand_0440",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 6 gates.\n        2 is the T-count\n        4 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0174",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0174.json",
+    "candidate_id": "cand_0441",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 5,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 7 gates.\n        2 is the T-count\n        5 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0175",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0175.json",
+    "candidate_id": "cand_0448",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 5 gates.\n        1 is the T-count\n        4 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0176",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0176.json",
+    "candidate_id": "cand_0449",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        3 is the T-count\n        5 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0177",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0177.json",
+    "candidate_id": "cand_0452",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0178",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0178.json",
+    "candidate_id": "cand_0453",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        2 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0179",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0179.json",
+    "candidate_id": "cand_0454",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        1 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0180",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0180.json",
+    "candidate_id": "cand_0455",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0181",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0181.json",
+    "candidate_id": "cand_0460",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        2 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0182",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0182.json",
+    "candidate_id": "cand_0465",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0183",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0183.json",
+    "candidate_id": "cand_0472",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 4 gates.\n        2 is the T-count\n        2 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0184",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0184.json",
+    "candidate_id": "cand_0473",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 9,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 9 gates.\n        4 is the T-count\n        5 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0185",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0185.json",
+    "candidate_id": "cand_0474",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        2 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0186",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0186.json",
+    "candidate_id": "cand_0476",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 5 gates.\n        2 is the T-count\n        3 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0187",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0187.json",
+    "candidate_id": "cand_0477",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 8 gates.\n        3 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0188",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0188.json",
+    "candidate_id": "cand_0478",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 7 gates.\n        2 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0189",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0189.json",
+    "candidate_id": "cand_0479",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        2 is the T-count\n        6 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0190",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0190.json",
+    "candidate_id": "cand_0480",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 9,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 9 gates.\n        2 is the T-count\n        7 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0191",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0191.json",
+    "candidate_id": "cand_0483",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0192",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0192.json",
+    "candidate_id": "cand_0484",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 10,
+      "two_qubit_count": 2,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 10 gates.\n        3 is the T-count\n        7 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0193",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0193.json",
+    "candidate_id": "cand_0485",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 15,
+      "two_qubit_count": 3,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 15 gates.\n        5 is the T-count\n        10 Cliffords among which\n        3 2-qubit gates (0 CNOT, 3 other) and\n        7 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0194",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0194.json",
+    "candidate_id": "cand_0488",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 5 gates.\n        3 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0195",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0195.json",
+    "candidate_id": "cand_0489",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 10,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 10 gates.\n        3 is the T-count\n        7 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0196",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0196.json",
+    "candidate_id": "cand_0504",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        1 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0197",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0197.json",
+    "candidate_id": "cand_0505",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        1 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0198",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0198.json",
+    "candidate_id": "cand_0508",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 10,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 10 gates.\n        3 is the T-count\n        7 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        5 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0199",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0199.json",
+    "candidate_id": "cand_0510",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        2 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0200",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0200.json",
+    "candidate_id": "cand_0512",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 2 gates.\n        2 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0201",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0201.json",
+    "candidate_id": "cand_0518",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 1 gates.\n        1 is the T-count\n        0 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0202",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0202.json",
+    "candidate_id": "cand_0519",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        2 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0203",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0203.json",
+    "candidate_id": "cand_0520",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 5 gates.\n        2 is the T-count\n        3 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0204",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0204.json",
+    "candidate_id": "cand_0521",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 7 gates.\n        1 is the T-count\n        6 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0205",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0205.json",
+    "candidate_id": "cand_0524",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        1 is the T-count\n        2 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0206",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0206.json",
+    "candidate_id": "cand_0525",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 6 gates.\n        3 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0207",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0207.json",
+    "candidate_id": "cand_0530",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        2 is the T-count\n        1 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0208",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0208.json",
+    "candidate_id": "cand_0531",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 1,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        1 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0209",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0209.json",
+    "candidate_id": "cand_0584",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 2,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 6 gates.\n        0 is the T-count\n        6 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0210",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0210.json",
+    "candidate_id": "cand_0585",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 2,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 8 gates.\n        0 is the T-count\n        8 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0211",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0211.json",
+    "candidate_id": "cand_0596",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 5 gates.\n        0 is the T-count\n        5 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0212",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0212.json",
+    "candidate_id": "cand_0597",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 9,
+      "two_qubit_count": 2,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 9 gates.\n        0 is the T-count\n        9 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        5 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0213",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0213.json",
+    "candidate_id": "cand_0606",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 15,
+      "two_qubit_count": 7,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 15 gates.\n        2 is the T-count\n        13 Cliffords among which\n        5 2-qubit gates (0 CNOT, 5 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0214",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0214.json",
+    "candidate_id": "cand_0607",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 21,
+      "two_qubit_count": 12,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 21 gates.\n        2 is the T-count\n        19 Cliffords among which\n        8 2-qubit gates (0 CNOT, 8 other) and\n        8 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0215",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0215.json",
+    "candidate_id": "cand_0615",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 2,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 8 gates.\n        0 is the T-count\n        8 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0216",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0216.json",
+    "candidate_id": "cand_0618",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 2,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 7 gates.\n        0 is the T-count\n        7 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        5 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0217",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0217.json",
+    "candidate_id": "cand_0650",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 3,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 1 gates.\n        0 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0218",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0218.json",
+    "candidate_id": "cand_0651",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 1,
+      "two_qubit_count": 3,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 1 gates.\n        0 is the T-count\n        1 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        0 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0219",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0219.json",
+    "candidate_id": "cand_0652",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 2,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 8 gates.\n        0 is the T-count\n        8 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0220",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0220.json",
+    "candidate_id": "cand_0653",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 2,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 8 gates.\n        0 is the T-count\n        8 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0221",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0221.json",
+    "candidate_id": "cand_0679",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 4,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 6 gates.\n        0 is the T-count\n        6 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0222",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0222.json",
+    "candidate_id": "cand_0680",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 11,
+      "two_qubit_count": 10,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 11 gates.\n        0 is the T-count\n        11 Cliffords among which\n        6 2-qubit gates (0 CNOT, 6 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0223",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0223.json",
+    "candidate_id": "cand_0681",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 13,
+      "two_qubit_count": 8,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 13 gates.\n        0 is the T-count\n        13 Cliffords among which\n        4 2-qubit gates (0 CNOT, 4 other) and\n        8 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0224",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0224.json",
+    "candidate_id": "cand_0682",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 18,
+      "two_qubit_count": 10,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 18 gates.\n        4 is the T-count\n        14 Cliffords among which\n        6 2-qubit gates (0 CNOT, 6 other) and\n        8 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0225",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0225.json",
+    "candidate_id": "cand_0683",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 16,
+      "two_qubit_count": 9,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 16 gates.\n        4 is the T-count\n        12 Cliffords among which\n        5 2-qubit gates (0 CNOT, 5 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0226",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0226.json",
+    "candidate_id": "cand_0688",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 4 gates.\n        1 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0227",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0227.json",
+    "candidate_id": "cand_0689",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 4 gates.\n        0 is the T-count\n        4 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0228",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0228.json",
+    "candidate_id": "cand_0691",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        0 is the T-count\n        8 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        5 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0229",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0229.json",
+    "candidate_id": "cand_0703",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 8,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 8 gates.\n        1 is the T-count\n        7 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0230",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0230.json",
+    "candidate_id": "cand_0705",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0231",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0231.json",
+    "candidate_id": "cand_0706",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 6,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 6 gates.\n        0 is the T-count\n        6 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0232",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0232.json",
+    "candidate_id": "cand_0711",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 5,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 5 gates.\n        0 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0233",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0233.json",
+    "candidate_id": "cand_0714",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 11,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 11 gates.\n        1 is the T-count\n        10 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        5 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0234",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0234.json",
+    "candidate_id": "cand_0726",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0235",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0235.json",
+    "candidate_id": "cand_0729",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 7 gates.\n        1 is the T-count\n        6 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0236",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0236.json",
+    "candidate_id": "cand_0732",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 7 gates.\n        1 is the T-count\n        6 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0237",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0237.json",
+    "candidate_id": "cand_0738",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0238",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0238.json",
+    "candidate_id": "cand_0742",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 10,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 10 gates.\n        0 is the T-count\n        10 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0239",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0239.json",
+    "candidate_id": "cand_0745",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 15,
+      "two_qubit_count": 6,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 15 gates.\n        2 is the T-count\n        13 Cliffords among which\n        4 2-qubit gates (0 CNOT, 4 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0240",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0240.json",
+    "candidate_id": "cand_0751",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 12,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 12 gates.\n        1 is the T-count\n        11 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        6 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0241",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0241.json",
+    "candidate_id": "cand_0753",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 2,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 2 gates.\n        0 is the T-count\n        2 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        1 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0242",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0242.json",
+    "candidate_id": "cand_0755",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 7 gates.\n        2 is the T-count\n        5 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        3 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0243",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0243.json",
+    "candidate_id": "cand_0765",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 7 gates.\n        1 is the T-count\n        6 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0244",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0244.json",
+    "candidate_id": "cand_0783",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 7,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 7 gates.\n        0 is the T-count\n        7 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        5 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0245",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0245.json",
+    "candidate_id": "cand_0784",
+    "n_qubits": 2,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 0,
+      "qubits": 2,
+      "stats_str": "Circuit  on 2 qubits with 4 gates.\n        0 is the T-count\n        4 Cliffords among which\n        0 2-qubit gates (0 CNOT, 0 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0246",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0246.json",
+    "candidate_id": "cand_0789",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 4,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 4 gates.\n        0 is the T-count\n        4 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        2 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0247",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0247.json",
+    "candidate_id": "cand_0793",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 9,
+      "two_qubit_count": 4,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 9 gates.\n        2 is the T-count\n        7 Cliffords among which\n        2 2-qubit gates (0 CNOT, 2 other) and\n        4 Hadamard gates."
+    }
+  },
+  {
+    "survivor_id": "surv_0248",
+    "circuit_path": "data_qaoa_discovery/filtered/circuits/surv_0248.json",
+    "candidate_id": "cand_0795",
+    "n_qubits": 3,
+    "stats": {
+      "n_gates": 3,
+      "two_qubit_count": 1,
+      "qubits": 3,
+      "stats_str": "Circuit  on 3 qubits with 3 gates.\n        0 is the T-count\n        3 Cliffords among which\n        1 2-qubit gates (0 CNOT, 1 other) and\n        2 Hadamard gates."
+    }
+  }
+]

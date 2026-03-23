@@ -1,0 +1,5150 @@
+[
+  {
+    "candidate_id": "byol_0000",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel_stitch",
+    "component_web_ids": [
+      "web_27662",
+      "web_1733"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0002",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "disc_74747",
+      "web_79002"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "byol_0004",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_10316",
+      "disc_46904"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "byol_0005",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel_stitch",
+    "component_web_ids": [
+      "disc_96723",
+      "disc_83533"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "byol_0006",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "disc_76409",
+      "disc_67828"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "byol_0010",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_6252",
+      "web_119654"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "byol_0012",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_13717",
+      "web_41321"
+    ],
+    "n_qubits": 4
+  },
+  {
+    "candidate_id": "byol_0014",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_214651",
+      "web_30662"
+    ],
+    "n_qubits": 4
+  },
+  {
+    "candidate_id": "byol_0015",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_77895",
+      "web_110208"
+    ],
+    "n_qubits": 4
+  },
+  {
+    "candidate_id": "byol_0016",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_58713",
+      "disc_57075"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0018",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_1118",
+      "web_31888"
+    ],
+    "n_qubits": 4
+  },
+  {
+    "candidate_id": "byol_0019",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_87510",
+      "web_0208"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "byol_0020",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "disc_141723",
+      "disc_51631"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0021",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_1970",
+      "web_8748"
+    ],
+    "n_qubits": 4
+  },
+  {
+    "candidate_id": "byol_0022",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_42678",
+      "disc_146410"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "byol_0023",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_38323",
+      "web_9856"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "byol_0025",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel_stitch",
+    "component_web_ids": [
+      "web_42657",
+      "web_1535"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0026",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_90741",
+      "web_171455"
+    ],
+    "n_qubits": 4
+  },
+  {
+    "candidate_id": "byol_0027",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel_stitch",
+    "component_web_ids": [
+      "web_9938",
+      "web_18979"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0029",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "disc_127988",
+      "web_0649"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0031",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "disc_48004",
+      "web_201742"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0032",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "disc_189520",
+      "disc_248465"
+    ],
+    "n_qubits": 4
+  },
+  {
+    "candidate_id": "byol_0033",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel_stitch",
+    "component_web_ids": [
+      "web_78518",
+      "web_202094"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0034",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel_stitch",
+    "component_web_ids": [
+      "disc_46882",
+      "web_104507"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "byol_0035",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_1422",
+      "disc_67840"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "byol_0036",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_13563",
+      "web_11366"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "byol_0038",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_43660",
+      "disc_149006"
+    ],
+    "n_qubits": 4
+  },
+  {
+    "candidate_id": "byol_0039",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_0005",
+      "disc_235706"
+    ],
+    "n_qubits": 4
+  },
+  {
+    "candidate_id": "byol_0043",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "disc_63889",
+      "disc_239848"
+    ],
+    "n_qubits": 4
+  },
+  {
+    "candidate_id": "byol_0044",
+    "error": "extraction_failed",
+    "composition_type": "byol_sequential",
+    "component_web_ids": [
+      "web_213875",
+      "disc_132823"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0045",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel_stitch",
+    "component_web_ids": [
+      "disc_34460",
+      "web_126785"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0046",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_1297",
+      "web_9857"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "byol_0047",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel_stitch",
+    "component_web_ids": [
+      "disc_74501",
+      "web_43171"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "byol_0048",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel_stitch",
+    "component_web_ids": [
+      "web_3025",
+      "web_127573"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0049",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel_stitch",
+    "component_web_ids": [
+      "web_142949",
+      "web_80967"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "byol_0051",
+    "error": "extraction_failed",
+    "composition_type": "byol_sequential",
+    "component_web_ids": [
+      "web_127780",
+      "disc_261634"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0052",
+    "error": "extraction_failed",
+    "composition_type": "byol_sequential",
+    "component_web_ids": [
+      "web_43864",
+      "web_9947"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0053",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "disc_31486",
+      "web_231250"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0054",
+    "error": "extraction_failed",
+    "composition_type": "byol_byol_phase_perturb",
+    "component_web_ids": [
+      "web_6506",
+      "web_78298"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0055",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel_stitch",
+    "component_web_ids": [
+      "disc_40802",
+      "disc_158679"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0056",
+    "error": "extraction_failed",
+    "composition_type": "byol_parallel",
+    "component_web_ids": [
+      "web_6500",
+      "web_2006"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "byol_0057",
+    "error": "extraction_failed",
+    "composition_type": "byol_sequential",
+    "component_web_ids": [
+      "web_246661",
+      "web_5668"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0004",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_43085"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0005",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_43085"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0009",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_1172"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0011",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_2807"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0012",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_47569"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0013",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_47569"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0014",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_0900"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0015",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_0900"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0030",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "disc_131919"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0031",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "disc_131919"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0033",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_1350"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0034",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_238278"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0038",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_19700"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0041",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "disc_135606"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0042",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0172",
+      "web_0001"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0043",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0172",
+      "web_0001"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0046",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "disc_37827"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0047",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "disc_37827"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0052",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_6525"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0053",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_6525"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0054",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_127491"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0055",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_127491"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0064",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_142244"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0065",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_142244"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0067",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_11429"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0068",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "disc_46404"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0069",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "disc_46404"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0070",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_38709"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0071",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_38709"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0076",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_38655"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0077",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_38655"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0078",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "disc_31439"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0079",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "disc_31439"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0082",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_1718"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0083",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_1718"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0087",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_38124"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0088",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_206966"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0089",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_206966"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0094",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_10452"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0095",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_10452"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0097",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_86051"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0098",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "disc_221330"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0099",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "disc_221330"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0101",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_82687"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0106",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_90553"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0107",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_90553"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0110",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "disc_179138"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0111",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "disc_179138"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0112",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_1401"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0113",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_1401"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0116",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_1942"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0117",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_1942"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0126",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_125000"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0127",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_125000"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0128",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_0416"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0129",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_0416"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0141",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "disc_36138"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0145",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_0072"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0147",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_18038"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0150",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_0687"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0151",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_0687"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0160",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_9711"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0161",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_9711"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0164",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_44207"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0165",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_44207"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0166",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_123325"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0167",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_123325"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0172",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_6513"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0176",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "disc_131882"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0177",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "disc_131882"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0178",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_0579"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0179",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_0579"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0180",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_132260"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0181",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_132260"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0184",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "disc_7995"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0185",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "disc_7995"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0190",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_51397"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0191",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_51397"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0192",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_3286"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0193",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_3286"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0195",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "disc_0677",
+      "web_0001"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0196",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_9287",
+      "web_0001"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0197",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_9287",
+      "web_0001"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0200",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "disc_36378"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0201",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "disc_36378"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0202",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_10745"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0203",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_10745"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0204",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "disc_31810"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0205",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "disc_31810"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0215",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_35003"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0216",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_14727"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0220",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_10197"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0221",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_10197"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0224",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_9568"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0225",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_9568"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0226",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "disc_132722"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0227",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "disc_132722"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0228",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "disc_58121"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0229",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "disc_58121"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0230",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_2745"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0231",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_2745"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0232",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "disc_131936"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0233",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "disc_131936"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0234",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_1985"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0235",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_1985"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0236",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_204166"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0237",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_204166"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0240",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_1456"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0241",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_1456"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0243",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_79229"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0247",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_84700"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0248",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "web_12651"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0249",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "web_12651"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0250",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_6156",
+      "web_0001"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0251",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_6156",
+      "web_0001"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0256",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0001",
+      "web_40518"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0257",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0001",
+      "web_40518"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0260",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "disc_151087"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0261",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "disc_151087"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0262",
+    "error": "extraction_failed",
+    "composition_type": "parallel",
+    "component_web_ids": [
+      "web_0000",
+      "disc_141389"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0263",
+    "error": "extraction_failed",
+    "composition_type": "parallel_stitch",
+    "component_web_ids": [
+      "web_0000",
+      "disc_141389"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0270",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_43085"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0271",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_43085"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0275",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_1172"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0277",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_2807"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0278",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_47569"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0279",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_47569"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0280",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_0900"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0281",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_0900"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0296",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_131919"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0297",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_131919"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0299",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_1350"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0300",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_238278"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0304",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_19700"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0307",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "disc_135606"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0308",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0172",
+      "web_0001"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0309",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0172",
+      "web_0001"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0312",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "disc_37827"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0313",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "disc_37827"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0318",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_6525"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0319",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_6525"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0320",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_127491"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0321",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_127491"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0324",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "disc_64084"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0330",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_142244"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0331",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_142244"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0333",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_11429"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0334",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_46404"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0335",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_46404"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0336",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_38709"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0337",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_38709"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0340",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_189605"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0341",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_189605"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0342",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_38655"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0343",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_38655"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0344",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_31439"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0345",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_31439"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0348",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_1718"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0349",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_1718"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0353",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_38124"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0354",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_206966"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0355",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_206966"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0357",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_57530"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0360",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_10452"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0361",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_10452"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0363",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_86051"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0364",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_221330"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0365",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_221330"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0367",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_82687"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0372",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_90553"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0373",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_90553"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0376",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_179138"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0377",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_179138"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0378",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_1401"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0379",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_1401"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0382",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_1942"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0383",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_1942"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0386",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_50584"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0388",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_214104"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0392",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_125000"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0393",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_125000"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0394",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_0416"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0395",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_0416"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0407",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "disc_36138"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0411",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_0072"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0413",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_18038"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0416",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_0687"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0417",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_0687"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0425",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_233476"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0426",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_9711"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0427",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_9711"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0430",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_44207"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0431",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_44207"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0432",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_123325"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0433",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_123325"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0438",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_6513"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0442",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_131882"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0443",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_131882"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0444",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_0579"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0445",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_0579"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0446",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_132260"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0447",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_132260"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0450",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "disc_7995"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0451",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "disc_7995"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0456",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_51397"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0457",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_51397"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0458",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_3286"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0459",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_3286"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0461",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "disc_0677",
+      "web_0001"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0462",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_9287",
+      "web_0001"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0463",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_9287",
+      "web_0001"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0466",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "disc_36378"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0467",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "disc_36378"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0468",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_10745"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0469",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_10745"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0470",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_31810"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0471",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_31810"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0481",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_35003"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0482",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_14727"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0486",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_10197"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0487",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_10197"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0490",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_9568"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0491",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_9568"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0492",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_132722"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0493",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_132722"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0494",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "disc_58121"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0495",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "disc_58121"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0496",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_2745"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0497",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_2745"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0498",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_131936"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0499",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_131936"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0500",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_1985"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0501",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_1985"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0502",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_204166"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0503",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_204166"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0506",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_1456"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0507",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_1456"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0509",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_79229"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0513",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_84700"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0514",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_12651"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0515",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "web_12651"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0516",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_6156",
+      "web_0001"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0517",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_6156",
+      "web_0001"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0522",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_40518"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0523",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0001",
+      "web_40518"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0526",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_151087"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0527",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_151087"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0528",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_141389"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0529",
+    "error": "extraction_failed",
+    "composition_type": "phase_perturb",
+    "component_web_ids": [
+      "web_0000",
+      "disc_141389"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0532",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0844",
+      "disc_84542",
+      "web_252308"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0533",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_1043",
+      "web_0355",
+      "web_10061"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0534",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_10061",
+      "web_47884",
+      "disc_191603"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0535",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0095",
+      "web_0040",
+      "web_0399"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0536",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0230",
+      "web_0010",
+      "web_252308"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0537",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0082",
+      "web_0120",
+      "web_0779"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0538",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0239",
+      "web_1892",
+      "web_43529"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0539",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0844",
+      "web_6163",
+      "web_1233"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0540",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0846",
+      "web_0027",
+      "web_0802"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0541",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0082",
+      "web_1100",
+      "web_0065"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0542",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0859",
+      "web_1277",
+      "web_0824"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0543",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "disc_169709",
+      "web_1602",
+      "web_0802"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0544",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0478",
+      "web_1602",
+      "web_44050"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0545",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_79256",
+      "web_1273",
+      "web_43529"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0546",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_1022",
+      "web_0840",
+      "web_0399"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0547",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_203552",
+      "web_0005",
+      "web_252308"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0548",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_79256",
+      "web_0010",
+      "web_0065"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0549",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0859",
+      "web_0583",
+      "web_35209"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0550",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0082",
+      "web_1120",
+      "web_0114"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0551",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_45537",
+      "web_0114",
+      "disc_64243"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0552",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_1022",
+      "web_1100",
+      "web_0399"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0553",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0846",
+      "web_0067",
+      "web_81591"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0554",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_1043",
+      "web_0239",
+      "web_1482"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0555",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_7196",
+      "web_0239",
+      "web_6163"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0556",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0230",
+      "disc_141426",
+      "web_7196"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0557",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0082",
+      "web_1892",
+      "web_252308"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0558",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0095",
+      "web_77518",
+      "web_11506"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0559",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_40934",
+      "web_1731",
+      "web_252308"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0560",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_1022",
+      "disc_53615",
+      "web_35209"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0561",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_45537",
+      "disc_31434",
+      "web_81591"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0562",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_45537",
+      "web_0224",
+      "web_43529"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0563",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_45537",
+      "web_0039",
+      "web_0114"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0564",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0270",
+      "disc_169709",
+      "web_252308"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0565",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_203552",
+      "web_1147",
+      "web_0399"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0566",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "disc_169709",
+      "web_38340",
+      "web_81591"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0567",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_8598",
+      "disc_141843",
+      "web_11506"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0568",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0230",
+      "web_1892",
+      "web_44050"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0569",
+    "error": "extraction_failed",
+    "composition_type": "triple_sequential",
+    "component_web_ids": [
+      "web_0095",
+      "web_52545",
+      "web_43529"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0570",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_146452",
+      "web_60605"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0571",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_60605",
+      "disc_146452"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0572",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_100706",
+      "web_85973"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0573",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_85973",
+      "web_100706"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0574",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_180997",
+      "disc_92158"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0575",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_92158",
+      "web_180997"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0576",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_32267",
+      "disc_139182"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0577",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_139182",
+      "web_32267"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0578",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_210688",
+      "web_42038"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0579",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_42038",
+      "disc_210688"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0580",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_7196",
+      "disc_146588"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0581",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_146588",
+      "web_7196"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0582",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_146640",
+      "web_60861"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0583",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_60861",
+      "disc_146640"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0586",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_141719",
+      "web_18038"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0587",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_18038",
+      "disc_141719"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0588",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_206386",
+      "web_24860"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0589",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_24860",
+      "web_206386"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0590",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_60649",
+      "disc_88051"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0591",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_88051",
+      "web_60649"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0592",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_88032",
+      "disc_88051"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0593",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_88051",
+      "disc_88032"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0594",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_140598",
+      "disc_146618"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0595",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_146618",
+      "disc_140598"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0598",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_82111",
+      "disc_146410"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0599",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_146410",
+      "disc_82111"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0600",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_69580",
+      "disc_146618"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0601",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_146618",
+      "disc_69580"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0602",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_210688",
+      "disc_249720"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0603",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_249720",
+      "disc_210688"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0604",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_257754",
+      "web_33914"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0605",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_33914",
+      "web_257754"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0608",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_100950",
+      "web_51208"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0609",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_51208",
+      "web_100950"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0610",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_14196",
+      "web_50570"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0611",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_50570",
+      "web_14196"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0614",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_59515",
+      "disc_205348"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0616",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_71069",
+      "web_123327"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0617",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_123327",
+      "disc_71069"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0620",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_81267",
+      "web_213871"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0621",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_213871",
+      "disc_81267"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0622",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_158183",
+      "disc_36967"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0623",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_36967",
+      "web_158183"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0624",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_100706",
+      "web_266920"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0625",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_266920",
+      "web_100706"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0626",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_10215",
+      "web_17573"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0627",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_17573",
+      "web_10215"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0628",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_81267",
+      "disc_146588"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0629",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_146588",
+      "disc_81267"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0630",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_81277",
+      "web_138985"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0631",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_138985",
+      "disc_81277"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0632",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_24852",
+      "disc_84539"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0633",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_84539",
+      "web_24852"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0634",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_130766",
+      "disc_239848"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0635",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_239848",
+      "disc_130766"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0636",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_10830",
+      "disc_134729"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0637",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_134729",
+      "web_10830"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0638",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_252779",
+      "web_119483"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0639",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_119483",
+      "disc_252779"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0640",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_239848",
+      "disc_136763"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0641",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_136763",
+      "disc_239848"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0642",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_71214",
+      "disc_134729"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0643",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_134729",
+      "disc_71214"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0644",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_8941",
+      "web_112248"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0645",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_112248",
+      "web_8941"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0646",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_32267",
+      "web_110208"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0647",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_110208",
+      "web_32267"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0648",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_6593",
+      "web_100949"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0649",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_100949",
+      "web_6593"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0654",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_78675",
+      "disc_77290"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0655",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_77290",
+      "web_78675"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0656",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_213936",
+      "web_138985"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0657",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_138985",
+      "web_213936"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0658",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_10215",
+      "disc_38584"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0659",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_38584",
+      "web_10215"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0660",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_136940",
+      "web_67426"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0661",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_67426",
+      "disc_136940"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0662",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_146446",
+      "disc_140563"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0663",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_140563",
+      "disc_146446"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0664",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_83039",
+      "web_158183"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0665",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_158183",
+      "disc_83039"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0666",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_114519",
+      "disc_239848"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0667",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_239848",
+      "disc_114519"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0668",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_17573",
+      "disc_146588"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0669",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_146588",
+      "web_17573"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0670",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_101121",
+      "disc_36582"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0671",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_36582",
+      "web_101121"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0672",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_210688",
+      "disc_46351"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0673",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_46351",
+      "disc_210688"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0674",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_59515",
+      "web_68108"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0675",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_68108",
+      "web_59515"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0676",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "disc_146453",
+      "web_60861"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0677",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_60861",
+      "disc_146453"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0678",
+    "error": "extraction_failed",
+    "composition_type": "guided_sequential",
+    "component_web_ids": [
+      "web_59515",
+      "disc_120732"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0684",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_66074",
+      "web_39069"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0685",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_10418",
+      "web_15337"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0686",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_43792",
+      "web_58874"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0687",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_1053",
+      "web_213920"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0690",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_1936",
+      "disc_42509"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0692",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_9381",
+      "web_1384"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0693",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_43186",
+      "web_207220"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0694",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_126106",
+      "web_42003"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0695",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_231228",
+      "web_2700"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0696",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_0844",
+      "web_77992"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0697",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_7591",
+      "web_44112"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0698",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_0375",
+      "web_7920"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0699",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_23311",
+      "web_72461"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0700",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_42524",
+      "web_38617"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0701",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_44240",
+      "disc_0812"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0702",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_81547",
+      "web_0527"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0704",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_0217",
+      "web_10625"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0707",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_22657",
+      "web_123724"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0708",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_9129",
+      "web_46707"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0709",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_2658",
+      "web_1821"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0710",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_11680",
+      "web_10424"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0712",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_101601",
+      "web_9907"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0713",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_0126",
+      "disc_47673"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0715",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_38184",
+      "web_43556"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0716",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_141708",
+      "web_151293"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0717",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_43111",
+      "disc_31404"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0718",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_34484",
+      "disc_135612"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0719",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_8600",
+      "web_54855"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0720",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_156855",
+      "web_127145"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0721",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_63933",
+      "disc_75368"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0722",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_42773",
+      "web_11681"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0723",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_33029",
+      "web_2413"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0724",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_5901",
+      "web_51397"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0725",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_9206",
+      "web_212120"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0727",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_58817",
+      "disc_130338"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0728",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_42651",
+      "web_18326"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0730",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_99715",
+      "web_125009"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0731",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_0492",
+      "web_88275"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0733",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_0772",
+      "web_77483"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0734",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_206456",
+      "web_2005"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0735",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_141639",
+      "disc_81231"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0736",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_0262",
+      "web_81799"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0739",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_190269",
+      "web_6025"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0740",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_148523",
+      "web_114852"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0741",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_10386",
+      "web_43196"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0743",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_1679",
+      "disc_136217"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0744",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_7650",
+      "web_101375"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0746",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_0446",
+      "web_80145"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0747",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_0754",
+      "web_49546"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0748",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_9872",
+      "web_9620"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0749",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_0591",
+      "web_87682"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0750",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_125020",
+      "web_4858"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0752",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_45378",
+      "disc_128655"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0754",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_141757",
+      "disc_68013"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0756",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_116627",
+      "web_10576"
+    ],
+    "n_qubits": 4
+  },
+  {
+    "candidate_id": "cand_0757",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_42849",
+      "disc_35297"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0758",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_0981",
+      "disc_67813"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0759",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_203325",
+      "disc_96227"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0761",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_38492",
+      "web_11680"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0763",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_0639",
+      "disc_46887"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0764",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_159711",
+      "web_3167"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0766",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_43676",
+      "disc_36146"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0767",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_9324",
+      "disc_105370"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0768",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_2963",
+      "disc_0008"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0769",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_146618",
+      "disc_64301"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0770",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_40388",
+      "web_10403"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0771",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_11636",
+      "disc_132861"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0772",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_131877",
+      "web_221252"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0774",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_44274",
+      "web_2047"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0775",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_84790",
+      "web_79763"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0776",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_2122",
+      "disc_66419"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0777",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_8050",
+      "web_142244"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0778",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_77583",
+      "web_150095"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0779",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_2940",
+      "web_3308"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0781",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_36708",
+      "web_9355"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0782",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_132018",
+      "disc_34268"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0785",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_42791",
+      "web_206390"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0786",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_82981",
+      "web_206490"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0787",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_78905",
+      "disc_46377"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0788",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_0988",
+      "disc_146663"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0790",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_141639",
+      "disc_96183"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0791",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_189880",
+      "web_79671"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0792",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_9701",
+      "web_77450"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0794",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_88066",
+      "web_78119"
+    ],
+    "n_qubits": 2
+  },
+  {
+    "candidate_id": "cand_0796",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_1189",
+      "web_10032"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0797",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_57111",
+      "web_85598"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0798",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "disc_157989",
+      "web_57211"
+    ],
+    "n_qubits": 3
+  },
+  {
+    "candidate_id": "cand_0799",
+    "error": "extraction_failed",
+    "composition_type": "guided_parallel",
+    "component_web_ids": [
+      "web_0352",
+      "web_206907"
+    ],
+    "n_qubits": 2
+  }
+]

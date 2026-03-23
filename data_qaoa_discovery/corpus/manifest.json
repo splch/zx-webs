@@ -1,0 +1,2074 @@
+[
+  {
+    "algorithm_id": "arithmetic/draper_adder_q3",
+    "family": "arithmetic",
+    "name": "draper_adder",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/draper_adder_6q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/draper_adder_q4",
+    "family": "arithmetic",
+    "name": "draper_adder",
+    "n_qubits": 8,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/draper_adder_8q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/draper_adder_q5",
+    "family": "arithmetic",
+    "name": "draper_adder",
+    "n_qubits": 10,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/draper_adder_10q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/inverse_qft_q3",
+    "family": "arithmetic",
+    "name": "inverse_qft",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/inverse_qft_3q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/inverse_qft_q3_hadamard_input",
+    "family": "arithmetic",
+    "name": "inverse_qft",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/inverse_qft_3q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/inverse_qft_q4",
+    "family": "arithmetic",
+    "name": "inverse_qft",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/inverse_qft_4q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/inverse_qft_q4_hadamard_input",
+    "family": "arithmetic",
+    "name": "inverse_qft",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/inverse_qft_4q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/inverse_qft_q5",
+    "family": "arithmetic",
+    "name": "inverse_qft",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/inverse_qft_5q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/inverse_qft_q5_hadamard_input",
+    "family": "arithmetic",
+    "name": "inverse_qft",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/inverse_qft_5q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/qft_q3",
+    "family": "arithmetic",
+    "name": "qft",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/qft_3q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/qft_q3_x0",
+    "family": "arithmetic",
+    "name": "qft",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/qft_3q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/qft_q4",
+    "family": "arithmetic",
+    "name": "qft",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/qft_4q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/qft_q4_x0",
+    "family": "arithmetic",
+    "name": "qft",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/qft_4q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/qft_q5",
+    "family": "arithmetic",
+    "name": "qft",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/qft_5q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/qft_q5_x0",
+    "family": "arithmetic",
+    "name": "qft",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/qft_5q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/qpe_q3",
+    "family": "arithmetic",
+    "name": "qpe",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/qpe_4q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/qpe_q3_sgate",
+    "family": "arithmetic",
+    "name": "qpe",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/qpe_4q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/qpe_q4",
+    "family": "arithmetic",
+    "name": "qpe",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/qpe_5q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/qpe_q4_sgate",
+    "family": "arithmetic",
+    "name": "qpe",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/qpe_5q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/qpe_q5",
+    "family": "arithmetic",
+    "name": "qpe",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/qpe_6q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/qpe_q5_sgate",
+    "family": "arithmetic",
+    "name": "qpe",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/qpe_6q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/quantum_comparator_q3",
+    "family": "arithmetic",
+    "name": "quantum_comparator",
+    "n_qubits": 8,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/quantum_comparator_8q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/quantum_comparator_q4",
+    "family": "arithmetic",
+    "name": "quantum_comparator",
+    "n_qubits": 10,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/quantum_comparator_10q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/quantum_comparator_q5",
+    "family": "arithmetic",
+    "name": "quantum_comparator",
+    "n_qubits": 12,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/quantum_comparator_12q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/quantum_multiplier_q3",
+    "family": "arithmetic",
+    "name": "quantum_multiplier",
+    "n_qubits": 12,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/quantum_multiplier_12q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/quantum_multiplier_q4",
+    "family": "arithmetic",
+    "name": "quantum_multiplier",
+    "n_qubits": 16,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/quantum_multiplier_16q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/quantum_multiplier_q5",
+    "family": "arithmetic",
+    "name": "quantum_multiplier",
+    "n_qubits": 20,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/quantum_multiplier_20q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/ripple_adder_q3",
+    "family": "arithmetic",
+    "name": "ripple_adder",
+    "n_qubits": 7,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/ripple_adder_7q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/ripple_adder_q4",
+    "family": "arithmetic",
+    "name": "ripple_adder",
+    "n_qubits": 9,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/ripple_adder_9q.qasm"
+  },
+  {
+    "algorithm_id": "arithmetic/ripple_adder_q5",
+    "family": "arithmetic",
+    "name": "ripple_adder",
+    "n_qubits": 11,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/arithmetic/ripple_adder_11q.qasm"
+  },
+  {
+    "algorithm_id": "communication/bb84_encoding_q3_pattern0",
+    "family": "communication",
+    "name": "bb84_encoding",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/bb84_encoding_3q.qasm"
+  },
+  {
+    "algorithm_id": "communication/bb84_encoding_q3_all_x",
+    "family": "communication",
+    "name": "bb84_encoding",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/bb84_encoding_3q.qasm"
+  },
+  {
+    "algorithm_id": "communication/bb84_encoding_q4_pattern0",
+    "family": "communication",
+    "name": "bb84_encoding",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/bb84_encoding_4q.qasm"
+  },
+  {
+    "algorithm_id": "communication/bb84_encoding_q4_all_x",
+    "family": "communication",
+    "name": "bb84_encoding",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/bb84_encoding_4q.qasm"
+  },
+  {
+    "algorithm_id": "communication/bb84_encoding_q5_pattern0",
+    "family": "communication",
+    "name": "bb84_encoding",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/bb84_encoding_5q.qasm"
+  },
+  {
+    "algorithm_id": "communication/bb84_encoding_q5_all_x",
+    "family": "communication",
+    "name": "bb84_encoding",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/bb84_encoding_5q.qasm"
+  },
+  {
+    "algorithm_id": "communication/entanglement_swapping_q4",
+    "family": "communication",
+    "name": "entanglement_swapping",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/entanglement_swapping_4q.qasm"
+  },
+  {
+    "algorithm_id": "communication/entanglement_swapping_q4_ry0",
+    "family": "communication",
+    "name": "entanglement_swapping",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/entanglement_swapping_4q.qasm"
+  },
+  {
+    "algorithm_id": "communication/entanglement_swapping_q5",
+    "family": "communication",
+    "name": "entanglement_swapping",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/entanglement_swapping_4q.qasm"
+  },
+  {
+    "algorithm_id": "communication/entanglement_swapping_q5_ry0",
+    "family": "communication",
+    "name": "entanglement_swapping",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/entanglement_swapping_4q.qasm"
+  },
+  {
+    "algorithm_id": "communication/ghz_distribution_q3",
+    "family": "communication",
+    "name": "ghz_distribution",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/ghz_distribution_3q.qasm"
+  },
+  {
+    "algorithm_id": "communication/ghz_distribution_q4",
+    "family": "communication",
+    "name": "ghz_distribution",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/ghz_distribution_4q.qasm"
+  },
+  {
+    "algorithm_id": "communication/ghz_distribution_q5",
+    "family": "communication",
+    "name": "ghz_distribution",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/ghz_distribution_5q.qasm"
+  },
+  {
+    "algorithm_id": "communication/quantum_secret_sharing_q3_a1",
+    "family": "communication",
+    "name": "quantum_secret_sharing",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/quantum_secret_sharing_3q.qasm"
+  },
+  {
+    "algorithm_id": "communication/quantum_secret_sharing_q3_a2",
+    "family": "communication",
+    "name": "quantum_secret_sharing",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/quantum_secret_sharing_3q.qasm"
+  },
+  {
+    "algorithm_id": "communication/quantum_secret_sharing_q3_a3",
+    "family": "communication",
+    "name": "quantum_secret_sharing",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/quantum_secret_sharing_3q.qasm"
+  },
+  {
+    "algorithm_id": "communication/quantum_secret_sharing_q4_a1",
+    "family": "communication",
+    "name": "quantum_secret_sharing",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/quantum_secret_sharing_4q.qasm"
+  },
+  {
+    "algorithm_id": "communication/quantum_secret_sharing_q4_a2",
+    "family": "communication",
+    "name": "quantum_secret_sharing",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/quantum_secret_sharing_4q.qasm"
+  },
+  {
+    "algorithm_id": "communication/quantum_secret_sharing_q4_a3",
+    "family": "communication",
+    "name": "quantum_secret_sharing",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/quantum_secret_sharing_4q.qasm"
+  },
+  {
+    "algorithm_id": "communication/quantum_secret_sharing_q5_a1",
+    "family": "communication",
+    "name": "quantum_secret_sharing",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/quantum_secret_sharing_5q.qasm"
+  },
+  {
+    "algorithm_id": "communication/quantum_secret_sharing_q5_a2",
+    "family": "communication",
+    "name": "quantum_secret_sharing",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/quantum_secret_sharing_5q.qasm"
+  },
+  {
+    "algorithm_id": "communication/quantum_secret_sharing_q5_a3",
+    "family": "communication",
+    "name": "quantum_secret_sharing",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/quantum_secret_sharing_5q.qasm"
+  },
+  {
+    "algorithm_id": "communication/superdense_coding_q3",
+    "family": "communication",
+    "name": "superdense_coding",
+    "n_qubits": 2,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/superdense_coding_2q.qasm"
+  },
+  {
+    "algorithm_id": "communication/superdense_coding_q4",
+    "family": "communication",
+    "name": "superdense_coding",
+    "n_qubits": 2,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/superdense_coding_2q.qasm"
+  },
+  {
+    "algorithm_id": "communication/superdense_coding_q5",
+    "family": "communication",
+    "name": "superdense_coding",
+    "n_qubits": 2,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/superdense_coding_2q.qasm"
+  },
+  {
+    "algorithm_id": "communication/teleportation_q3",
+    "family": "communication",
+    "name": "teleportation",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/teleportation_3q.qasm"
+  },
+  {
+    "algorithm_id": "communication/teleportation_q3_plus",
+    "family": "communication",
+    "name": "teleportation",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/teleportation_3q.qasm"
+  },
+  {
+    "algorithm_id": "communication/teleportation_q3_one",
+    "family": "communication",
+    "name": "teleportation",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/teleportation_3q.qasm"
+  },
+  {
+    "algorithm_id": "communication/teleportation_q4",
+    "family": "communication",
+    "name": "teleportation",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/teleportation_3q.qasm"
+  },
+  {
+    "algorithm_id": "communication/teleportation_q4_plus",
+    "family": "communication",
+    "name": "teleportation",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/teleportation_3q.qasm"
+  },
+  {
+    "algorithm_id": "communication/teleportation_q4_one",
+    "family": "communication",
+    "name": "teleportation",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/teleportation_3q.qasm"
+  },
+  {
+    "algorithm_id": "communication/teleportation_q5",
+    "family": "communication",
+    "name": "teleportation",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/teleportation_3q.qasm"
+  },
+  {
+    "algorithm_id": "communication/teleportation_q5_plus",
+    "family": "communication",
+    "name": "teleportation",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/teleportation_3q.qasm"
+  },
+  {
+    "algorithm_id": "communication/teleportation_q5_one",
+    "family": "communication",
+    "name": "teleportation",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/communication/teleportation_3q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/bell_state_q3",
+    "family": "entanglement",
+    "name": "bell_state",
+    "n_qubits": 2,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/bell_state_2q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/bell_state_q4",
+    "family": "entanglement",
+    "name": "bell_state",
+    "n_qubits": 2,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/bell_state_2q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/bell_state_q5",
+    "family": "entanglement",
+    "name": "bell_state",
+    "n_qubits": 2,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/bell_state_2q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/cluster_state_q3_linear",
+    "family": "entanglement",
+    "name": "cluster_state",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/cluster_state_3q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/cluster_state_q4_linear",
+    "family": "entanglement",
+    "name": "cluster_state",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/cluster_state_4q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/cluster_state_q4_ladder",
+    "family": "entanglement",
+    "name": "cluster_state",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/cluster_state_4q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/cluster_state_q5_linear",
+    "family": "entanglement",
+    "name": "cluster_state",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/cluster_state_5q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/cluster_state_q5_ladder",
+    "family": "entanglement",
+    "name": "cluster_state",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/cluster_state_5q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/dicke_state_q4",
+    "family": "entanglement",
+    "name": "dicke_state",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/dicke_state_4q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/dicke_state_q5",
+    "family": "entanglement",
+    "name": "dicke_state",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/dicke_state_5q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/ghz_q3",
+    "family": "entanglement",
+    "name": "ghz",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/ghz_3q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/ghz_q3_x0",
+    "family": "entanglement",
+    "name": "ghz",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/ghz_3q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/ghz_q4",
+    "family": "entanglement",
+    "name": "ghz",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/ghz_4q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/ghz_q4_x0",
+    "family": "entanglement",
+    "name": "ghz",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/ghz_4q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/ghz_q5",
+    "family": "entanglement",
+    "name": "ghz",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/ghz_5q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/ghz_q5_x0",
+    "family": "entanglement",
+    "name": "ghz",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/ghz_5q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/graph_state_q3_ring",
+    "family": "entanglement",
+    "name": "graph_state",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/graph_state_3q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/graph_state_q3_complete",
+    "family": "entanglement",
+    "name": "graph_state",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/graph_state_3q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/graph_state_q4_ring",
+    "family": "entanglement",
+    "name": "graph_state",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/graph_state_4q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/graph_state_q4_complete",
+    "family": "entanglement",
+    "name": "graph_state",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/graph_state_4q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/graph_state_q5_ring",
+    "family": "entanglement",
+    "name": "graph_state",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/graph_state_5q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/graph_state_q5_complete",
+    "family": "entanglement",
+    "name": "graph_state",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/graph_state_5q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/w_state_q3",
+    "family": "entanglement",
+    "name": "w_state",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/w_state_3q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/w_state_q3_ry0",
+    "family": "entanglement",
+    "name": "w_state",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/w_state_3q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/w_state_q4",
+    "family": "entanglement",
+    "name": "w_state",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/w_state_4q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/w_state_q4_ry0",
+    "family": "entanglement",
+    "name": "w_state",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/w_state_4q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/w_state_q5",
+    "family": "entanglement",
+    "name": "w_state",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/w_state_5q.qasm"
+  },
+  {
+    "algorithm_id": "entanglement/w_state_q5_ry0",
+    "family": "entanglement",
+    "name": "w_state",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/entanglement/w_state_5q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/bit_flip_code_q3",
+    "family": "error_correction",
+    "name": "bit_flip_code",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/bit_flip_code_3q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/bit_flip_code_q3_plus",
+    "family": "error_correction",
+    "name": "bit_flip_code",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/bit_flip_code_3q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/bit_flip_code_q4",
+    "family": "error_correction",
+    "name": "bit_flip_code",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/bit_flip_code_3q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/bit_flip_code_q4_plus",
+    "family": "error_correction",
+    "name": "bit_flip_code",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/bit_flip_code_3q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/bit_flip_code_q5",
+    "family": "error_correction",
+    "name": "bit_flip_code",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/bit_flip_code_3q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/bit_flip_code_q5_plus",
+    "family": "error_correction",
+    "name": "bit_flip_code",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/bit_flip_code_3q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/phase_flip_code_q3",
+    "family": "error_correction",
+    "name": "phase_flip_code",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/phase_flip_code_3q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/phase_flip_code_q3_plus",
+    "family": "error_correction",
+    "name": "phase_flip_code",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/phase_flip_code_3q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/phase_flip_code_q4",
+    "family": "error_correction",
+    "name": "phase_flip_code",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/phase_flip_code_3q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/phase_flip_code_q4_plus",
+    "family": "error_correction",
+    "name": "phase_flip_code",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/phase_flip_code_3q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/phase_flip_code_q5",
+    "family": "error_correction",
+    "name": "phase_flip_code",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/phase_flip_code_3q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/phase_flip_code_q5_plus",
+    "family": "error_correction",
+    "name": "phase_flip_code",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/phase_flip_code_3q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/repetition_code_q3",
+    "family": "error_correction",
+    "name": "repetition_code",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/repetition_code_3q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/repetition_code_q4",
+    "family": "error_correction",
+    "name": "repetition_code",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/repetition_code_4q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/repetition_code_q5",
+    "family": "error_correction",
+    "name": "repetition_code",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/repetition_code_5q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/surface_code_plaquette_q5",
+    "family": "error_correction",
+    "name": "surface_code_plaquette",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/surface_code_plaquette_5q.qasm"
+  },
+  {
+    "algorithm_id": "error_correction/surface_code_plaquette_q5_plus_data",
+    "family": "error_correction",
+    "name": "surface_code_plaquette",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/error_correction/surface_code_plaquette_5q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/hadamard_test_q3",
+    "family": "linear_algebra",
+    "name": "hadamard_test",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/hadamard_test_3q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/hadamard_test_q3_ry_input",
+    "family": "linear_algebra",
+    "name": "hadamard_test",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/hadamard_test_3q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/hadamard_test_q4",
+    "family": "linear_algebra",
+    "name": "hadamard_test",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/hadamard_test_4q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/hadamard_test_q4_ry_input",
+    "family": "linear_algebra",
+    "name": "hadamard_test",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/hadamard_test_4q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/hadamard_test_q5",
+    "family": "linear_algebra",
+    "name": "hadamard_test",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/hadamard_test_5q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/hadamard_test_q5_ry_input",
+    "family": "linear_algebra",
+    "name": "hadamard_test",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/hadamard_test_5q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/hhl_rotation_q3",
+    "family": "linear_algebra",
+    "name": "hhl_rotation",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/hhl_rotation_3q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/hhl_rotation_q4",
+    "family": "linear_algebra",
+    "name": "hhl_rotation",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/hhl_rotation_4q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/hhl_rotation_q5",
+    "family": "linear_algebra",
+    "name": "hhl_rotation",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/hhl_rotation_5q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/inner_product_q4",
+    "family": "linear_algebra",
+    "name": "inner_product",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/inner_product_4q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/inner_product_q5",
+    "family": "linear_algebra",
+    "name": "inner_product",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/inner_product_4q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/quantum_walk_q3",
+    "family": "linear_algebra",
+    "name": "quantum_walk",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/quantum_walk_3q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/quantum_walk_q4",
+    "family": "linear_algebra",
+    "name": "quantum_walk",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/quantum_walk_4q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/quantum_walk_q5",
+    "family": "linear_algebra",
+    "name": "quantum_walk",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/quantum_walk_5q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/swap_test_q3",
+    "family": "linear_algebra",
+    "name": "swap_test",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/swap_test_3q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/swap_test_q3_plus_a",
+    "family": "linear_algebra",
+    "name": "swap_test",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/swap_test_3q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/swap_test_q4",
+    "family": "linear_algebra",
+    "name": "swap_test",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/swap_test_3q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/swap_test_q4_plus_a",
+    "family": "linear_algebra",
+    "name": "swap_test",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/swap_test_3q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/swap_test_q5",
+    "family": "linear_algebra",
+    "name": "swap_test",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/swap_test_5q.qasm"
+  },
+  {
+    "algorithm_id": "linear_algebra/swap_test_q5_plus_a",
+    "family": "linear_algebra",
+    "name": "swap_test",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/linear_algebra/swap_test_5q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/bernstein_vazirani_q3_s1",
+    "family": "oracular",
+    "name": "bernstein_vazirani",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/bernstein_vazirani_4q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/bernstein_vazirani_q3_s6",
+    "family": "oracular",
+    "name": "bernstein_vazirani",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/bernstein_vazirani_4q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/bernstein_vazirani_q3_s7",
+    "family": "oracular",
+    "name": "bernstein_vazirani",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/bernstein_vazirani_4q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/bernstein_vazirani_q4_s1",
+    "family": "oracular",
+    "name": "bernstein_vazirani",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/bernstein_vazirani_5q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/bernstein_vazirani_q4_s12",
+    "family": "oracular",
+    "name": "bernstein_vazirani",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/bernstein_vazirani_5q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/bernstein_vazirani_q4_s15",
+    "family": "oracular",
+    "name": "bernstein_vazirani",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/bernstein_vazirani_5q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/bernstein_vazirani_q5_s8",
+    "family": "oracular",
+    "name": "bernstein_vazirani",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/bernstein_vazirani_6q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/bernstein_vazirani_q5_s9",
+    "family": "oracular",
+    "name": "bernstein_vazirani",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/bernstein_vazirani_6q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/bernstein_vazirani_q5_s31",
+    "family": "oracular",
+    "name": "bernstein_vazirani",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/bernstein_vazirani_6q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/deutsch_q3",
+    "family": "oracular",
+    "name": "deutsch",
+    "n_qubits": 2,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/deutsch_2q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/deutsch_q4",
+    "family": "oracular",
+    "name": "deutsch",
+    "n_qubits": 2,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/deutsch_2q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/deutsch_q5",
+    "family": "oracular",
+    "name": "deutsch",
+    "n_qubits": 2,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/deutsch_2q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/deutsch_jozsa_q3",
+    "family": "oracular",
+    "name": "deutsch_jozsa",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/deutsch_jozsa_4q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/deutsch_jozsa_q4",
+    "family": "oracular",
+    "name": "deutsch_jozsa",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/deutsch_jozsa_5q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/deutsch_jozsa_q5",
+    "family": "oracular",
+    "name": "deutsch_jozsa",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/deutsch_jozsa_6q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/grover_q3_m2",
+    "family": "oracular",
+    "name": "grover",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/grover_4q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/grover_q3_m3",
+    "family": "oracular",
+    "name": "grover",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/grover_4q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/grover_q3_m7",
+    "family": "oracular",
+    "name": "grover",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/grover_4q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/grover_q4_m2",
+    "family": "oracular",
+    "name": "grover",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/grover_5q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/grover_q4_m3",
+    "family": "oracular",
+    "name": "grover",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/grover_5q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/grover_q4_m15",
+    "family": "oracular",
+    "name": "grover",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/grover_5q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/grover_q5_m2",
+    "family": "oracular",
+    "name": "grover",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/grover_6q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/grover_q5_m27",
+    "family": "oracular",
+    "name": "grover",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/grover_6q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/grover_q5_m31",
+    "family": "oracular",
+    "name": "grover",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/grover_6q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/quantum_counting_q3",
+    "family": "oracular",
+    "name": "quantum_counting",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/quantum_counting_5q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/quantum_counting_q4",
+    "family": "oracular",
+    "name": "quantum_counting",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/quantum_counting_6q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/quantum_counting_q5",
+    "family": "oracular",
+    "name": "quantum_counting",
+    "n_qubits": 7,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/quantum_counting_7q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/simon_q3_p1",
+    "family": "oracular",
+    "name": "simon",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/simon_6q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/simon_q3_p2",
+    "family": "oracular",
+    "name": "simon",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/simon_6q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/simon_q3_p3",
+    "family": "oracular",
+    "name": "simon",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/simon_6q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/simon_q4_p3",
+    "family": "oracular",
+    "name": "simon",
+    "n_qubits": 8,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/simon_8q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/simon_q4_p4",
+    "family": "oracular",
+    "name": "simon",
+    "n_qubits": 8,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/simon_8q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/simon_q4_p9",
+    "family": "oracular",
+    "name": "simon",
+    "n_qubits": 8,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/simon_8q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/simon_q5_p1",
+    "family": "oracular",
+    "name": "simon",
+    "n_qubits": 10,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/simon_10q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/simon_q5_p3",
+    "family": "oracular",
+    "name": "simon",
+    "n_qubits": 10,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/simon_10q.qasm"
+  },
+  {
+    "algorithm_id": "oracular/simon_q5_p20",
+    "family": "oracular",
+    "name": "simon",
+    "n_qubits": 10,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/oracular/simon_10q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/hamiltonian_sim_q3_J05h03",
+    "family": "simulation",
+    "name": "hamiltonian_sim",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/hamiltonian_sim_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/hamiltonian_sim_q3_J1h05",
+    "family": "simulation",
+    "name": "hamiltonian_sim",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/hamiltonian_sim_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/hamiltonian_sim_q3_J03h1",
+    "family": "simulation",
+    "name": "hamiltonian_sim",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/hamiltonian_sim_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/hamiltonian_sim_q4_J05h03",
+    "family": "simulation",
+    "name": "hamiltonian_sim",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/hamiltonian_sim_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/hamiltonian_sim_q4_J1h05",
+    "family": "simulation",
+    "name": "hamiltonian_sim",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/hamiltonian_sim_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/hamiltonian_sim_q4_J03h1",
+    "family": "simulation",
+    "name": "hamiltonian_sim",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/hamiltonian_sim_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/hamiltonian_sim_q5_J05h03",
+    "family": "simulation",
+    "name": "hamiltonian_sim",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/hamiltonian_sim_5q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/hamiltonian_sim_q5_J1h05",
+    "family": "simulation",
+    "name": "hamiltonian_sim",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/hamiltonian_sim_5q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/hamiltonian_sim_q5_J03h1",
+    "family": "simulation",
+    "name": "hamiltonian_sim",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/hamiltonian_sim_5q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/suzuki_trotter_ising_q3_J1h1",
+    "family": "simulation",
+    "name": "suzuki_trotter_ising",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/suzuki_trotter_ising_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/suzuki_trotter_ising_q3_J05h15",
+    "family": "simulation",
+    "name": "suzuki_trotter_ising",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/suzuki_trotter_ising_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/suzuki_trotter_ising_q3_J2h05",
+    "family": "simulation",
+    "name": "suzuki_trotter_ising",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/suzuki_trotter_ising_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/suzuki_trotter_ising_q4_J1h1",
+    "family": "simulation",
+    "name": "suzuki_trotter_ising",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/suzuki_trotter_ising_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/suzuki_trotter_ising_q4_J05h15",
+    "family": "simulation",
+    "name": "suzuki_trotter_ising",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/suzuki_trotter_ising_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/suzuki_trotter_ising_q4_J2h05",
+    "family": "simulation",
+    "name": "suzuki_trotter_ising",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/suzuki_trotter_ising_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/suzuki_trotter_ising_q5_J1h1",
+    "family": "simulation",
+    "name": "suzuki_trotter_ising",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/suzuki_trotter_ising_5q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/suzuki_trotter_ising_q5_J05h15",
+    "family": "simulation",
+    "name": "suzuki_trotter_ising",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/suzuki_trotter_ising_5q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/suzuki_trotter_ising_q5_J2h05",
+    "family": "simulation",
+    "name": "suzuki_trotter_ising",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/suzuki_trotter_ising_5q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_heisenberg_q3_iso",
+    "family": "simulation",
+    "name": "trotter_heisenberg",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_heisenberg_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_heisenberg_q3_xy",
+    "family": "simulation",
+    "name": "trotter_heisenberg",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_heisenberg_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_heisenberg_q3_xxz",
+    "family": "simulation",
+    "name": "trotter_heisenberg",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_heisenberg_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_heisenberg_q4_iso",
+    "family": "simulation",
+    "name": "trotter_heisenberg",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_heisenberg_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_heisenberg_q4_xy",
+    "family": "simulation",
+    "name": "trotter_heisenberg",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_heisenberg_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_heisenberg_q4_xxz",
+    "family": "simulation",
+    "name": "trotter_heisenberg",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_heisenberg_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_heisenberg_q5_iso",
+    "family": "simulation",
+    "name": "trotter_heisenberg",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_heisenberg_5q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_heisenberg_q5_xy",
+    "family": "simulation",
+    "name": "trotter_heisenberg",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_heisenberg_5q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_heisenberg_q5_xxz",
+    "family": "simulation",
+    "name": "trotter_heisenberg",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_heisenberg_5q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_hubbard_q4_t1u05",
+    "family": "simulation",
+    "name": "trotter_hubbard",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_hubbard_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_hubbard_q4_t05u2",
+    "family": "simulation",
+    "name": "trotter_hubbard",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_hubbard_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_hubbard_q4_t1u1",
+    "family": "simulation",
+    "name": "trotter_hubbard",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_hubbard_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_hubbard_q5_t1u05",
+    "family": "simulation",
+    "name": "trotter_hubbard",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_hubbard_6q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_hubbard_q5_t05u2",
+    "family": "simulation",
+    "name": "trotter_hubbard",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_hubbard_6q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_hubbard_q5_t1u1",
+    "family": "simulation",
+    "name": "trotter_hubbard",
+    "n_qubits": 6,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_hubbard_6q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_ising_q3_J1h1",
+    "family": "simulation",
+    "name": "trotter_ising",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_ising_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_ising_q3_J05h15",
+    "family": "simulation",
+    "name": "trotter_ising",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_ising_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_ising_q3_J2h05",
+    "family": "simulation",
+    "name": "trotter_ising",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_ising_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_ising_q4_J1h1",
+    "family": "simulation",
+    "name": "trotter_ising",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_ising_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_ising_q4_J05h15",
+    "family": "simulation",
+    "name": "trotter_ising",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_ising_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_ising_q4_J2h05",
+    "family": "simulation",
+    "name": "trotter_ising",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_ising_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_ising_q5_J1h1",
+    "family": "simulation",
+    "name": "trotter_ising",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_ising_5q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_ising_q5_J05h15",
+    "family": "simulation",
+    "name": "trotter_ising",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_ising_5q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_ising_q5_J2h05",
+    "family": "simulation",
+    "name": "trotter_ising",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_ising_5q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_xy_q3_J05",
+    "family": "simulation",
+    "name": "trotter_xy",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_xy_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_xy_q3_J1",
+    "family": "simulation",
+    "name": "trotter_xy",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_xy_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_xy_q3_J2",
+    "family": "simulation",
+    "name": "trotter_xy",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_xy_3q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_xy_q4_J05",
+    "family": "simulation",
+    "name": "trotter_xy",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_xy_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_xy_q4_J1",
+    "family": "simulation",
+    "name": "trotter_xy",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_xy_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_xy_q4_J2",
+    "family": "simulation",
+    "name": "trotter_xy",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_xy_4q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_xy_q5_J05",
+    "family": "simulation",
+    "name": "trotter_xy",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_xy_5q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_xy_q5_J1",
+    "family": "simulation",
+    "name": "trotter_xy",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_xy_5q.qasm"
+  },
+  {
+    "algorithm_id": "simulation/trotter_xy_q5_J2",
+    "family": "simulation",
+    "name": "trotter_xy",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/simulation/trotter_xy_5q.qasm"
+  },
+  {
+    "algorithm_id": "variational/excitation_preserving_q3_ao0",
+    "family": "variational",
+    "name": "excitation_preserving",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/excitation_preserving_3q.qasm"
+  },
+  {
+    "algorithm_id": "variational/excitation_preserving_q3_ao7",
+    "family": "variational",
+    "name": "excitation_preserving",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/excitation_preserving_3q.qasm"
+  },
+  {
+    "algorithm_id": "variational/excitation_preserving_q3_ao13",
+    "family": "variational",
+    "name": "excitation_preserving",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/excitation_preserving_3q.qasm"
+  },
+  {
+    "algorithm_id": "variational/excitation_preserving_q4_ao0",
+    "family": "variational",
+    "name": "excitation_preserving",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/excitation_preserving_4q.qasm"
+  },
+  {
+    "algorithm_id": "variational/excitation_preserving_q4_ao7",
+    "family": "variational",
+    "name": "excitation_preserving",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/excitation_preserving_4q.qasm"
+  },
+  {
+    "algorithm_id": "variational/excitation_preserving_q4_ao13",
+    "family": "variational",
+    "name": "excitation_preserving",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/excitation_preserving_4q.qasm"
+  },
+  {
+    "algorithm_id": "variational/excitation_preserving_q5_ao0",
+    "family": "variational",
+    "name": "excitation_preserving",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/excitation_preserving_5q.qasm"
+  },
+  {
+    "algorithm_id": "variational/excitation_preserving_q5_ao7",
+    "family": "variational",
+    "name": "excitation_preserving",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/excitation_preserving_5q.qasm"
+  },
+  {
+    "algorithm_id": "variational/excitation_preserving_q5_ao13",
+    "family": "variational",
+    "name": "excitation_preserving",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/excitation_preserving_5q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_maxcut_q3_ring",
+    "family": "variational",
+    "name": "qaoa_maxcut",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_maxcut_3q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_maxcut_q3_star",
+    "family": "variational",
+    "name": "qaoa_maxcut",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_maxcut_3q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_maxcut_q3_random",
+    "family": "variational",
+    "name": "qaoa_maxcut",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_maxcut_3q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_maxcut_q4_ring",
+    "family": "variational",
+    "name": "qaoa_maxcut",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_maxcut_4q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_maxcut_q4_star",
+    "family": "variational",
+    "name": "qaoa_maxcut",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_maxcut_4q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_maxcut_q4_random",
+    "family": "variational",
+    "name": "qaoa_maxcut",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_maxcut_4q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_maxcut_q5_ring",
+    "family": "variational",
+    "name": "qaoa_maxcut",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_maxcut_5q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_maxcut_q5_star",
+    "family": "variational",
+    "name": "qaoa_maxcut",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_maxcut_5q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_maxcut_q5_random",
+    "family": "variational",
+    "name": "qaoa_maxcut",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_maxcut_5q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_sk_model_q3_seed42",
+    "family": "variational",
+    "name": "qaoa_sk_model",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_sk_model_3q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_sk_model_q3_seed137",
+    "family": "variational",
+    "name": "qaoa_sk_model",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_sk_model_3q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_sk_model_q3_seed271",
+    "family": "variational",
+    "name": "qaoa_sk_model",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_sk_model_3q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_sk_model_q4_seed42",
+    "family": "variational",
+    "name": "qaoa_sk_model",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_sk_model_4q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_sk_model_q4_seed137",
+    "family": "variational",
+    "name": "qaoa_sk_model",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_sk_model_4q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_sk_model_q4_seed271",
+    "family": "variational",
+    "name": "qaoa_sk_model",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_sk_model_4q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_sk_model_q5_seed42",
+    "family": "variational",
+    "name": "qaoa_sk_model",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_sk_model_5q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_sk_model_q5_seed137",
+    "family": "variational",
+    "name": "qaoa_sk_model",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_sk_model_5q.qasm"
+  },
+  {
+    "algorithm_id": "variational/qaoa_sk_model_q5_seed271",
+    "family": "variational",
+    "name": "qaoa_sk_model",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/qaoa_sk_model_5q.qasm"
+  },
+  {
+    "algorithm_id": "variational/vqe_hardware_efficient_q3_ao0",
+    "family": "variational",
+    "name": "vqe_hardware_efficient",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/vqe_hardware_efficient_3q.qasm"
+  },
+  {
+    "algorithm_id": "variational/vqe_hardware_efficient_q3_ao5",
+    "family": "variational",
+    "name": "vqe_hardware_efficient",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/vqe_hardware_efficient_3q.qasm"
+  },
+  {
+    "algorithm_id": "variational/vqe_hardware_efficient_q3_ao11",
+    "family": "variational",
+    "name": "vqe_hardware_efficient",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/vqe_hardware_efficient_3q.qasm"
+  },
+  {
+    "algorithm_id": "variational/vqe_hardware_efficient_q4_ao0",
+    "family": "variational",
+    "name": "vqe_hardware_efficient",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/vqe_hardware_efficient_4q.qasm"
+  },
+  {
+    "algorithm_id": "variational/vqe_hardware_efficient_q4_ao5",
+    "family": "variational",
+    "name": "vqe_hardware_efficient",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/vqe_hardware_efficient_4q.qasm"
+  },
+  {
+    "algorithm_id": "variational/vqe_hardware_efficient_q4_ao11",
+    "family": "variational",
+    "name": "vqe_hardware_efficient",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/vqe_hardware_efficient_4q.qasm"
+  },
+  {
+    "algorithm_id": "variational/vqe_hardware_efficient_q5_ao0",
+    "family": "variational",
+    "name": "vqe_hardware_efficient",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/vqe_hardware_efficient_5q.qasm"
+  },
+  {
+    "algorithm_id": "variational/vqe_hardware_efficient_q5_ao5",
+    "family": "variational",
+    "name": "vqe_hardware_efficient",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/vqe_hardware_efficient_5q.qasm"
+  },
+  {
+    "algorithm_id": "variational/vqe_hardware_efficient_q5_ao11",
+    "family": "variational",
+    "name": "vqe_hardware_efficient",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/vqe_hardware_efficient_5q.qasm"
+  },
+  {
+    "algorithm_id": "variational/vqe_uccsd_ansatz_q4_L1",
+    "family": "variational",
+    "name": "vqe_uccsd_ansatz",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/vqe_uccsd_ansatz_4q.qasm"
+  },
+  {
+    "algorithm_id": "variational/vqe_uccsd_ansatz_q4_L2",
+    "family": "variational",
+    "name": "vqe_uccsd_ansatz",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/vqe_uccsd_ansatz_4q.qasm"
+  },
+  {
+    "algorithm_id": "variational/vqe_uccsd_ansatz_q5_L1",
+    "family": "variational",
+    "name": "vqe_uccsd_ansatz",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/vqe_uccsd_ansatz_5q.qasm"
+  },
+  {
+    "algorithm_id": "variational/vqe_uccsd_ansatz_q5_L2",
+    "family": "variational",
+    "name": "vqe_uccsd_ansatz",
+    "n_qubits": 5,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/variational/vqe_uccsd_ansatz_5q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0098",
+    "family": "discovered_r1",
+    "name": "surv_0098",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0098_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0182",
+    "family": "discovered_r1",
+    "name": "surv_0182",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0182_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0189",
+    "family": "discovered_r1",
+    "name": "surv_0189",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0189_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0116",
+    "family": "discovered_r1",
+    "name": "surv_0116",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0116_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0074",
+    "family": "discovered_r1",
+    "name": "surv_0074",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0074_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0196",
+    "family": "discovered_r1",
+    "name": "surv_0196",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0196_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0197",
+    "family": "discovered_r1",
+    "name": "surv_0197",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0197_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0014",
+    "family": "discovered_r1",
+    "name": "surv_0014",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0014_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0041",
+    "family": "discovered_r1",
+    "name": "surv_0041",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0041_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0178",
+    "family": "discovered_r1",
+    "name": "surv_0178",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0178_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0194",
+    "family": "discovered_r1",
+    "name": "surv_0194",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0194_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0192",
+    "family": "discovered_r1",
+    "name": "surv_0192",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0192_4q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0191",
+    "family": "discovered_r1",
+    "name": "surv_0191",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0191_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0064",
+    "family": "discovered_r1",
+    "name": "surv_0064",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0064_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0184",
+    "family": "discovered_r1",
+    "name": "surv_0184",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0184_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0006",
+    "family": "discovered_r1",
+    "name": "surv_0006",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0006_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0115",
+    "family": "discovered_r1",
+    "name": "surv_0115",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0115_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0110",
+    "family": "discovered_r1",
+    "name": "surv_0110",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0110_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0108",
+    "family": "discovered_r1",
+    "name": "surv_0108",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0108_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r1/surv_0040",
+    "family": "discovered_r1",
+    "name": "surv_0040",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r1/surv_0040_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0164",
+    "family": "discovered_r2",
+    "name": "surv_0164",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0164_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0165",
+    "family": "discovered_r2",
+    "name": "surv_0165",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0165_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0178",
+    "family": "discovered_r2",
+    "name": "surv_0178",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0178_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0162",
+    "family": "discovered_r2",
+    "name": "surv_0162",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0162_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0006",
+    "family": "discovered_r2",
+    "name": "surv_0006",
+    "n_qubits": 4,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0006_4q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0173",
+    "family": "discovered_r2",
+    "name": "surv_0173",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0173_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0093",
+    "family": "discovered_r2",
+    "name": "surv_0093",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0093_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0118",
+    "family": "discovered_r2",
+    "name": "surv_0118",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0118_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0015",
+    "family": "discovered_r2",
+    "name": "surv_0015",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0015_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0163",
+    "family": "discovered_r2",
+    "name": "surv_0163",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0163_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0175",
+    "family": "discovered_r2",
+    "name": "surv_0175",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0175_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0048",
+    "family": "discovered_r2",
+    "name": "surv_0048",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0048_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0043",
+    "family": "discovered_r2",
+    "name": "surv_0043",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0043_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0183",
+    "family": "discovered_r2",
+    "name": "surv_0183",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0183_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0181",
+    "family": "discovered_r2",
+    "name": "surv_0181",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0181_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0053",
+    "family": "discovered_r2",
+    "name": "surv_0053",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0053_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0094",
+    "family": "discovered_r2",
+    "name": "surv_0094",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0094_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0127",
+    "family": "discovered_r2",
+    "name": "surv_0127",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0127_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0194",
+    "family": "discovered_r2",
+    "name": "surv_0194",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0194_3q.qasm"
+  },
+  {
+    "algorithm_id": "discovered_r2/surv_0187",
+    "family": "discovered_r2",
+    "name": "surv_0187",
+    "n_qubits": 3,
+    "qasm_path": "data_qaoa_discovery/corpus/algorithms/discovered_r2/surv_0187_3q.qasm"
+  }
+]

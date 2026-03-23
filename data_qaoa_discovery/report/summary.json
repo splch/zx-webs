@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-03-23T02:08:45.003069+00:00",
+  "stages": {
+    "corpus": {
+      "n_algorithms": 296
+    },
+    "zx_diagrams": {
+      "n_diagrams": 296
+    },
+    "mining": {
+      "n_webs": 530474
+    },
+    "compose": {
+      "n_candidates": 858
+    },
+    "filter": {
+      "n_survivors": 249
+    },
+    "bench": {
+      "n_benchmarked": 249,
+      "n_dominating": 0
+    }
+  }
+}
