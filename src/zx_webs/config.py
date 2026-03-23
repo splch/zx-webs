@@ -91,6 +91,7 @@ class ComposeConfig(BaseModel):
     byol_episodes: int = 5  # number of BYOL-Explore exploration episodes
     byol_steps_per_episode: int = 200  # composition attempts per episode
     byol_budget_fraction: float = 0.5  # fraction of max_candidates allocated to BYOL in hybrid mode
+    qaoa_reward_weight: float = 0.0  # blend weight for problem-driven QAOA fitness in BYOL reward (0=pure curiosity, 1=pure QAOA)
 
 
 class FilterConfig(BaseModel):

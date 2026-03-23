@@ -1388,6 +1388,7 @@ def run_stage4(
         # Pure BYOL-Explore: all candidates come from curiosity-driven search.
         from zx_webs.byol_explore import run_curiosity_exploration
 
+        qaoa_wt = getattr(config, "qaoa_reward_weight", 0.0)
         candidates, exploration_log = run_curiosity_exploration(
             webs=webs,
             stitcher=stitcher,
@@ -1395,6 +1396,7 @@ def run_stage4(
             n_episodes=config.byol_episodes,
             steps_per_episode=config.byol_steps_per_episode,
             seed=config.seed,
+            qaoa_reward_weight=qaoa_wt,
         )
         # Persist exploration log alongside candidates.
         _save_exploration_log(
@@ -1413,6 +1415,7 @@ def run_stage4(
         std_budget = config.max_candidates - byol_budget
 
         # Run BYOL-Explore with its share of the budget.
+        qaoa_wt = getattr(config, "qaoa_reward_weight", 0.0)
         byol_config = config.model_copy(update={"max_candidates": byol_budget})
         byol_candidates, exploration_log = run_curiosity_exploration(
             webs=webs,
@@ -1421,6 +1424,7 @@ def run_stage4(
             n_episodes=config.byol_episodes,
             steps_per_episode=config.byol_steps_per_episode,
             seed=config.seed,
+            qaoa_reward_weight=qaoa_wt,
         )
         _save_exploration_log(
             exploration_log, output_dir / "byol_exploration_log.json",

@@ -553,6 +553,39 @@ class BYOLExploreAgent:
 # ---------------------------------------------------------------------------
 
 
+def _evaluate_qaoa_fitness(graph: zx.Graph, n_qubits: int) -> float:
+    """Try to extract a circuit from a ZX graph and evaluate QAOA fitness.
+
+    Returns 0.0 on failure. This provides a problem-driven reward signal
+    that steers exploration toward circuits useful as QAOA mixers.
+    """
+    if n_qubits < 2 or n_qubits > 5:
+        return 0.0
+    try:
+        import pyzx as zx_lib
+        from zx_webs.stage6_bench.usefulness import _qaoa_mixer_fitness
+
+        g = graph.copy()
+        zx_lib.full_reduce(g)
+        circ = zx_lib.extract_circuit(g)
+        circ = circ.to_basic_gates()
+        qasm = circ.to_qasm()
+
+        # Parse unitary via qiskit
+        from qiskit import QuantumCircuit
+        from qiskit.quantum_info import Operator
+
+        qc = QuantumCircuit.from_qasm_str(qasm)
+        if qc.num_qubits != n_qubits:
+            return 0.0
+        U = Operator(qc).data
+
+        result = _qaoa_mixer_fitness(U, n_qubits, n_instances=2, n_trials=4, seed=7)
+        return result.get("approx_ratio", 0.0)
+    except Exception:
+        return 0.0
+
+
 def run_curiosity_exploration(
     webs: list,  # list[ZXWeb]
     stitcher: Any,  # Stitcher instance
@@ -560,6 +593,7 @@ def run_curiosity_exploration(
     n_episodes: int = 5,
     steps_per_episode: int = 200,
     seed: int = 42,
+    qaoa_reward_weight: float = 0.5,
 ) -> tuple[list, list[dict]]:
     """Run BYOL-Explore curiosity-driven composition.
 
@@ -724,9 +758,24 @@ def run_curiosity_exploration(
                 except Exception:
                     next_features = np.zeros(FEATURE_DIM, dtype=np.float32)
 
+                # Compute qubit counts early (needed for QAOA fitness)
+                n_qubits = len(composed_graph.inputs()) if composed_graph.inputs() else 0
+                n_outputs = len(composed_graph.outputs()) if composed_graph.outputs() else 0
+
                 action_vec = encode_action(web_i, web_j, mode, n_webs)
-                intrinsic_reward = agent.compute_intrinsic_reward(
+                curiosity_reward = agent.compute_intrinsic_reward(
                     curr_features, action_vec, next_features,
+                )
+
+                # Problem-driven reward: evaluate QAOA mixer quality
+                qaoa_reward = 0.0
+                if qaoa_reward_weight > 0 and n_qubits >= 2:
+                    qaoa_reward = _evaluate_qaoa_fitness(composed_graph, n_qubits)
+
+                # Blend curiosity and problem-driven signals
+                alpha = qaoa_reward_weight
+                intrinsic_reward = (
+                    (1 - alpha) * curiosity_reward + alpha * qaoa_reward * 10.0
                 )
 
                 # Train the agent
@@ -739,10 +788,6 @@ def run_curiosity_exploration(
                 agent.total_reward += intrinsic_reward
                 agent.reward_history.append(intrinsic_reward)
                 episode_reward_list.append(intrinsic_reward)
-
-                # Check if this is a valid candidate
-                n_qubits = len(composed_graph.inputs()) if composed_graph.inputs() else 0
-                n_outputs = len(composed_graph.outputs()) if composed_graph.outputs() else 0
 
                 if (
                     min_qubits <= n_qubits <= max_qubits
@@ -787,6 +832,8 @@ def run_curiosity_exploration(
                     "web_j": web_j,
                     "mode": mode,
                     "intrinsic_reward": intrinsic_reward,
+                    "curiosity_reward": curiosity_reward,
+                    "qaoa_reward": qaoa_reward,
                     "train_loss": train_loss,
                     "predicted_reward": predicted_reward,
                     "n_qubits": n_qubits if composed_graph else 0,

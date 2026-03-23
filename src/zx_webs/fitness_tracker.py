@@ -104,6 +104,18 @@ def _compute_candidate_fitness(
     if usefulness > 0:
         score += usefulness
 
+    # QAOA performance bonus: circuits that actually improve QAOA
+    # approximation ratios get a strong fitness signal.
+    usefulness_data = bench_result.get("usefulness", {})
+    qaoa_fitness = usefulness_data.get("qaoa_fitness", 0.0)
+    if qaoa_fitness > 0.75:
+        # Bonus scales with how much it exceeds the standard baseline (0.75)
+        score += 2.0 * (qaoa_fitness - 0.75)
+    constrained_qaoa = usefulness_data.get("constrained_qaoa_fitness", 0.0)
+    if constrained_qaoa > 0.5:
+        # Strong bonus for constrained-preserving mixers
+        score += 3.0 * constrained_qaoa
+
     # Near-miss bonus: candidates close to implementing a known algorithm
     best_fidelity = bench_result.get("best_fidelity", 0.0)
     if near_miss_lo <= best_fidelity < near_miss_hi:

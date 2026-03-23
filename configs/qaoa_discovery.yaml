@@ -1,0 +1,99 @@
+# Problem-driven quantum algorithm discovery
+# Key change: QAOA performance is the primary fitness signal
+# instead of pure curiosity/novelty
+data_dir: data_qaoa_discovery
+
+corpus:
+  families:
+    - oracular
+    - arithmetic
+    - variational
+    - simulation
+    - entanglement
+    - error_correction
+    - linear_algebra
+    - communication
+  max_qubits: 5
+  qubit_counts: [3, 4, 5]
+  seed: 42
+
+zx:
+  reduction: full_reduce
+  mining_reduction: teleport_reduce
+  normalize: true
+
+mining:
+  min_support: 2
+  min_vertices: 2
+  max_vertices: 10
+  max_input_vertices: 50
+  phase_discretization: 8
+  include_phase_in_label: true
+  mining_reduction: teleport_reduce
+  mining_timeout: 300
+  discriminative_mining: true
+  discriminative_min_support: 2
+  discriminative_max_family_ratio: 0.5
+
+compose:
+  max_webs_per_candidate: 3
+  max_candidates: 2000
+  max_webs_loaded: 30000
+  composition_modes: [sequential, parallel]
+  min_compose_qubits: 2
+  max_compose_qubits: 5
+  seed: 42
+  prefer_cross_family: true
+  guided: true
+  target_qubit_counts: [3, 4, 5]
+  phase_perturbation_resolution: 8
+  phase_perturbation_rate: 0.3
+  continuous_phase_perturbation: true
+  # BYOL-Explore with problem-driven reward
+  compose_strategy: hybrid
+  byol_episodes: 3
+  byol_steps_per_episode: 200
+  byol_budget_fraction: 0.6
+  # The key new parameter: blend QAOA fitness into BYOL reward
+  qaoa_reward_weight: 0.5
+
+filter:
+  extract_timeout_seconds: 30.0
+  max_cnot_blowup_factor: 5.0
+  cnot_blowup_enabled: true
+  dedup_method: unitary
+  n_workers: 0
+  optimize_cnots_level: 2
+  gflow_precheck: false
+  max_unitary_qubits: 6
+
+bench:
+  tasks:
+    - grover_oracle
+    - maxcut
+    - qpe
+    - ghz
+    - arithmetic
+  qasmbench_path: data/qasmbench
+  fidelity_shots: 8192
+  fidelity_threshold: 0.99
+  novelty_scoring: true
+  max_unitary_qubits: 6
+  usefulness_scoring: true
+  usefulness_weight: 0.5
+  magic_max_qubits: 4
+  scrambling_samples: 10
+
+report:
+  output_format: [json, html]
+  figure_dpi: 150
+
+# Evolutionary search: 2 refinement rounds, fitness-guided
+refinement_rounds: 2
+refinement_top_k: 20
+fitness_guided: true
+fitness_decay: 0.7
+phase_optimize_near_misses: true
+phase_optimize_max_iters: 200
+near_miss_fidelity_lo: 0.80
+near_miss_fidelity_hi: 0.99

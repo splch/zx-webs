@@ -61,6 +61,10 @@ class UsefulnessReport:
     magic_score: float = 0.0
     entangling_power_multipartite: float = 0.0
 
+    # Tier 4: Problem-driven fitness
+    qaoa_fitness: float = 0.0
+    constrained_qaoa_fitness: float = 0.0
+
     # Composite
     usefulness_score: float = 0.0
     usefulness_tags: list[str] = field(default_factory=list)
@@ -81,6 +85,8 @@ class UsefulnessReport:
             "haar_typicality": self.haar_typicality,
             "magic_score": self.magic_score,
             "entangling_power_multipartite": self.entangling_power_multipartite,
+            "qaoa_fitness": self.qaoa_fitness,
+            "constrained_qaoa_fitness": self.constrained_qaoa_fitness,
             "usefulness_score": self.usefulness_score,
             "usefulness_tags": self.usefulness_tags,
         }
@@ -571,6 +577,253 @@ def _bipartite_operator_entropy(
 
 
 # ---------------------------------------------------------------------------
+# Tier 4: Problem-driven QAOA fitness
+# ---------------------------------------------------------------------------
+
+
+def _generate_maxcut_instances(
+    n_qubits: int,
+    n_instances: int = 3,
+    seed: int = 42,
+) -> list[tuple[list[tuple[int, int]], int]]:
+    """Generate random MaxCut graph instances for benchmarking.
+
+    Returns a list of (edges, optimal_cut_value) tuples.
+    For small graphs we compute the optimal cut exactly.
+    """
+    rng = np.random.default_rng(seed)
+    instances = []
+
+    # Always include structured graphs that are hard for standard QAOA
+    # Ring graph: standard QAOA p=1 gets 0.75 on this
+    ring_edges = [(i, (i + 1) % n_qubits) for i in range(n_qubits)]
+    ring_opt = n_qubits if n_qubits % 2 == 0 else n_qubits - 1
+    instances.append((ring_edges, ring_opt))
+
+    # Random graphs
+    for _ in range(n_instances - 1):
+        edges = []
+        for i in range(n_qubits):
+            for j in range(i + 1, n_qubits):
+                if rng.random() < 0.5:
+                    edges.append((i, j))
+        if not edges:
+            edges = [(0, 1)]
+
+        # Compute optimal cut by brute force (feasible for n <= 10)
+        opt = 0
+        for bits in range(2**n_qubits):
+            cut = sum(
+                1
+                for (i, j) in edges
+                if ((bits >> i) & 1) != ((bits >> j) & 1)
+            )
+            opt = max(opt, cut)
+        instances.append((edges, opt))
+
+    return instances
+
+
+def _qaoa_energy_with_mixer(
+    params: np.ndarray,
+    n_qubits: int,
+    edges: list[tuple[int, int]],
+    mixer_unitary: np.ndarray,
+) -> float:
+    """Evaluate QAOA energy for MaxCut using a discovered mixer unitary.
+
+    Uses the ansatz: cost_layer(beta) -> U_mixer -> Rz_layer(gamma).
+    The discovered unitary is applied directly (not matrix-powered),
+    with single-qubit Rz rotations providing the free parameter.
+    Returns the expected cut value (higher is better).
+    """
+    d = 2**n_qubits
+    p = len(params) // 2
+    gammas = params[:p]
+    betas = params[p:]
+
+    # Start from |+>^n
+    state = np.ones(d, dtype=complex) / np.sqrt(d)
+
+    for layer in range(p):
+        # Cost layer: e^{-i * beta * C}
+        for i_e, j_e in edges:
+            for idx in range(d):
+                zi = 1 - 2 * ((idx >> i_e) & 1)
+                zj = 1 - 2 * ((idx >> j_e) & 1)
+                state[idx] *= np.exp(-1j * betas[layer] * (1 - zi * zj) / 2)
+
+        # Mixer: apply discovered unitary directly
+        state = mixer_unitary @ state
+
+        # Parameterised Rz rotation on each qubit (provides variational freedom)
+        for q in range(n_qubits):
+            for idx in range(d):
+                bit = (idx >> q) & 1
+                state[idx] *= np.exp(-1j * gammas[layer] * (1 - 2 * bit) / 2)
+
+    # Compute expected cut value
+    probs = np.abs(state) ** 2
+    # Sanity check: probabilities should sum to ~1
+    prob_sum = np.sum(probs)
+    if not np.isfinite(prob_sum) or prob_sum < 0.5:
+        return 0.0
+    probs /= prob_sum
+
+    energy = 0.0
+    for idx in range(d):
+        cut_val = sum(
+            1
+            for (i_e, j_e) in edges
+            if ((idx >> i_e) & 1) != ((idx >> j_e) & 1)
+        )
+        energy += probs[idx] * cut_val
+
+    return float(energy)
+
+
+def _qaoa_energy_standard(
+    params: np.ndarray,
+    n_qubits: int,
+    edges: list[tuple[int, int]],
+) -> float:
+    """Evaluate standard QAOA energy with X-mixer for MaxCut."""
+    d = 2**n_qubits
+    p = len(params) // 2
+    gammas = params[:p]
+    betas = params[p:]
+
+    state = np.ones(d, dtype=complex) / np.sqrt(d)
+
+    for layer in range(p):
+        # Cost layer
+        for i_e, j_e in edges:
+            for idx in range(d):
+                zi = 1 - 2 * ((idx >> i_e) & 1)
+                zj = 1 - 2 * ((idx >> j_e) & 1)
+                state[idx] *= np.exp(-1j * betas[layer] * (1 - zi * zj) / 2)
+
+        # Standard X-mixer: e^{-i * gamma * X_j} on each qubit
+        for q in range(n_qubits):
+            # Apply Rx(2*gamma) on qubit q
+            cos_g = np.cos(gammas[layer])
+            sin_g = np.sin(gammas[layer])
+            for idx in range(d):
+                partner = idx ^ (1 << q)
+                if idx < partner:
+                    a, b = state[idx], state[partner]
+                    state[idx] = cos_g * a - 1j * sin_g * b
+                    state[partner] = -1j * sin_g * a + cos_g * b
+
+    probs = np.abs(state) ** 2
+    energy = 0.0
+    for idx in range(d):
+        cut_val = sum(
+            1
+            for (i_e, j_e) in edges
+            if ((idx >> i_e) & 1) != ((idx >> j_e) & 1)
+        )
+        energy += probs[idx] * cut_val
+
+    return float(energy)
+
+
+def _qaoa_mixer_fitness(
+    unitary: np.ndarray,
+    n_qubits: int,
+    n_instances: int = 3,
+    n_trials: int = 8,
+    seed: int = 42,
+) -> dict[str, float]:
+    """Evaluate a unitary as a QAOA mixer on MaxCut instances.
+
+    Compares the discovered mixer against the standard X-mixer baseline.
+    Returns a dict with 'approx_ratio' and 'constrained_ratio'.
+
+    The approximation ratio is relative to the optimal cut, averaged
+    across problem instances.  A ratio > baseline means the discovered
+    mixer outperforms standard QAOA at the same depth.
+    """
+    from scipy.optimize import minimize as sp_minimize
+
+    if n_qubits > 6:
+        # Too expensive for inline evaluation
+        return {"approx_ratio": 0.0, "constrained_ratio": 0.0}
+
+    rng = np.random.default_rng(seed)
+    instances = _generate_maxcut_instances(n_qubits, n_instances, seed)
+
+    discovered_ratios = []
+    baseline_ratios = []
+
+    for edges, opt_cut in instances:
+        if opt_cut == 0:
+            continue
+
+        # Evaluate discovered mixer (p=1 QAOA)
+        best_disc = 0.0
+        for _ in range(n_trials):
+            params0 = rng.uniform(0, np.pi, 2)
+            try:
+                result = sp_minimize(
+                    lambda x: -_qaoa_energy_with_mixer(x, n_qubits, edges, unitary),
+                    params0,
+                    method="COBYLA",
+                    options={"maxiter": 100},
+                )
+                best_disc = max(best_disc, -result.fun)
+            except Exception:
+                continue
+
+        # Evaluate standard X-mixer baseline (p=1)
+        best_std = 0.0
+        for _ in range(n_trials):
+            params0 = rng.uniform(0, np.pi, 2)
+            try:
+                result = sp_minimize(
+                    lambda x: -_qaoa_energy_standard(x, n_qubits, edges),
+                    params0,
+                    method="COBYLA",
+                    options={"maxiter": 100},
+                )
+                best_std = max(best_std, -result.fun)
+            except Exception:
+                continue
+
+        discovered_ratios.append(best_disc / opt_cut)
+        baseline_ratios.append(best_std / opt_cut)
+
+    if not discovered_ratios:
+        return {"approx_ratio": 0.0, "constrained_ratio": 0.0}
+
+    avg_disc = float(np.mean(discovered_ratios))
+    avg_base = float(np.mean(baseline_ratios))
+
+    # Constrained fitness: bonus if mixer preserves Hamming weight
+    # Check if the mixer preserves Hamming weight sectors
+    d = 2**n_qubits
+    hw_preserved = True
+    for i in range(d):
+        hw_in = bin(i).count("1")
+        row = unitary[i, :]
+        for j in range(d):
+            if abs(row[j]) > 1e-6 and bin(j).count("1") != hw_in:
+                hw_preserved = False
+                break
+        if not hw_preserved:
+            break
+
+    constrained_ratio = avg_disc if hw_preserved else 0.0
+
+    return {
+        "approx_ratio": avg_disc,
+        "baseline_ratio": avg_base,
+        "improvement_over_baseline": avg_disc - avg_base,
+        "constrained_ratio": constrained_ratio,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Composite scoring
 # ---------------------------------------------------------------------------
 
@@ -661,8 +914,27 @@ def compute_usefulness(
     if report.entangling_power_multipartite > 0.5:
         tags.append("strong_entangler")
 
+    # --- Tier 4: Problem-driven fitness (QAOA/VQE performance) ---
+    report.qaoa_fitness = 0.0
+    report.constrained_qaoa_fitness = 0.0
+    if n_qubits >= 2:
+        try:
+            qaoa_result = _qaoa_mixer_fitness(unitary, n_qubits)
+            report.qaoa_fitness = qaoa_result["approx_ratio"]
+            report.constrained_qaoa_fitness = qaoa_result.get(
+                "constrained_ratio", 0.0
+            )
+            if report.qaoa_fitness > 0.75:
+                tags.append("qaoa_useful")
+            if report.constrained_qaoa_fitness > 0.5:
+                tags.append("constrained_qaoa_useful")
+            if report.preserves_hamming_weight and report.qaoa_fitness > 0.6:
+                tags.append("hw_preserving_mixer")
+        except Exception:
+            logger.debug("QAOA fitness evaluation failed for %d-qubit circuit.", n_qubits)
+
     # --- Composite score ---
-    # Tier 1: functional detection (0.30 weight)
+    # Tier 1: functional detection (0.20 weight)
     tier1 = 0.0
     if report.is_diagonal:
         tier1 += 0.3
@@ -676,7 +948,7 @@ def compute_usefulness(
         tier1 += 0.3
     tier1 = min(1.0, tier1)
 
-    # Tier 2: algebraic utility (0.35 weight)
+    # Tier 2: algebraic utility (0.25 weight)
     tier2 = 0.0
     tier2 += 0.25 * report.mixer_strength
     tier2 += 0.20 * report.scrambling_score
@@ -690,14 +962,26 @@ def compute_usefulness(
         tier2 += 0.10
     tier2 = min(1.0, tier2)
 
-    # Tier 3: structural richness (0.35 weight)
+    # Tier 3: structural richness (0.20 weight)
     tier3 = 0.0
     tier3 += 0.35 * report.haar_typicality
     tier3 += 0.35 * report.magic_score
     tier3 += 0.30 * report.entangling_power_multipartite
     tier3 = min(1.0, tier3)
 
-    report.usefulness_score = 0.30 * tier1 + 0.35 * tier2 + 0.35 * tier3
+    # Tier 4: problem-driven performance (0.35 weight) -- the new primary signal
+    tier4 = 0.0
+    if report.qaoa_fitness > 0:
+        # Scale: 0.75 is standard X-mixer baseline on hard graphs
+        # Anything above 0.75 is interesting; 1.0 is optimal
+        tier4 += 0.60 * min(1.0, report.qaoa_fitness / 0.85)
+    if report.constrained_qaoa_fitness > 0:
+        tier4 += 0.40 * min(1.0, report.constrained_qaoa_fitness / 0.75)
+    tier4 = min(1.0, tier4)
+
+    report.usefulness_score = (
+        0.20 * tier1 + 0.25 * tier2 + 0.20 * tier3 + 0.35 * tier4
+    )
     report.usefulness_tags = tags
 
     return report
