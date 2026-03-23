@@ -139,6 +139,11 @@ class BenchConfig(BaseModel):
     backends: list[BackendConfig] = [
         BackendConfig(name="aer_ideal", type="simulator", provider="aer"),
     ]
+    # Usefulness scoring: test circuits for computational utility, not just novelty.
+    usefulness_scoring: bool = False
+    usefulness_weight: float = 0.5  # weight in composite fitness (vs novelty)
+    magic_max_qubits: int = 4  # max qubits for exact stabiliser state enumeration
+    scrambling_samples: int = 10  # random Pauli pairs for OTOC estimation
 
 
 class ReportConfig(BaseModel):

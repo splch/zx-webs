@@ -74,6 +74,10 @@ bench:
   fidelity_threshold: 0.99
   novelty_scoring: true
   max_unitary_qubits: 10
+  usefulness_scoring: true
+  usefulness_weight: 0.5
+  magic_max_qubits: 4
+  scrambling_samples: 10
 
 report:
   output_format: [json, html]

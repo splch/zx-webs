@@ -97,6 +97,13 @@ def _compute_candidate_fitness(
     novelty = bench_result.get("novelty_score", 0.0)
     score += novelty
 
+    # Usefulness component: circuits that are functionally useful
+    # get a bonus on top of novelty. This drives evolution toward
+    # circuits that are both novel AND computationally meaningful.
+    usefulness = bench_result.get("usefulness_score", 0.0)
+    if usefulness > 0:
+        score += usefulness
+
     # Near-miss bonus: candidates close to implementing a known algorithm
     best_fidelity = bench_result.get("best_fidelity", 0.0)
     if near_miss_lo <= best_fidelity < near_miss_hi:

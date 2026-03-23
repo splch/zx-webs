@@ -107,6 +107,9 @@ def run_stage6(
     fidelity_threshold = getattr(config, "fidelity_threshold", 0.99)
     max_unitary_qubits = getattr(config, "max_unitary_qubits", 10)
     novelty_enabled = getattr(config, "novelty_scoring", False)
+    usefulness_enabled = getattr(config, "usefulness_scoring", False)
+    magic_max_qubits = getattr(config, "magic_max_qubits", 4)
+    scrambling_samples = getattr(config, "scrambling_samples", 10)
 
     # -- 1. Build benchmark tasks from the corpus ----------------------------
     # Derive qubit counts from the survivor manifest so tasks match actual data.
@@ -202,13 +205,28 @@ def run_stage6(
             classification["is_clifford"] = None
             classification["entanglement_capacity"] = None
 
-        # 3c. Compute novelty score.
+        # 3c. Compute usefulness score.
+        usefulness_report = None
+        if usefulness_enabled and unitary is not None:
+            from zx_webs.stage6_bench.usefulness import compute_usefulness
+
+            try:
+                usefulness_report = compute_usefulness(
+                    unitary,
+                    metrics.qubit_count,
+                    scrambling_samples=scrambling_samples,
+                    magic_max_qubits=magic_max_qubits,
+                )
+            except Exception:
+                logger.debug("Usefulness scoring failed for %s.", survivor_id)
+
+        # 3d. Compute novelty score.
         nov_score: float | None = None
         if novelty_enabled and unitary is not None:
             corpus_us = corpus_unitaries_by_qubits.get(metrics.qubit_count, [])
             nov_score = novelty_score(unitary, corpus_us)
 
-        # 3d. Match against benchmark tasks.
+        # 3f. Match against benchmark tasks.
         matches = match_candidate_to_tasks(
             candidate_id=survivor_id,
             candidate_qasm=qasm_str,
@@ -217,7 +235,7 @@ def run_stage6(
             max_unitary_qubits=max_unitary_qubits,
         )
 
-        # 3e. Identify real improvements.
+        # 3g. Identify real improvements.
         real_improvements = [m for m in matches if m.is_improvement]
         best_fidelity = max((m.fidelity for m in matches), default=0.0)
         dominates_any = len(real_improvements) > 0
@@ -240,6 +258,10 @@ def run_stage6(
         }
         if nov_score is not None:
             result_entry["novelty_score"] = nov_score
+        if usefulness_report is not None:
+            result_entry["usefulness"] = usefulness_report.to_dict()
+            result_entry["usefulness_score"] = usefulness_report.usefulness_score
+            result_entry["usefulness_tags"] = usefulness_report.usefulness_tags
         results.append(result_entry)
 
     # -- 4. Persist results --------------------------------------------------
@@ -268,5 +290,21 @@ def run_stage6(
                 sum(novelty_scores) / len(novelty_scores),
                 max(novelty_scores),
                 high_novelty,
+            )
+    if usefulness_enabled:
+        u_scores = [r["usefulness_score"] for r in results if "usefulness_score" in r]
+        if u_scores:
+            from collections import Counter
+            all_tags: list[str] = []
+            for r in results:
+                all_tags.extend(r.get("usefulness_tags", []))
+            tag_counts = Counter(all_tags)
+            logger.info(
+                "Usefulness: %d/%d survivors scored (mean=%.3f, max=%.3f). "
+                "Tags: %s",
+                len(u_scores), len(results),
+                sum(u_scores) / len(u_scores),
+                max(u_scores),
+                dict(tag_counts.most_common(10)),
             )
     return results
