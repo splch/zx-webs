@@ -127,6 +127,19 @@ class BenchConfig(BaseModel):
         BackendConfig(name="aer_ideal", type="simulator", provider="aer"),
     ]
 
+    # Problem library: screen composed circuits against a broad set of
+    # quantum computational problems (not just the 47 corpus algorithms).
+    problem_library_enabled: bool = True
+    problem_library_categories: list[str] = [
+        "state_prep",
+        "hamiltonian",
+        "controlled_gates",
+        "arithmetic",
+        "qec",
+    ]
+    problem_library_hamiltonian_times: list[float] = [0.1, 0.5, 1.0]
+    problem_library_hamiltonian_h_values: list[float] = [0.5, 1.0, 2.0]
+
 
 class ReportConfig(BaseModel):
     """Stage 7 -- report generation."""

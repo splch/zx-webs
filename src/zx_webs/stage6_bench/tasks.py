@@ -53,6 +53,8 @@ class BenchmarkTask:
     description: str = ""
     n_qubits: int = 0
     target_unitary: np.ndarray = field(default_factory=lambda: np.eye(1))
+    target_state: np.ndarray | None = None
+    target_type: str = "unitary"  # "unitary" or "state_prep"
     baseline_gate_count: int = 0
     baseline_t_count: int = 0
     baseline_cnot_count: int = 0
@@ -60,13 +62,15 @@ class BenchmarkTask:
     metric_focus: list[str] = field(default_factory=lambda: ["fidelity", "gate_count"])
 
     def fidelity(self, candidate_unitary: np.ndarray) -> float:
-        """Compute process fidelity between this task's target and a candidate.
+        """Compute fidelity between this task's target and a candidate.
 
-        Process fidelity is defined as::
+        For ``target_type="unitary"``, computes process fidelity::
 
             F = |Tr(U_target^dagger @ U_candidate)|^2 / d^2
 
-        where ``d = 2^n_qubits`` is the Hilbert space dimension.
+        For ``target_type="state_prep"``, computes state fidelity::
+
+            F = |<target_state | U_candidate | 0...0>|^2
 
         Parameters
         ----------
@@ -78,6 +82,16 @@ class BenchmarkTask:
         float
             Fidelity in [0, 1].  Returns 0.0 if shapes don't match.
         """
+        if self.target_type == "state_prep" and self.target_state is not None:
+            d = 2**self.n_qubits
+            if candidate_unitary.shape != (d, d):
+                return 0.0
+            # |0...0> is the first computational basis state
+            output_state = candidate_unitary[:, 0]
+            overlap = np.vdot(self.target_state, output_state)
+            return float(np.abs(overlap) ** 2)
+
+        # Default: process fidelity for unitary targets
         if candidate_unitary.shape != self.target_unitary.shape:
             return 0.0
         d = self.target_unitary.shape[0]

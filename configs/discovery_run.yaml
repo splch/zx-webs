@@ -1,0 +1,76 @@
+data_dir: data_discovery
+
+corpus:
+  families:
+    - oracular
+    - arithmetic
+    - variational
+    - simulation
+    - entanglement
+    - error_correction
+    - linear_algebra
+    - communication
+  max_qubits: 7
+  qubit_counts: [3, 4, 5, 7]
+  seed: 42
+
+zx:
+  reduction: full_reduce
+  normalize: true
+
+mining:
+  min_support: 10
+  min_vertices: 3
+  max_vertices: 8
+  max_input_vertices: 75
+  phase_discretization: 8
+  include_phase_in_label: true
+  mining_timeout: 300
+
+compose:
+  max_webs_per_candidate: 3
+  max_candidates: 200000
+  max_webs_loaded: 50000
+  composition_modes: [sequential, parallel]
+  min_compose_qubits: 2
+  max_compose_qubits: 12
+  seed: 42
+  prefer_cross_family: true
+  guided: true
+  target_qubit_counts: [2, 3, 4, 5, 6, 7]
+  phase_perturbation_resolution: 8
+  phase_perturbation_rate: 0.4
+
+filter:
+  extract_timeout_seconds: 30.0
+  max_cnot_blowup_factor: 5.0
+  cnot_blowup_enabled: true
+  dedup_method: unitary
+  optimize_cnots_level: 2
+  gflow_precheck: false
+  max_unitary_qubits: 10
+
+bench:
+  tasks:
+    - grover_oracle
+    - maxcut
+    - qpe
+    - ghz
+    - arithmetic
+  qasmbench_path: data_discovery/qasmbench
+  fidelity_shots: 8192
+  fidelity_threshold: 0.99
+  max_unitary_qubits: 10
+  problem_library_enabled: true
+  problem_library_categories:
+    - state_prep
+    - hamiltonian
+    - controlled_gates
+    - arithmetic
+    - qec
+  problem_library_hamiltonian_times: [0.1, 0.5, 1.0, 2.0]
+  problem_library_hamiltonian_h_values: [0.25, 0.5, 1.0, 1.5, 2.0]
+
+report:
+  output_format: [json, html]
+  figure_dpi: 150

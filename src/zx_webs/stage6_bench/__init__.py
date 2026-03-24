@@ -15,6 +15,7 @@ from zx_webs.stage6_bench.metrics import (
     is_clifford_unitary,
 )
 from zx_webs.stage6_bench.runner import run_stage6
+from zx_webs.stage6_bench.problem_library import build_problem_library_tasks
 from zx_webs.stage6_bench.tasks import BenchmarkTask, build_benchmark_tasks
 
 __all__ = [
@@ -24,6 +25,7 @@ __all__ = [
     "SupermarQFeatures",
     "TaskMatch",
     "build_benchmark_tasks",
+    "build_problem_library_tasks",
     "compare_candidate_to_baselines",
     "compute_unitary",
     "entanglement_capacity",

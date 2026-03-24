@@ -27,6 +27,7 @@ from zx_webs.stage6_bench.metrics import (
     entanglement_capacity,
     is_clifford_unitary,
 )
+from zx_webs.stage6_bench.problem_library import build_problem_library_tasks
 from zx_webs.stage6_bench.tasks import build_benchmark_tasks
 
 logger = logging.getLogger(__name__)
@@ -127,9 +128,30 @@ def run_stage6(
         )
         tasks = []
 
+    # -- 1b. Build problem library tasks (state prep, Hamiltonians, etc.) ----
+    problem_library_enabled = getattr(config, "problem_library_enabled", True)
+    if problem_library_enabled:
+        try:
+            pl_categories = getattr(config, "problem_library_categories", None)
+            pl_times = getattr(config, "problem_library_hamiltonian_times", None)
+            pl_h_values = getattr(config, "problem_library_hamiltonian_h_values", None)
+            pl_tasks = build_problem_library_tasks(
+                qubit_counts=survivor_qubit_counts if survivor_qubit_counts else None,
+                categories=pl_categories,
+                hamiltonian_times=pl_times,
+                hamiltonian_h_values=pl_h_values,
+            )
+            tasks.extend(pl_tasks)
+            logger.info("Added %d problem library tasks.", len(pl_tasks))
+        except Exception:
+            logger.warning(
+                "Failed to build problem library tasks; continuing with corpus tasks only.",
+                exc_info=True,
+            )
+
     task_qubit_counts = sorted(set(t.n_qubits for t in tasks))
     logger.info(
-        "Stage 6: built %d benchmark tasks for qubit counts %s.",
+        "Stage 6: built %d total benchmark tasks for qubit counts %s.",
         len(tasks),
         task_qubit_counts,
     )
