@@ -31,7 +31,15 @@ Stage 6 screens composed circuits against the 47 corpus algorithms AND a problem
 
 ## On success
 
-Write `docs/discovery.md` with full details, git commit and push, then output `<promise>DONE</promise>`.
+Write `docs/discovery.md` with full details, then **verify with an expert agent** before finalizing.
+
+### Expert verification (required)
+
+Before committing, spawn an agent with a prompt like:
+
+> You are a quantum computing expert. Evaluate whether the following discovered circuit is (1) genuinely novel -- not a trivial identity, textbook construction, or simple gate decomposition, (2) useful -- it solves a meaningful computational problem more efficiently or in a structurally interesting way, and (3) correctly verified -- the fidelity claim is sound and not an artifact of qubit ordering, global phase, or benchmark methodology. Be skeptical. Here is the circuit and its claimed match: [paste QASM + target + fidelity + provenance]
+
+Only circuits that pass expert review should appear in `docs/discovery.md`. If the expert flags an issue, fix it or remove the claim. After verification, git commit and push, then output `<promise>DONE</promise>`.
 
 ## On failure
 
