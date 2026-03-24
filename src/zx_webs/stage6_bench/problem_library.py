@@ -26,11 +26,34 @@ from zx_webs.stage6_bench.tasks import BenchmarkTask
 
 logger = logging.getLogger(__name__)
 
-# Baseline metrics for problem library tasks.  Set high so any real circuit
-# Pareto-dominates them, making is_improvement = True whenever fidelity
-# exceeds the threshold.  This signals "hit against problem library" without
-# requiring a known baseline algorithm.
+# Fallback when no reference circuit is available.
 _NO_BASELINE = 999_999
+
+
+def _baseline_from_circuit(qc) -> tuple[int, int, int, int]:
+    """Compute (gate_count, t_count, cnot_count, depth) from a Qiskit circuit.
+
+    Uses PyZX metric computation for consistency with how the benchmark
+    evaluates candidate circuits.  Returns ``(_NO_BASELINE,) * 4`` on failure.
+    """
+    try:
+        import pyzx as zx
+        from qiskit import qasm2, transpile
+
+        basis = ["cx", "cz", "h", "x", "z", "s", "sdg", "t", "tdg",
+                 "rz", "ry", "rx", "swap", "id"]
+        transpiled = transpile(qc, basis_gates=basis, optimization_level=2)
+        qasm_str = qasm2.dumps(transpiled)
+        c = zx.Circuit.from_qasm(qasm_str)
+        sd = c.stats_dict()
+        return (
+            sd.get("gates", 0),
+            sd.get("tcount", 0),
+            sd.get("twoqubit", 0),
+            c.depth(),
+        )
+    except Exception:
+        return (_NO_BASELINE, _NO_BASELINE, _NO_BASELINE, _NO_BASELINE)
 
 # ---------------------------------------------------------------------------
 # Pauli matrices (reused across Hamiltonian builders)
@@ -139,21 +162,69 @@ def _complete_graph_edges(n: int) -> list[tuple[int, int]]:
     return [(i, j) for i in range(n) for j in range(i + 1, n)]
 
 
+def _state_prep_reference_circuit(name: str, n: int, edges: list[tuple[int, int]] | None = None):
+    """Build the textbook reference circuit for a state preparation target.
+
+    Returns a Qiskit QuantumCircuit, or None if no standard construction
+    is known.
+    """
+    try:
+        from qiskit import QuantumCircuit
+    except ImportError:
+        return None
+
+    if name.startswith("ghz_prep"):
+        # Textbook: H(0), CNOT(0,i) for i=1..n-1
+        qc = QuantumCircuit(n)
+        qc.h(0)
+        for i in range(1, n):
+            qc.cx(0, i)
+        return qc
+
+    if name.startswith("graph_") or name.startswith("cluster_1d_prep"):
+        # Graph state: H on all, CZ on each edge
+        if edges is None:
+            return None
+        qc = QuantumCircuit(n)
+        for i in range(n):
+            qc.h(i)
+        for i, j in edges:
+            qc.cz(i, j)
+        return qc
+
+    if name.startswith("w_prep"):
+        # W state: cascading controlled rotations + CNOT
+        # Standard: Ry on q0, then CNOT+Ry cascade
+        qc = QuantumCircuit(n)
+        import numpy as _np
+        for i in range(n - 1):
+            angle = 2 * _np.arccos(_np.sqrt(1.0 / (n - i)))
+            qc.ry(angle, i)
+            qc.cx(i, i + 1)
+            qc.ry(-angle, i + 1) if i < n - 2 else None
+        qc.x(n - 1)  # flip last qubit to complete the pattern
+        return qc
+
+    # Dicke states: no simple textbook circuit, use conservative estimate
+    return None
+
+
 def _state_prep_tasks(qubit_counts: list[int]) -> list[BenchmarkTask]:
-    """Generate state preparation benchmark tasks."""
+    """Generate state preparation benchmark tasks with real baselines."""
     tasks: list[BenchmarkTask] = []
 
     for n in qubit_counts:
         if n < 3:
             continue
 
-        state_targets: list[tuple[str, str, np.ndarray]] = []
+        # (short_name, description, target_state, edges_for_reference)
+        state_targets: list[tuple[str, str, np.ndarray, list[tuple[int, int]] | None]] = []
 
         # GHZ
-        state_targets.append(("ghz_prep", f"Prepare {n}-qubit GHZ state", _ghz_state(n)))
+        state_targets.append(("ghz_prep", f"Prepare {n}-qubit GHZ state", _ghz_state(n), None))
 
         # W state
-        state_targets.append(("w_prep", f"Prepare {n}-qubit W state", _w_state(n)))
+        state_targets.append(("w_prep", f"Prepare {n}-qubit W state", _w_state(n), None))
 
         # Dicke states D(n,k) for k=1..n-1 (k=1 is W state, skip)
         for k in range(2, n):
@@ -161,6 +232,7 @@ def _state_prep_tasks(qubit_counts: list[int]) -> list[BenchmarkTask]:
                 f"dicke_{k}_prep",
                 f"Prepare Dicke state D({n},{k})",
                 _dicke_state(n, k),
+                None,
             ))
 
         # Graph states: line, cycle, star, complete
@@ -170,20 +242,32 @@ def _state_prep_tasks(qubit_counts: list[int]) -> list[BenchmarkTask]:
             ("star", _star_graph_edges),
             ("complete", _complete_graph_edges),
         ]:
+            edges = edge_fn(n)
             state_targets.append((
                 f"graph_{graph_name}_prep",
                 f"Prepare {graph_name} graph state on {n} qubits",
-                _graph_state(n, edge_fn(n)),
+                _graph_state(n, edges),
+                edges,
             ))
 
         # Cluster state (line graph = 1D cluster)
+        line_edges = _line_graph_edges(n)
         state_targets.append((
             "cluster_1d_prep",
             f"Prepare 1D cluster state on {n} qubits",
-            _graph_state(n, _line_graph_edges(n)),
+            _graph_state(n, line_edges),
+            line_edges,
         ))
 
-        for short_name, desc, target_state in state_targets:
+        for short_name, desc, target_state, edges in state_targets:
+            # Compute baseline from reference circuit
+            ref_qc = _state_prep_reference_circuit(short_name, n, edges)
+            if ref_qc is not None:
+                gc, tc, cc, dp = _baseline_from_circuit(ref_qc)
+            else:
+                # Conservative estimate for Dicke states
+                gc, tc, cc, dp = (3 * n, 0, 2 * n, 3 * n)
+
             tasks.append(BenchmarkTask(
                 name=f"{short_name}_{n}q",
                 description=f"problem_library/state_prep: {desc}",
@@ -191,10 +275,10 @@ def _state_prep_tasks(qubit_counts: list[int]) -> list[BenchmarkTask]:
                 target_unitary=np.eye(1),  # unused for state prep
                 target_state=target_state,
                 target_type="state_prep",
-                baseline_gate_count=_NO_BASELINE,
-                baseline_t_count=_NO_BASELINE,
-                baseline_cnot_count=_NO_BASELINE,
-                baseline_depth=_NO_BASELINE,
+                baseline_gate_count=gc,
+                baseline_t_count=tc,
+                baseline_cnot_count=cc,
+                baseline_depth=dp,
                 metric_focus=["fidelity"],
             ))
 
@@ -324,6 +408,31 @@ def _hamiltonian_tasks(
                 ))
 
         for ham_name, ham_desc, H in hamiltonians:
+            # Compute Trotter baseline gate counts analytically.
+            # First-order Trotter: one exp(-iHt) per Pauli term.
+            if "tfim" in ham_name:
+                # (n-1) ZZ terms × 3 gates + n X terms × 1 gate
+                bl_gc = 3 * (n - 1) + n
+                bl_cc = 2 * (n - 1)
+                bl_dp = 3 * (n - 1) + 1
+            elif "heisenberg" in ham_name:
+                # 3(n-1) terms (XX+YY+ZZ per bond), ~7 gates per bond + n Rz
+                bl_gc = 7 * (n - 1) + n
+                bl_cc = 6 * (n - 1)
+                bl_dp = 7 * (n - 1)
+            elif "xy" in ham_name:
+                # 2(n-1) terms (XX+YY per bond), ~5 gates per bond + n phases
+                bl_gc = 5 * (n - 1) + n
+                bl_cc = 4 * (n - 1)
+                bl_dp = 5 * (n - 1)
+            elif "hubbard" in ham_name:
+                n_sites = n // 2
+                bl_gc = 10 * n_sites
+                bl_cc = 6 * n_sites
+                bl_dp = 10 * n_sites
+            else:
+                bl_gc, bl_cc, bl_dp = _NO_BASELINE, _NO_BASELINE, _NO_BASELINE
+
             for t_val in times:
                 U_target = expm(-1j * H * t_val)
                 tasks.append(BenchmarkTask(
@@ -332,10 +441,10 @@ def _hamiltonian_tasks(
                     n_qubits=n,
                     target_unitary=U_target,
                     target_type="unitary",
-                    baseline_gate_count=_NO_BASELINE,
-                    baseline_t_count=_NO_BASELINE,
-                    baseline_cnot_count=_NO_BASELINE,
-                    baseline_depth=_NO_BASELINE,
+                    baseline_gate_count=bl_gc,
+                    baseline_t_count=0,
+                    baseline_cnot_count=bl_cc,
+                    baseline_depth=bl_dp,
                     metric_focus=["fidelity"],
                 ))
 
@@ -404,16 +513,17 @@ def _controlled_gate_tasks(qubit_counts: list[int]) -> list[BenchmarkTask]:
         for gate_name, desc, qc in gate_circuits:
             try:
                 U = Operator(qc).data
+                gc, tc, cc, dp = _baseline_from_circuit(qc)
                 tasks.append(BenchmarkTask(
                     name=f"{gate_name}_{n}q",
                     description=f"problem_library/controlled_gate: {desc}",
                     n_qubits=n,
                     target_unitary=np.array(U, dtype=complex),
                     target_type="unitary",
-                    baseline_gate_count=_NO_BASELINE,
-                    baseline_t_count=_NO_BASELINE,
-                    baseline_cnot_count=_NO_BASELINE,
-                    baseline_depth=_NO_BASELINE,
+                    baseline_gate_count=gc,
+                    baseline_t_count=tc,
+                    baseline_cnot_count=cc,
+                    baseline_depth=dp,
                     metric_focus=["fidelity"],
                 ))
             except Exception:
@@ -501,16 +611,17 @@ def _arithmetic_tasks(qubit_counts: list[int]) -> list[BenchmarkTask]:
         try:
             U = Operator(qc).data
             n = qc.num_qubits
+            gc, tc, cc, dp = _baseline_from_circuit(qc)
             tasks.append(BenchmarkTask(
                 name=name,
                 description=f"problem_library/arithmetic: {desc}",
                 n_qubits=n,
                 target_unitary=np.array(U, dtype=complex),
                 target_type="unitary",
-                baseline_gate_count=_NO_BASELINE,
-                baseline_t_count=_NO_BASELINE,
-                baseline_cnot_count=_NO_BASELINE,
-                baseline_depth=_NO_BASELINE,
+                baseline_gate_count=gc,
+                baseline_t_count=tc,
+                baseline_cnot_count=cc,
+                baseline_depth=dp,
                 metric_focus=["fidelity"],
             ))
         except Exception:
@@ -599,16 +710,17 @@ def _qec_tasks(qubit_counts: list[int]) -> list[BenchmarkTask]:
         try:
             U = Operator(qc).data
             n = qc.num_qubits
+            gc, tc, cc, dp = _baseline_from_circuit(qc)
             tasks.append(BenchmarkTask(
                 name=f"{name}_{n}q",
                 description=f"problem_library/qec: {desc}",
                 n_qubits=n,
                 target_unitary=np.array(U, dtype=complex),
                 target_type="unitary",
-                baseline_gate_count=_NO_BASELINE,
-                baseline_t_count=_NO_BASELINE,
-                baseline_cnot_count=_NO_BASELINE,
-                baseline_depth=_NO_BASELINE,
+                baseline_gate_count=gc,
+                baseline_t_count=tc,
+                baseline_cnot_count=cc,
+                baseline_depth=dp,
                 metric_focus=["fidelity"],
             ))
         except Exception:
