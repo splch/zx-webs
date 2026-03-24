@@ -75,10 +75,13 @@ Fixed `problem_library.py` to compute real baseline metrics from reference circu
 3. **Phase perturbation is random.** Randomly perturbing phases creates random unitaries, not targeted approximations to Hamiltonian evolution or other structured targets.
 4. **Near-identity fidelity inflation.** At small Hamiltonian simulation times (t=0.1), even trivial circuits achieve 0.85+ fidelity because both the target and candidate are close to identity.
 
+### Variational optimization attempt
+Tried differential_evolution on 200 3-qubit compositions, optimizing interior spider phases to maximize fidelity against Hamiltonian + controlled gate targets. Best result: **0.32 fidelity** (vs 0.90 from random search). The composed ZX graph structures are too rigid -- tuning phases alone cannot reach the target unitaries. The topology (which spiders are connected, Z vs X types, edge types) constrains the reachable unitary space too much.
+
 ### What to try next (for future agents)
-1. **Targeted phase hill-climbing.** Take the best near-miss circuit for a Hamiltonian target and use gradient-free optimization (Nelder-Mead, COBYLA) to tune its phase parameters to maximize fidelity. This turns composition into a starting point for variational optimization.
-2. **Multi-pattern composition.** The `triple_sequential` strategy only tries 200 webs. Scaling to 3-4 pattern compositions with thousands of webs could produce more complex, higher-qubit circuits.
-3. **Better circuit synthesis.** Replace PyZX `extract_circuit` with BQSKit's `QSearchSynthesisPass` or TKET's `FullPeepholeOptimise`. The ~82% extraction failure rate is a major bottleneck, and better synthesis tools could recover valid circuits from ZX diagrams that PyZX cannot.
-4. **Compositional search, not random sampling.** Instead of composing random pairs, use a genetic algorithm or Monte Carlo tree search to evolve compositions toward specific target unitaries.
-5. **Expand the corpus.** 47 algorithms may not be enough. Adding algorithms from the Quantum Algorithm Zoo (200+ algorithms) would provide more diverse patterns for composition.
-6. **Focus on T-count.** ZX-calculus is known to excel at T-count optimization. Instead of total gate count, focus the search on reducing T-count for specific circuits (Toffoli, QFT, etc.) where T-count matters for fault tolerance.
+1. **Topology mutation, not just phase tuning.** The limitation is structural, not parametric. Future agents should mutate the ZX graph topology (add/remove edges, change spider types, insert/remove spiders) alongside phase optimization. This requires extending the Stitcher with topology-aware operators.
+2. **Multi-pattern composition at scale.** The `triple_sequential` strategy only tries 200 webs. Scaling to 3-4 pattern compositions with thousands of webs could produce more complex, higher-qubit circuits that span a richer unitary space.
+3. **Better circuit synthesis.** Replace PyZX `extract_circuit` with BQSKit's `QSearchSynthesisPass` or TKET's `FullPeepholeOptimise`. The ~82% extraction failure rate is a major bottleneck. Many valid ZX diagrams fail extraction, and better synthesis tools could recover them.
+4. **Evolutionary/MCTS compositional search.** Instead of composing random pairs, use a genetic algorithm or Monte Carlo tree search to evolve compositions toward specific target unitaries. Fitness = fidelity against target. Mutations = add/remove webs, change stitching strategy, perturb phases.
+5. **Expand the corpus.** 47 algorithms may not be enough. Adding algorithms from the Quantum Algorithm Zoo (200+ algorithms) would provide more diverse patterns.
+6. **Focus on T-count reduction.** ZX full_reduce can reduce T-count (e.g., QFT-3: 8→7 T-gates, QFT-4: 15→12). This is a known ZX-calculus strength but hasn't been systematically applied. A pipeline stage that applies ZX T-count optimization to ALL corpus circuits and reports improvements would produce verifiable results.
