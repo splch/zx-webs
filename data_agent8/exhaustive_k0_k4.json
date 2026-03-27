@@ -1,0 +1,86 @@
+[
+  {
+    "k": 0,
+    "n_topologies": 1,
+    "n_restarts": 3,
+    "global_best_fidelity": 0.37499999999998224,
+    "best_topology": [],
+    "elapsed_s": 0.0
+  },
+  {
+    "k": 1,
+    "n_topologies": 12,
+    "n_restarts": 3,
+    "global_best_fidelity": 0.41666666666635765,
+    "best_topology": [
+      [
+        2,
+        0
+      ]
+    ],
+    "elapsed_s": 0.5
+  },
+  {
+    "k": 2,
+    "n_topologies": 144,
+    "n_restarts": 3,
+    "global_best_fidelity": 0.6666666666666253,
+    "best_topology": [
+      [
+        3,
+        1
+      ],
+      [
+        0,
+        2
+      ]
+    ],
+    "elapsed_s": 14.7
+  },
+  {
+    "k": 3,
+    "n_topologies": 1728,
+    "n_restarts": 3,
+    "global_best_fidelity": 0.8333333333331244,
+    "best_topology": [
+      [
+        2,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "elapsed_s": 366.7
+  },
+  {
+    "k": 4,
+    "n_topologies": 20736,
+    "n_restarts": 3,
+    "global_best_fidelity": 0.8726779962498378,
+    "best_topology": [
+      [
+        3,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        2,
+        1
+      ]
+    ],
+    "elapsed_s": 17890.8
+  }
+]
