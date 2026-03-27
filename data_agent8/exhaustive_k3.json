@@ -1,0 +1,21 @@
+{
+  "k": 3,
+  "n_topologies": 1728,
+  "n_restarts": 3,
+  "global_best_fidelity": 0.8333333333331244,
+  "best_topology": [
+    [
+      2,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      3,
+      1
+    ]
+  ],
+  "elapsed_s": 366.7
+}
