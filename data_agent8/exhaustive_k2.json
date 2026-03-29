@@ -1,17 +1,17 @@
 {
   "k": 2,
   "n_topologies": 144,
-  "n_restarts": 3,
-  "global_best_fidelity": 0.6666666666666253,
+  "n_restarts": 6,
+  "global_best_fidelity": 0.666666666666644,
   "best_topology": [
     [
       3,
-      1
+      0
     ],
     [
-      0,
-      2
+      2,
+      1
     ]
   ],
-  "elapsed_s": 14.7
+  "elapsed_s": 67.1
 }

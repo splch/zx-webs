@@ -1,7 +1,7 @@
 {
   "k": 4,
   "n_topologies": 20736,
-  "n_restarts": 3,
+  "n_restarts": 6,
   "global_best_fidelity": 0.8726779962498378,
   "best_topology": [
     [
@@ -21,5 +21,5 @@
       1
     ]
   ],
-  "elapsed_s": 17890.8
+  "elapsed_s": 35366.5
 }

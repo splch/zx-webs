@@ -1,13 +1,13 @@
 {
   "k": 1,
   "n_topologies": 12,
-  "n_restarts": 3,
-  "global_best_fidelity": 0.41666666666635765,
+  "n_restarts": 6,
+  "global_best_fidelity": 0.416666666666559,
   "best_topology": [
     [
-      2,
-      0
+      0,
+      1
     ]
   ],
-  "elapsed_s": 0.5
+  "elapsed_s": 2.5
 }
